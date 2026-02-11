@@ -1,0 +1,19 @@
+# Railway Environment Variable Update
+
+Go to Railway dashboard:
+https://railway.app
+
+1. Select: easypoly-bot project
+2. Click: Variables tab
+3. Add new variable:
+   - Key: WELCOME_LANDING_URL
+   - Value: https://easypoly.lol
+
+4. Click: Deploy (will trigger automatic restart)
+
+OR use Railway CLI:
+```bash
+railway variables set WELCOME_LANDING_URL=https://easypoly.lol
+```
+
+After adding, bot will restart and pick up the new variable.

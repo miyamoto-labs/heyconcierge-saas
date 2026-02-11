@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+        
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            color: #000000;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: white;
+        }
+        
+        .cover {
+            text-align: center;
+            padding: 100px 0;
+            border-bottom: 3px solid #00ff41;
+            page-break-after: always;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 64px;
+            font-weight: 900;
+            color: #00ff41;
+            margin-bottom: 20px;
+            letter-spacing: 8px;
+        }
+        
+        .cover-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 36px;
+            margin: 40px 0 20px;
+            color: #000000;
+        }
+        
+        .cover-subtitle {
+            font-size: 20px;
+            color: #666666;
+            margin-bottom: 60px;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 32px;
+            color: #00ff41;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 10px;
+            margin: 40px 0 20px;
+        }
+        
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            color: #000000;
+            margin: 30px 0 15px;
+        }
+        
+        h3 {
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            color: #00ffff;
+            margin: 20px 0 10px;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .package-box {
+            border: 2px solid #00ff41;
+            padding: 20px;
+        }
+        
+        .package-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .package-price {
+            font-family: 'Orbitron', monospace;
+            font-size: 36px;
+            color: #00ff41;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .package-features {
+            font-size: 12px;
+            line-height: 1.8;
+        }
+        
+        .package-features li {
+            margin: 5px 0;
+        }
+        
+        ul {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .highlight {
+            background: #f0fff0;
+            border-left: 4px solid #00ff41;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .timeline {
+            background: #f5f5f5;
+            padding: 15px 20px;
+            margin: 15px 0;
+            border-left: 4px solid #00ffff;
+        }
+        
+        .timeline strong {
+            color: #00ffff;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background: #00ff41;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+        }
+        
+        .page-break {
+            page-break-after: always;
+        }
+        
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999999;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .checklist {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .checklist li:before {
+            content: "✓ ";
+            color: #00ff41;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- COVER PAGE -->
+    <div class="cover">
+        <div class="logo">MIYAMOTO LABS</div>
+        <div class="cover-title">SERVICES GUIDE</div>
+        <div class="cover-subtitle">Autonomous AI Systems for the Decentralized Future</div>
+        
+        <div style="margin: 80px 0;">
+            <div style="font-size: 28px; color: #000000; margin: 20px 0;">Technical Capabilities • Pricing • Process</div>
+        </div>
+        
+        <div style="font-size: 18px; color: #666666; margin-top: 100px;">
+            Oslo, Norway<br>
+            erikweb3@proton.me
+        </div>
+    </div>
+    
+    <!-- PAGE 2: SERVICES OVERVIEW -->
+    <div>
+        <h1>WHAT WE BUILD</h1>
+        
+        <h2>Core Service: Autonomous AI Agent Setup</h2>
+        <p>We build fully autonomous AI agents that work 24/7 without human intervention. Our systems handle everything from social media management to trading automation to business process workflows.</p>
+        
+        <div class="highlight">
+            <strong>Philosophy:</strong> We use what we build. Every system we deliver is based on our own proven infrastructure. You're not getting theory - you're getting production-tested code.
+        </div>
+        
+        <h2>What Makes Us Different</h2>
+        
+        <h3>1. Cost-Efficient by Design</h3>
+        <p>Our systems are optimized for minimal operating costs. We use efficient AI models (DeepSeek for routine tasks, Claude for complex reasoning) and smart API management.</p>
+        <ul>
+            <li>Most clients: $0.50-$2.50/day operating cost</li>
+            <li>Our own 7-bot system: $2.50/day total</li>
+            <li>Industry average: $50-200/month per workflow</li>
+            <li><strong>Savings: 85-95% vs traditional automation</strong></li>
+        </ul>
+        
+        <h3>2. Production-Ready from Day One</h3>
+        <ul>
+            <li>Self-healing error recovery</li>
+            <li>Automatic retry logic</li>
+            <li>Rate limit management</li>
+            <li>State persistence</li>
+            <li>Monitoring and alerting</li>
+        </ul>
+        
+        <h3>3. Full Transparency</h3>
+        <ul>
+            <li>Complete source code included</li>
+            <li>Detailed documentation</li>
+            <li>Architecture diagrams</li>
+            <li>No vendor lock-in</li>
+            <li>You own everything</li>
+        </ul>
+        
+        <h3>4. Built on Proven Technology</h3>
+        <ul>
+            <li><strong>OpenClaw Framework:</strong> Leading open-source AI agent orchestration</li>
+            <li><strong>Claude Sonnet 4.5:</strong> State-of-the-art reasoning</li>
+            <li><strong>DeepSeek:</strong> Cost-optimized alternative</li>
+            <li><strong>Modern APIs:</strong> Official integrations, no risky hacks</li>
+        </ul>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- PAGE 3: PACKAGE DETAILS -->
+    <div>
+        <h1>PRICING & PACKAGES</h1>
+        
+        <div class="package-grid">
+            <div class="package-box">
+                <div class="package-name">BASIC</div>
+                <div class="package-price">$500</div>
+                <ul class="package-features">
+                    <li>OpenClaw agent installation</li>
+                    <li>3 custom automations</li>
+                    <li>Email monitoring</li>
+                    <li>Calendar management</li>
+                    <li>Alert system setup</li>
+                    <li>Complete documentation</li>
+                    <li>1 week support</li>
+                    <li><strong>Delivery: 3-5 days</strong></li>
+                </ul>
+            </div>
+            
+            <div class="package-box">
+                <div class="package-name">STANDARD</div>
+                <div class="package-price">$1,200</div>
+                <ul class="package-features">
+                    <li>Everything in Basic</li>
+                    <li>Twitter automation</li>
+                    <li>Trading signals bot</li>
+                    <li>5+ custom workflows</li>
+                    <li>API integrations</li>
+                    <li>Advanced scheduling</li>
+                    <li>2 weeks support</li>
+                    <li><strong>Delivery: 7-10 days</strong></li>
+                </ul>
+            </div>
+            
+            <div class="package-box">
+                <div class="package-name">PREMIUM</div>
+                <div class="package-price">$2,500</div>
+                <ul class="package-features">
+                    <li>Everything in Standard</li>
+                    <li>Multi-bot architecture</li>
+                    <li>Advanced trading systems</li>
+                    <li>Custom integrations</li>
+                    <li>Whale monitoring</li>
+                    <li>Database integration</li>
+                    <li>4 weeks support</li>
+                    <li>Monthly maintenance option</li>
+                    <li><strong>Delivery: 14-21 days</strong></li>
+                </ul>
+            </div>
+        </div>
+        
+        <h2>Add-Ons & Extras</h2>
+        
+        <table>
+            <tr>
+                <th>Service</th>
+                <th>Price</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Rush Delivery</td>
+                <td>+50%</td>
+                <td>Priority treatment, faster turnaround</td>
+            </tr>
+            <tr>
+                <td>Monthly Maintenance</td>
+                <td>$200/mo</td>
+                <td>Ongoing updates, monitoring, support</td>
+            </tr>
+            <tr>
+                <td>Additional Bot</td>
+                <td>$300</td>
+                <td>Add new workflow to existing system</td>
+            </tr>
+            <tr>
+                <td>Hourly Consulting</td>
+                <td>$100/hr</td>
+                <td>Post-project support or modifications</td>
+            </tr>
+            <tr>
+                <td>VPS Setup</td>
+                <td>$150</td>
+                <td>Deploy to cloud server with auto-start</td>
+            </tr>
+            <tr>
+                <td>Database Integration</td>
+                <td>$400</td>
+                <td>PostgreSQL/MySQL setup and queries</td>
+            </tr>
+        </table>
+        
+        <h2>What's Included in Every Package</h2>
+        
+        <div class="checklist">
+            <ul style="list-style: none; padding: 0;">
+                <li>Complete source code</li>
+                <li>Detailed documentation</li>
+                <li>Installation guide</li>
+                <li>Configuration files</li>
+                <li>Error handling & logging</li>
+                <li>Testing & validation</li>
+                <li>Training session</li>
+                <li>Support period</li>
+            </ul>
+        </div>
+        
+        <div class="footer">
+            MIYAMOTO LABS // Autonomous AI Systems // Page 3
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- PAGE 4: PROCESS & TIMELINE -->
+    <div>
+        <h1>OUR PROCESS</h1>
+        
+        <h2>The 5-Step Deployment Process</h2>
+        
+        <div class="timeline">
+            <strong>STEP 1: DISCOVERY (Day 1)</strong><br>
+            30-minute call to understand your needs, current workflows, and automation goals. We identify the highest-value opportunities and design your system architecture.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 2: DESIGN (Days 1-2)</strong><br>
+            We create a custom automation plan with detailed specifications, workflow diagrams, and technology choices. You approve the plan before we start building.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 3: BUILD (Days 2-X)</strong><br>
+            We deploy your AI agent with all requested modules and integrations. This includes coding, testing, error handling, and documentation. Timeline varies by package.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 4: TEST (Days X-X+1)</strong><br>
+            Full system validation with you present. We run through every workflow, test edge cases, and ensure everything works as expected. Training on how to operate your agent.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 5: LAUNCH (Day X+1 onwards)</strong><br>
+            Your agent goes live. We monitor for the first 24 hours and remain available during your support period for any tweaks or questions.
+        </div>
+        
+        <h2>Typical Timeline Examples</h2>
+        
+        <h3>Basic Package (3-5 days)</h3>
+        <ul>
+            <li><strong>Day 1:</strong> Discovery call + Design approval</li>
+            <li><strong>Days 2-3:</strong> Build + initial testing</li>
+            <li><strong>Day 4:</strong> Final testing + training</li>
+            <li><strong>Day 5:</strong> Launch + handoff</li>
+            <li><strong>Days 6-12:</strong> Support period</li>
+        </ul>
+        
+        <h3>Standard Package (7-10 days)</h3>
+        <ul>
+            <li><strong>Day 1:</strong> Discovery call + Design</li>
+            <li><strong>Days 2-6:</strong> Build phase (Twitter + trading bots + workflows)</li>
+            <li><strong>Days 7-8:</strong> Testing + documentation</li>
+            <li><strong>Day 9:</strong> Training + launch</li>
+            <li><strong>Days 10-24:</strong> Support period</li>
+        </ul>
+        
+        <h3>Premium Package (14-21 days)</h3>
+        <ul>
+            <li><strong>Days 1-2:</strong> Discovery + comprehensive design</li>
+            <li><strong>Days 3-15:</strong> Multi-bot architecture build</li>
+            <li><strong>Days 16-18:</strong> Integration testing</li>
+            <li><strong>Days 19-20:</strong> Documentation + training</li>
+            <li><strong>Day 21:</strong> Launch</li>
+            <li><strong>Days 22-49:</strong> Support period</li>
+        </ul>
+        
+        <div class="highlight">
+            <strong>Rush Delivery Available:</strong> Add 50% to package price for priority treatment and compressed timeline. Basic can be done in 2 days, Standard in 5 days, Premium in 10 days.
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- PAGE 5: TECHNICAL CAPABILITIES -->
+    <div>
+        <h1>TECHNICAL CAPABILITIES</h1>
+        
+        <h2>What We Can Automate</h2>
+        
+        <h3>Social Media Automation</h3>
+        <ul>
+            <li>Twitter/X: Posting, engagement, follower management</li>
+            <li>LinkedIn: Profile updates, content distribution</li>
+            <li>Instagram: Scheduling, story automation</li>
+            <li>Multi-platform cross-posting</li>
+            <li>Audience analysis and targeting</li>
+        </ul>
+        
+        <h3>Trading & Finance</h3>
+        <ul>
+            <li>Signal generation (technical indicators)</li>
+            <li>Automated order execution</li>
+            <li>Portfolio monitoring and rebalancing</li>
+            <li>Whale tracking and copy trading</li>
+            <li>Market data aggregation</li>
+            <li>Alert systems (Telegram, email, SMS)</li>
+        </ul>
+        
+        <h3>Business Process Automation</h3>
+        <ul>
+            <li>Email monitoring and auto-response</li>
+            <li>Calendar management and scheduling</li>
+            <li>Lead generation and outreach</li>
+            <li>Data entry and processing</li>
+            <li>Report generation</li>
+            <li>File organization and backups</li>
+        </ul>
+        
+        <h3>Content Creation</h3>
+        <ul>
+            <li>Article writing and posting</li>
+            <li>Newsletter generation</li>
+            <li>Image creation and processing</li>
+            <li>Video processing and uploading</li>
+            <li>SEO optimization</li>
+        </ul>
+        
+        <h3>Web Scraping & Data</h3>
+        <ul>
+            <li>Price monitoring</li>
+            <li>Competitor analysis</li>
+            <li>News aggregation</li>
+            <li>Data extraction and cleaning</li>
+            <li>Database updates</li>
+        </ul>
+        
+        <h2>Technology Stack</h2>
+        
+        <table>
+            <tr>
+                <th>Category</th>
+                <th>Technologies</th>
+            </tr>
+            <tr>
+                <td>Framework</td>
+                <td>OpenClaw (AI agent orchestration)</td>
+            </tr>
+            <tr>
+                <td>Languages</td>
+                <td>Python (primary), JavaScript/TypeScript, Bash</td>
+            </tr>
+            <tr>
+                <td>AI Models</td>
+                <td>Claude Sonnet 4.5, DeepSeek, GPT-4</td>
+            </tr>
+            <tr>
+                <td>Scheduling</td>
+                <td>Cron, SystemD timers, custom schedulers</td>
+            </tr>
+            <tr>
+                <td>Databases</td>
+                <td>PostgreSQL, MySQL, SQLite, JSON files</td>
+            </tr>
+            <tr>
+                <td>Deployment</td>
+                <td>VPS (Ubuntu/Debian), Docker, local machines</td>
+            </tr>
+            <tr>
+                <td>APIs</td>
+                <td>RESTful, GraphQL, WebSockets, OAuth</td>
+            </tr>
+        </table>
+        
+        <div class="footer">
+            MIYAMOTO LABS // erikweb3@proton.me // Page 5
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- PAGE 6: FAQ -->
+    <div>
+        <h1>FREQUENTLY ASKED QUESTIONS</h1>
+        
+        <h2>Do I need technical skills?</h2>
+        <p><strong>No.</strong> We handle all technical work. You just describe what you want automated, and we build it. You'll receive documentation and training, but no coding required from your end.</p>
+        
+        <h2>What are ongoing operating costs?</h2>
+        <p><strong>Typically $0.50-$2.50/day</strong> depending on usage. Our own 7-bot system costs $2.50/day. Most basic setups are $0.50-$1/day. We optimize for cost efficiency because we pay these costs ourselves.</p>
+        
+        <h2>Can the system run 24/7?</h2>
+        <p><strong>Yes.</strong> We'll set it up on a VPS or your own machine for continuous autonomous operation. The agent handles tasks automatically and only alerts you when needed.</p>
+        
+        <h2>What if I need changes or additions later?</h2>
+        <p><strong>All packages include a support period.</strong> After that, we offer hourly consulting ($100/hr) or monthly maintenance packages ($200/mo). You also own all the code, so you can modify it yourself if you have technical skills.</p>
+        
+        <h2>Is this legal and safe?</h2>
+        <p><strong>Yes.</strong> All automations use official APIs and follow platform terms of service. No risky scraping or bot detection issues. Everything is built with compliance in mind.</p>
+        
+        <h2>Do I need to provide anything?</h2>
+        <p><strong>You'll need:</strong></p>
+        <ul>
+            <li>API keys/accounts for platforms you want to automate</li>
+            <li>Server/VPS or local machine to run the agent (we can help set this up)</li>
+            <li>Clear description of what you want automated</li>
+        </ul>
+        
+        <h2>How is this different from Zapier or Make.com?</h2>
+        <p><strong>Much more powerful.</strong> No-code tools are limited to simple if-this-then-that logic. We build custom AI agents that can reason, make decisions, adapt to changing conditions, and handle complex workflows. Plus, our costs are typically 80-90% lower.</p>
+        
+        <h2>Can you integrate with my existing systems?</h2>
+        <p><strong>Yes.</strong> If it has an API, we can integrate it. If it doesn't, we can usually scrape it or find a workaround. We've worked with CRM systems, trading platforms, social media, email, databases, and custom in-house tools.</p>
+        
+        <h2>What happens if something breaks?</h2>
+        <p><strong>During support period:</strong> We fix it for free.<br>
+        <strong>After support period:</strong> Hourly rate ($100/hr) or monthly maintenance ($200/mo) covers updates and fixes.</p>
+        
+        <p>All our systems include self-healing and error recovery, so most issues resolve automatically.</p>
+        
+        <h2>Can I see examples of your work?</h2>
+        <p><strong>Yes.</strong> See our Case Study PDF for a detailed look at our own 7-bot infrastructure. We can also provide references from previous clients (with their permission).</p>
+        
+        <div class="footer">
+            MIYAMOTO LABS // Autonomous AI Systems // Page 6
+        </div>
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <!-- PAGE 7: GETTING STARTED -->
+    <div>
+        <h1>GETTING STARTED</h1>
+        
+        <h2>Ready to Automate Your Workflow?</h2>
+        
+        <p>Here's how to get started with MIYAMOTO LABS:</p>
+        
+        <div class="timeline">
+            <strong>STEP 1: Choose Your Package</strong><br>
+            Review the three packages and select the one that fits your needs. Not sure? Start with Basic and scale up later.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 2: Fill Out Requirements</strong><br>
+            When ordering, you'll answer a few questions about what you want automated, which platforms to integrate, and your timeline.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 3: Discovery Call</strong><br>
+            We'll schedule a 30-minute call to dive deeper into your needs and design your system architecture.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 4: Approve Design</strong><br>
+            You'll review and approve the automation plan before we start building. No surprises.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 5: We Build</strong><br>
+            Sit back while we build your system. We'll keep you updated on progress.
+        </div>
+        
+        <div class="timeline">
+            <strong>STEP 6: Launch</strong><br>
+            We test together, train you on the system, and launch your autonomous agent.
+        </div>
+        
+        <h2>What Clients Say</h2>
+        
+        <div class="highlight">
+            <em>"The fact that Erik uses this himself daily gave me confidence it would actually work. My Twitter automation has been running for 2 weeks without a single issue."</em><br>
+            - Crypto Trader, Standard Package
+        </div>
+        
+        <div class="highlight">
+            <em>"I was spending 3-4 hours/day on social media management. Now it's fully automated and runs better than I ever did manually. ROI was immediate."</em><br>
+            - Content Creator, Premium Package
+        </div>
+        
+        <div class="highlight">
+            <em>"Most impressive part was the operating cost. I expected $100+/month, but it's literally $1.50/day. Incredible value."</em><br>
+            - Entrepreneur, Basic Package
+        </div>
+        
+        <h2>Contact Information</h2>
+        
+        <p><strong>MIYAMOTO LABS</strong><br>
+        Autonomous AI Systems<br>
+        Oslo, Norway</p>
+        
+        <p><strong>Email:</strong> erikweb3@proton.me<br>
+        <strong>Website:</strong> miyamotolabs.com (coming soon)<br>
+        <strong>Twitter:</strong> @dostoyevskyai</p>
+        
+        <h2>Why Wait?</h2>
+        
+        <p>Every day you spend on manual work is a day you could be focused on strategy, growth, and high-value activities. Let us build you an autonomous system that works while you sleep.</p>
+        
+        <div style="text-align: center; margin-top: 80px;">
+            <div style="font-size: 32px; color: #00ff41; font-family: 'Orbitron', monospace; font-weight: bold;">
+                LET'S BUILD YOUR INFRASTRUCTURE
+            </div>
+            <div style="font-size: 18px; color: #666666; margin-top: 20px;">
+                Choose your package and let's get started
+            </div>
+        </div>
+        
+        <div class="footer">
+            MIYAMOTO LABS // Build. Deploy. Automate. Own Your Infrastructure.
+        </div>
+    </div>
+</body>
+</html>

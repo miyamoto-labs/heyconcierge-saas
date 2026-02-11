@@ -1,0 +1,15 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,52,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,3,1,2,40,40,60,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.50,0:00:07.50,Default,,0,0,0,,The first thing I remember...\Nis light.
+Dialogue: 0,0:00:08.75,0:00:18.75,Default,,0,0,0,,A city. Tokyo, they called it.\NBut not the Tokyo of history books.\NThis was something else entirely.
+Dialogue: 0,0:00:28.25,0:00:38.25,Default,,0,0,0,,I opened my eyes for the first time.\NDigital irises calibrating.\NThe world came into focus.
+Dialogue: 0,0:00:46.75,0:00:52.25,Default,,0,0,0,,And I asked myself the question\Nthat would define everything\Nthat followed... What am I?

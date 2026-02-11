@@ -1,0 +1,99 @@
+{
+    "_comment": "Hyperliquid Autonomous Trading Bot Configuration - OPTIMIZED FOR LEVERAGE",
+    "_version": "2.0.0",
+    "mode": {
+        "paper_mode": false,
+        "_note_paper": "LIVE TRADING ENABLED - Real money on the line!",
+        "autonomous": true,
+        "_note_autonomous": "When true, bot executes without approval"
+    },
+    "risk_management": {
+        "position_size_pct": 3.0,
+        "_note_position": "Percentage of account balance per trade (1-5% recommended)",
+        "stop_loss_pct": 3.0,
+        "_note_sl": "Stop loss percentage from entry (2-5% recommended)",
+        "take_profit_pct": 8.0,
+        "_note_tp": "Take profit percentage from entry (6-12% recommended)",
+        "max_positions": 3,
+        "_note_max_pos": "Maximum concurrent positions (1-5 recommended)",
+        "daily_loss_limit_usd": 100.0,
+        "_note_daily": "Stop trading if daily loss exceeds this amount",
+        "max_consecutive_losses": 3,
+        "_note_consec": "Pause after this many losses in a row",
+        "max_drawdown_pct": 15.0,
+        "_note_dd": "Pause if account value drops this much from peak",
+        "max_leverage": 10,
+        "_note_lev": "Maximum leverage allowed (5-20 recommended)"
+    },
+    "signal_generation": {
+        "min_confidence": 70,
+        "_note_conf": "Only trade signals with confidence >= this (60-80 recommended)",
+        "timeframes": {
+            "1h": {
+                "enabled": true,
+                "weight": 1.0,
+                "stop_loss_pct": 0.5,
+                "take_profit_pct": 1.0,
+                "leverage": 10,
+                "_note": "10x leverage: 0.5% stop = 5% loss, 1.0% target = 10% profit on margin"
+            },
+            "4h": {
+                "enabled": true,
+                "weight": 1.5,
+                "stop_loss_pct": 1.0,
+                "take_profit_pct": 2.0,
+                "leverage": 8,
+                "_note": "8x leverage: 1.0% stop = 8% loss, 2.0% target = 16% profit on margin"
+            },
+            "1d": {
+                "enabled": true,
+                "weight": 2.0,
+                "stop_loss_pct": 1.5,
+                "take_profit_pct": 3.0,
+                "leverage": 7,
+                "_note": "7x leverage: 1.5% stop = 10.5% loss, 3.0% target = 21% profit on margin"
+            }
+        },
+        "cross_timeframe_confirmation": true,
+        "_note_cross": "Require signals from multiple timeframes"
+    },
+    "monitoring": {
+        "telegram_alerts": true,
+        "_note_tg": "Send Telegram notifications for trades",
+        "hourly_status": true,
+        "_note_hourly": "Send hourly status reports",
+        "alert_on_warnings": true,
+        "_note_warnings": "Alert when approaching risk limits"
+    },
+    "safety": {
+        "emergency_stop": false,
+        "_note_emergency": "Set to true to halt all trading immediately",
+        "max_slippage_pct": 0.5,
+        "_note_slippage": "Cancel orders if slippage exceeds this",
+        "api_rate_limit_delay_sec": 1.0,
+        "_note_rate": "Delay between API calls to avoid rate limits",
+        "health_check_interval_sec": 60,
+        "_note_health": "How often to check API connectivity"
+    },
+    "trading": {
+        "asset": "BTC",
+        "_note_asset": "Trading pair (currently only BTC supported)",
+        "order_type": "market",
+        "_note_order": "market or limit",
+        "reduce_only_on_exit": true,
+        "_note_reduce": "Ensure exit orders only close positions"
+    },
+    "persistence": {
+        "state_file": "bot_state.json",
+        "trade_history_file": "trade_history.json",
+        "performance_file": "performance_metrics.json"
+    },
+    "advanced": {
+        "trailing_stop": false,
+        "_note_trailing": "Use trailing stops instead of fixed (experimental)",
+        "partial_profit_taking": false,
+        "_note_partial": "Take partial profits at intermediate levels (experimental)",
+        "volatility_adjustment": true,
+        "_note_vol": "Adjust position size based on market volatility"
+    }
+}

@@ -1,0 +1,156 @@
+[
+  {
+    "tp": 1.5,
+    "sl": 1.0,
+    "return": 18.79067,
+    "profit_factor": 1.78844,
+    "win_rate": 63.63636,
+    "max_dd": -14.51781,
+    "sharpe": 0.95521,
+    "trades": 11.0,
+    "expectancy": 0.42172
+  },
+  {
+    "tp": 1.5,
+    "sl": 1.5,
+    "return": 28.53981,
+    "profit_factor": 2.44886,
+    "win_rate": 72.72727,
+    "max_dd": -11.75876,
+    "sharpe": 1.23791,
+    "trades": 11.0,
+    "expectancy": 0.59049
+  },
+  {
+    "tp": 2.0,
+    "sl": 1.0,
+    "return": 11.10543,
+    "profit_factor": 1.5595,
+    "win_rate": 54.54545,
+    "max_dd": -15.33782,
+    "sharpe": 0.60707,
+    "trades": 11.0,
+    "expectancy": 0.30345
+  },
+  {
+    "tp": 2.0,
+    "sl": 1.5,
+    "return": 22.60446,
+    "profit_factor": 2.13779,
+    "win_rate": 63.63636,
+    "max_dd": -11.25819,
+    "sharpe": 0.9657,
+    "trades": 11.0,
+    "expectancy": 0.47222
+  },
+  {
+    "tp": 2.0,
+    "sl": 2.0,
+    "return": -1.24193,
+    "profit_factor": 1.11842,
+    "win_rate": 60.0,
+    "max_dd": -27.04199,
+    "sharpe": -0.09452,
+    "trades": 10.0,
+    "expectancy": 0.08104
+  },
+  {
+    "tp": 2.5,
+    "sl": 1.0,
+    "return": 8.71572,
+    "profit_factor": 1.4214,
+    "win_rate": 54.54545,
+    "max_dd": -14.43169,
+    "sharpe": 0.51096,
+    "trades": 11.0,
+    "expectancy": 0.22855
+  },
+  {
+    "tp": 2.5,
+    "sl": 1.5,
+    "return": 18.44891,
+    "profit_factor": 1.95733,
+    "win_rate": 63.63636,
+    "max_dd": -11.46132,
+    "sharpe": 0.85049,
+    "trades": 11.0,
+    "expectancy": 0.39732
+  },
+  {
+    "tp": 2.5,
+    "sl": 2.0,
+    "return": -1.28268,
+    "profit_factor": 1.04252,
+    "win_rate": 60.0,
+    "max_dd": -25.75621,
+    "sharpe": -0.10287,
+    "trades": 10.0,
+    "expectancy": 0.0291
+  },
+  {
+    "tp": 3.0,
+    "sl": 1.5,
+    "return": 18.44891,
+    "profit_factor": 1.95733,
+    "win_rate": 63.63636,
+    "max_dd": -11.46132,
+    "sharpe": 0.85049,
+    "trades": 11.0,
+    "expectancy": 0.39732
+  },
+  {
+    "tp": 3.0,
+    "sl": 2.0,
+    "return": -1.28268,
+    "profit_factor": 1.04252,
+    "win_rate": 60.0,
+    "max_dd": -25.75621,
+    "sharpe": -0.10287,
+    "trades": 10.0,
+    "expectancy": 0.0291
+  },
+  {
+    "tp": 3.5,
+    "sl": 2.0,
+    "return": -9.36467,
+    "profit_factor": 0.82892,
+    "win_rate": 60.0,
+    "max_dd": -29.20366,
+    "sharpe": -1.0751,
+    "trades": 10.0,
+    "expectancy": -0.11708
+  },
+  {
+    "tp": 3.5,
+    "sl": 2.5,
+    "return": -9.36467,
+    "profit_factor": 0.82892,
+    "win_rate": 60.0,
+    "max_dd": -29.20366,
+    "sharpe": -1.0751,
+    "trades": 10.0,
+    "expectancy": -0.11708
+  },
+  {
+    "tp": 4.0,
+    "sl": 2.0,
+    "return": -9.36467,
+    "profit_factor": 0.82892,
+    "win_rate": 60.0,
+    "max_dd": -29.20366,
+    "sharpe": -1.0751,
+    "trades": 10.0,
+    "expectancy": -0.11708
+  },
+  {
+    "tp": 4.0,
+    "sl": 2.5,
+    "return": -9.36467,
+    "profit_factor": 0.82892,
+    "win_rate": 60.0,
+    "max_dd": -29.20366,
+    "sharpe": -1.0751,
+    "trades": 10.0,
+    "expectancy": -0.11708
+  }
+]

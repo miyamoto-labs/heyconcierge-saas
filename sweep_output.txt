@@ -1,0 +1,18 @@
+TP=1.5% SL=1.0% → Return=18.79067% PF=1.78844 WR=63.63636% DD=-14.51781% Sharpe=0.95521 Trades=11 Exp=0.42172%
+TP=1.5% SL=1.5% → Return=28.53981% PF=2.44886 WR=72.72727% DD=-11.75876% Sharpe=1.23791 Trades=11 Exp=0.59049%
+TP=2.0% SL=1.0% → Return=11.10543% PF=1.5595 WR=54.54545% DD=-15.33782% Sharpe=0.60707 Trades=11 Exp=0.30345%
+TP=2.0% SL=1.5% → Return=22.60446% PF=2.13779 WR=63.63636% DD=-11.25819% Sharpe=0.9657 Trades=11 Exp=0.47222%
+TP=2.0% SL=2.0% → Return=-1.24193% PF=1.11842 WR=60.0% DD=-27.04199% Sharpe=-0.09452 Trades=10 Exp=0.08104%
+TP=2.5% SL=1.0% → Return=8.71572% PF=1.4214 WR=54.54545% DD=-14.43169% Sharpe=0.51096 Trades=11 Exp=0.22855%
+TP=2.5% SL=1.5% → Return=18.44891% PF=1.95733 WR=63.63636% DD=-11.46132% Sharpe=0.85049 Trades=11 Exp=0.39732%
+TP=2.5% SL=2.0% → Return=-1.28268% PF=1.04252 WR=60.0% DD=-25.75621% Sharpe=-0.10287 Trades=10 Exp=0.0291%
+TP=3.0% SL=1.5% → Return=18.44891% PF=1.95733 WR=63.63636% DD=-11.46132% Sharpe=0.85049 Trades=11 Exp=0.39732%
+TP=3.0% SL=2.0% → Return=-1.28268% PF=1.04252 WR=60.0% DD=-25.75621% Sharpe=-0.10287 Trades=10 Exp=0.0291%
+TP=3.5% SL=2.0% → Return=-9.36467% PF=0.82892 WR=60.0% DD=-29.20366% Sharpe=-1.0751 Trades=10 Exp=-0.11708%
+TP=3.5% SL=2.5% → Return=-9.36467% PF=0.82892 WR=60.0% DD=-29.20366% Sharpe=-1.0751 Trades=10 Exp=-0.11708%
+TP=4.0% SL=2.0% → Return=-9.36467% PF=0.82892 WR=60.0% DD=-29.20366% Sharpe=-1.0751 Trades=10 Exp=-0.11708%
+TP=4.0% SL=2.5% → Return=-9.36467% PF=0.82892 WR=60.0% DD=-29.20366% Sharpe=-1.0751 Trades=10 Exp=-0.11708%
+
+🏆 BEST: TP=1.5% SL=1.5% → Return=28.53981% PF=2.44886 Sharpe=1.23791
+
+✅ Bot updated with best params: TP=1.5% SL=1.5%

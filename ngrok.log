@@ -1,0 +1,54 @@
+t=2026-02-07T21:00:44+0100 lvl=info msg="no configuration paths supplied"
+t=2026-02-07T21:00:44+0100 lvl=info msg="using configuration at default config path" path="/Users/erik/Library/Application Support/ngrok/ngrok.yml"
+t=2026-02-07T21:00:44+0100 lvl=info msg="open config file" path="/Users/erik/Library/Application Support/ngrok/ngrok.yml" err=nil
+t=2026-02-07T21:00:44+0100 lvl=info msg="FIPS 140 mode" enabled=false
+t=2026-02-07T21:00:44+0100 lvl=eror msg="unable to check host info" obj=tunnels.session err="getting host ID: exec: \"ioreg\": executable file not found in $PATH"
+t=2026-02-07T21:00:44+0100 lvl=eror msg="unable to check ComputerName" obj=tunnels.session err="exec: \"scutil\": executable file not found in $PATH"
+t=2026-02-07T21:00:44+0100 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2026-02-07T21:00:44+0100 lvl=info msg="client session established" obj=tunnels.session
+t=2026-02-07T21:00:44+0100 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2026-02-07T21:00:45+0100 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:8420 url=https://untyrannic-shaneka-corporately.ngrok-free.dev
+t=2026-02-07T21:00:47+0100 lvl=info msg=start pg=/api/tunnels id=6f70861e01e0afca
+t=2026-02-07T21:00:47+0100 lvl=info msg=end pg=/api/tunnels id=6f70861e01e0afca status=200 dur=397.042µs
+t=2026-02-07T21:02:23+0100 lvl=info msg="join connections" obj=join id=e9915f001186 l=127.0.0.1:8420 r=[2001:4654:9186:0:a5b7:5df5:af27:726c]:55634
+t=2026-02-07T21:03:36+0100 lvl=info msg="join connections" obj=join id=ea4778d7fbd2 l=127.0.0.1:8420 r=54.175.232.225:45920
+t=2026-02-07T21:03:36+0100 lvl=info msg="join connections" obj=join id=786311ee45fb l=127.0.0.1:8420 r=54.175.232.225:45928
+t=2026-02-07T21:03:38+0100 lvl=info msg="join connections" obj=join id=8442fc4eaa40 l=127.0.0.1:8420 r=54.175.232.225:42326
+t=2026-02-07T21:03:38+0100 lvl=info msg="join connections" obj=join id=a14b302cb8df l=127.0.0.1:8420 r=54.175.232.225:52196
+t=2026-02-07T21:03:39+0100 lvl=info msg="join connections" obj=join id=7d9afeacf4c7 l=127.0.0.1:8420 r=54.175.232.225:45920
+t=2026-02-07T21:04:14+0100 lvl=info msg="join connections" obj=join id=b7fd8b0f6e26 l=127.0.0.1:8420 r=54.175.232.225:57618
+t=2026-02-07T21:05:04+0100 lvl=info msg="join connections" obj=join id=e0b5b62f1e68 l=127.0.0.1:8420 r=[2001:4654:9186:0:a5b7:5df5:af27:726c]:55918
+t=2026-02-08T10:34:32+0100 lvl=eror msg="session closed, starting reconnect loop" obj=tunnels.session obj=csess id=ab2fb12bc1d6 err="read EOF from remote peer"
+t=2026-02-08T10:34:36+0100 lvl=info msg="client session established" obj=tunnels.session
+t=2026-02-08T10:34:36+0100 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2026-02-08T10:34:57+0100 lvl=eror msg="heartbeat timeout, terminating session" obj=tunnels.session obj=csess id=7cb6ef6777d1 clientid=59f401691e6eb77863e38bda5b33f62c
+t=2026-02-08T20:15:54+0100 lvl=info msg=start pg=/api/tunnels id=bc0d04a21d84ffe4
+t=2026-02-08T20:15:54+0100 lvl=info msg=end pg=/api/tunnels id=bc0d04a21d84ffe4 status=200 dur=1.574875ms
+t=2026-02-08T20:19:37+0100 lvl=info msg="join connections" obj=join id=1734c10ba684 l=127.0.0.1:8420 r=54.211.229.110:58960
+t=2026-02-08T20:22:34+0100 lvl=info msg=start pg=/api/tunnels id=c8d4eee0fdd34c44
+t=2026-02-08T20:22:34+0100 lvl=info msg=end pg=/api/tunnels id=c8d4eee0fdd34c44 status=200 dur=443µs
+t=2026-02-08T20:22:58+0100 lvl=info msg="join connections" obj=join id=48cbf0d9ffa9 l=127.0.0.1:8420 r=35.175.220.159:56108
+t=2026-02-08T20:23:27+0100 lvl=info msg="join connections" obj=join id=cbfe72980358 l=127.0.0.1:8420 r=[2001:4654:9186:0:252f:c4fa:9b92:f79b]:56786
+t=2026-02-08T20:23:38+0100 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2026-02-08T20:23:38+0100 lvl=info msg="session closing" obj=tunnels.session err=nil
+t=2026-02-10T09:31:26+0100 lvl=info msg="no configuration paths supplied"
+t=2026-02-10T09:31:26+0100 lvl=info msg="using configuration at default config path" path="/Users/erik/Library/Application Support/ngrok/ngrok.yml"
+t=2026-02-10T09:31:26+0100 lvl=info msg="open config file" path="/Users/erik/Library/Application Support/ngrok/ngrok.yml" err=nil
+t=2026-02-10T09:31:26+0100 lvl=info msg="FIPS 140 mode" enabled=false
+t=2026-02-10T09:31:26+0100 lvl=eror msg="unable to check host info" obj=tunnels.session err="getting host ID: exec: \"ioreg\": executable file not found in $PATH"
+t=2026-02-10T09:31:26+0100 lvl=eror msg="unable to check ComputerName" obj=tunnels.session err="exec: \"scutil\": executable file not found in $PATH"
+t=2026-02-10T09:31:26+0100 lvl=info msg="starting web service" obj=web addr=127.0.0.1:4040 allow_hosts=[]
+t=2026-02-10T09:31:26+0100 lvl=info msg="client session established" obj=tunnels.session
+t=2026-02-10T09:31:26+0100 lvl=info msg="tunnel session started" obj=tunnels.session
+t=2026-02-10T09:31:27+0100 lvl=info msg="started tunnel" obj=tunnels name=command_line addr=http://localhost:3001 url=https://untyrannic-shaneka-corporately.ngrok-free.dev
+t=2026-02-10T09:31:31+0100 lvl=info msg=start pg=/api/tunnels id=e1648f3c836b0d6a
+t=2026-02-10T09:31:31+0100 lvl=info msg=end pg=/api/tunnels id=e1648f3c836b0d6a status=200 dur=516.209µs
+t=2026-02-10T09:31:35+0100 lvl=info msg="join connections" obj=join id=8a7cfad29b79 l=[::1]:3001 r=[2001:4654:9186:0:798e:1449:3615:21f7]:60894
+t=2026-02-10T09:34:06+0100 lvl=info msg="join connections" obj=join id=605da75010bf l=[::1]:3001 r=[2001:4654:9186:0:798e:1449:3615:21f7]:61058
+t=2026-02-10T09:34:31+0100 lvl=info msg="join connections" obj=join id=3085e6423ed7 l=[::1]:3001 r=162.220.232.202:56548
+t=2026-02-10T09:37:11+0100 lvl=info msg="join connections" obj=join id=d5dc4ce965de l=[::1]:3001 r=162.220.232.202:42042
+t=2026-02-10T09:39:31+0100 lvl=info msg="join connections" obj=join id=9fb9526abd24 l=[::1]:3001 r=162.220.232.202:45322
+t=2026-02-10T09:42:34+0100 lvl=info msg="join connections" obj=join id=eaf90de9c5fb l=[::1]:3001 r=162.220.232.202:36162
+t=2026-02-10T09:54:26+0100 lvl=info msg="join connections" obj=join id=923bc941d59c l=[::1]:3001 r=162.220.232.202:48526
+t=2026-02-10T14:31:50+0100 lvl=info msg="received stop request" obj=app stopReq="{err:<nil> restart:false}"
+t=2026-02-10T14:31:50+0100 lvl=info msg="session closing" obj=tunnels.session err=nil

@@ -1,0 +1,825 @@
+[2026-02-06 10:42:13] INFO: 🚀 AUTONOMOUS POLYMARKET BOT STARTING
+[2026-02-06 10:42:13] INFO: ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 10:42:13] INFO: ⚙️  Auto-execute: True
+[2026-02-06 10:42:13] INFO: ⚙️  Position size: $15.00
+[2026-02-06 10:42:13] INFO: ⚙️  Daily loss limit: $100.00
+[2026-02-06 10:42:13] INFO: ⚙️  Max consecutive losses: 3
+[2026-02-06 10:42:13] INFO: 
+[2026-02-06 10:42:14] INFO: ✅ Connected to Binance BTC WebSocket
+[2026-02-06 10:42:14] INFO: ✅ Connected to Binance ETH WebSocket
+[2026-02-06 10:42:14] INFO: BTC - New 15-min window at $65,767.04
+[2026-02-06 10:42:15] INFO: ETH - New 15-min window at $1,909.81
+[2026-02-06 10:43:12] INFO: 🚀 AUTONOMOUS POLYMARKET BOT STARTING
+[2026-02-06 10:43:12] INFO: ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 10:43:12] INFO: ⚙️  Auto-execute: True
+[2026-02-06 10:43:12] INFO: ⚙️  Position size: $15.00
+[2026-02-06 10:43:12] INFO: ⚙️  Daily loss limit: $100.00
+[2026-02-06 10:43:12] INFO: ⚙️  Max consecutive losses: 3
+[2026-02-06 10:43:12] INFO: 
+[2026-02-06 10:43:14] INFO: ✅ Connected to Binance ETH WebSocket
+[2026-02-06 10:43:14] INFO: ✅ Connected to Binance BTC WebSocket
+[2026-02-06 10:43:14] INFO: ETH - New 15-min window at $1,906.72
+[2026-02-06 10:43:14] INFO: BTC - New 15-min window at $65,656.79
+[2026-02-06 10:43:25] INFO: 🚀 AUTONOMOUS POLYMARKET BOT STARTING
+[2026-02-06 10:43:25] INFO: ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 10:43:25] INFO: ⚙️  Auto-execute: True
+[2026-02-06 10:43:25] INFO: ⚙️  Position size: $15.00
+[2026-02-06 10:43:25] INFO: ⚙️  Daily loss limit: $100.00
+[2026-02-06 10:43:25] INFO: ⚙️  Max consecutive losses: 3
+[2026-02-06 10:43:25] INFO: 
+[2026-02-06 10:43:26] INFO: ✅ Connected to Binance ETH WebSocket
+[2026-02-06 10:43:26] INFO: ✅ Connected to Binance BTC WebSocket
+[2026-02-06 10:43:27] INFO: ETH - New 15-min window at $1,906.31
+[2026-02-06 10:43:27] INFO: BTC - New 15-min window at $65,639.82
+[2026-02-06 10:45:00] INFO: ETH - New 15-min window at $1,914.83
+[2026-02-06 10:45:00] INFO: BTC - New 15-min window at $65,867.64
+[2026-02-06 10:48:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,886.97 (+0.03%)
+   ETH: $1,918.62 (+0.20%)
+[2026-02-06 10:53:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,090.56 (+0.34%)
+   ETH: $1,928.85 (+0.73%)
+[2026-02-06 10:58:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,796.29 (-0.11%)
+   ETH: $1,918.02 (+0.17%)
+[2026-02-06 11:00:00] INFO: ETH - New 15-min window at $1,919.08
+[2026-02-06 11:00:00] INFO: BTC - New 15-min window at $65,799.55
+[2026-02-06 11:01:57] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 60.0% | Move: +0.51% | Window: 117s
+[2026-02-06 11:01:57] ERROR: Trade execution failed
+[2026-02-06 11:03:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,724.54 (-0.11%)
+   ETH: $1,921.36 (+0.12%)
+[2026-02-06 11:08:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,798.43 (-0.00%)
+   ETH: $1,919.06 (-0.00%)
+[2026-02-06 11:13:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,611.27 (-0.29%)
+   ETH: $1,910.70 (-0.44%)
+[2026-02-06 11:15:00] INFO: BTC - New 15-min window at $65,833.57
+[2026-02-06 11:15:00] INFO: ETH - New 15-min window at $1,914.72
+[2026-02-06 11:16:55] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 60.0% | Move: +0.51% | Window: 115s
+[2026-02-06 11:16:55] ERROR: Trade execution failed
+[2026-02-06 11:18:25] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,894.65 (+0.09%)
+   ETH: $1,920.97 (+0.33%)
+[2026-02-06 11:19:07] INFO: 🚀 AUTONOMOUS POLYMARKET BOT STARTING
+[2026-02-06 11:19:07] INFO: ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 11:19:07] INFO: ⚙️  Auto-execute: True
+[2026-02-06 11:19:07] INFO: ⚙️  Position size: $15.00
+[2026-02-06 11:19:07] INFO: ⚙️  Daily loss limit: $100.00
+[2026-02-06 11:19:07] INFO: ⚙️  Max consecutive losses: 3
+[2026-02-06 11:19:07] INFO: 
+[2026-02-06 11:19:08] INFO: ✅ Connected to Binance BTC WebSocket
+[2026-02-06 11:19:08] INFO: ✅ Connected to Binance ETH WebSocket
+[2026-02-06 11:19:09] INFO: BTC - New 15-min window at $65,906.20
+[2026-02-06 11:19:09] INFO: ETH - New 15-min window at $1,920.94
+[2026-02-06 11:24:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,930.61 (+0.04%)
+   ETH: $1,922.33 (+0.07%)
+[2026-02-06 11:29:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,051.42 (+0.22%)
+   ETH: $1,928.00 (+0.37%)
+[2026-02-06 11:30:00] INFO: BTC - New 15-min window at $66,022.98
+[2026-02-06 11:30:00] INFO: ETH - New 15-min window at $1,926.49
+[2026-02-06 11:34:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,118.97 (+0.15%)
+   ETH: $1,930.52 (+0.21%)
+[2026-02-06 11:39:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,989.98 (-0.05%)
+   ETH: $1,926.38 (-0.01%)
+[2026-02-06 11:44:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,004.62 (-0.03%)
+   ETH: $1,925.85 (-0.03%)
+[2026-02-06 11:45:00] INFO: BTC - New 15-min window at $66,065.99
+[2026-02-06 11:45:00] INFO: ETH - New 15-min window at $1,926.70
+[2026-02-06 11:49:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,982.06 (-0.13%)
+   ETH: $1,925.26 (-0.07%)
+[2026-02-06 11:54:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,914.60 (-0.23%)
+   ETH: $1,925.89 (-0.04%)
+[2026-02-06 11:59:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,955.66 (-0.17%)
+   ETH: $1,926.15 (-0.03%)
+[2026-02-06 12:00:00] INFO: ETH - New 15-min window at $1,926.94
+[2026-02-06 12:00:00] INFO: BTC - New 15-min window at $65,967.51
+[2026-02-06 12:04:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,931.93 (-0.05%)
+   ETH: $1,924.96 (-0.10%)
+[2026-02-06 12:09:07] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,812.29 (-0.24%)
+   ETH: $1,921.26 (-0.29%)
+[2026-02-06 12:12:34] INFO: 🚀 AUTONOMOUS POLYMARKET BOT STARTING
+[2026-02-06 12:12:34] INFO: ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 12:12:34] INFO: ⚙️  Auto-execute: True
+[2026-02-06 12:12:34] INFO: ⚙️  Position size: $15.00
+[2026-02-06 12:12:34] INFO: ⚙️  Daily loss limit: $100.00
+[2026-02-06 12:12:34] INFO: ⚙️  Max consecutive losses: 3
+[2026-02-06 12:12:34] INFO: 
+[2026-02-06 12:12:35] INFO: ✅ Connected to Binance ETH WebSocket
+[2026-02-06 12:12:35] INFO: ✅ Connected to Binance BTC WebSocket
+[2026-02-06 12:12:36] INFO: ETH - New 15-min window at $1,926.02
+[2026-02-06 12:12:36] INFO: BTC - New 15-min window at $65,910.89
+[2026-02-06 12:15:00] INFO: ETH - New 15-min window at $1,929.45
+[2026-02-06 12:15:00] INFO: BTC - New 15-min window at $65,943.58
+[2026-02-06 12:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,890.93 (-0.08%)
+   ETH: $1,926.78 (-0.14%)
+[2026-02-06 12:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $65,926.30 (-0.03%)
+   ETH: $1,926.52 (-0.15%)
+[2026-02-06 12:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,022.18 (+0.12%)
+   ETH: $1,927.18 (-0.12%)
+[2026-02-06 12:30:00] INFO: BTC - New 15-min window at $66,066.23
+[2026-02-06 12:30:00] INFO: ETH - New 15-min window at $1,927.52
+[2026-02-06 12:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,077.40 (+0.02%)
+   ETH: $1,928.62 (+0.06%)
+[2026-02-06 12:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,196.40 (+0.20%)
+   ETH: $1,928.64 (+0.06%)
+[2026-02-06 12:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,341.72 (+0.42%)
+   ETH: $1,931.69 (+0.22%)
+[2026-02-06 12:45:00] INFO: ETH - New 15-min window at $1,927.36
+[2026-02-06 12:45:00] INFO: BTC - New 15-min window at $66,322.23
+[2026-02-06 12:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,247.87 (-0.11%)
+   ETH: $1,924.86 (-0.13%)
+[2026-02-06 12:52:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,533.08 (+0.32%)
+   ETH: $1,936.25 (+0.46%)
+[2026-02-06 12:57:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,603.83 (+0.42%)
+   ETH: $1,933.14 (+0.30%)
+[2026-02-06 13:00:00] INFO: ETH - New 15-min window at $1,932.67
+[2026-02-06 13:00:00] INFO: BTC - New 15-min window at $66,631.32
+[2026-02-06 13:02:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,537.00 (-0.14%)
+   ETH: $1,930.51 (-0.11%)
+[2026-02-06 13:07:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,349.70 (-0.42%)
+   ETH: $1,926.03 (-0.34%)
+[2026-02-06 13:12:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,288.62 (-0.51%)
+   ETH: $1,922.76 (-0.51%)
+[2026-02-06 13:15:00] INFO: ETH - New 15-min window at $1,925.90
+[2026-02-06 13:15:00] INFO: BTC - New 15-min window at $66,414.94
+[2026-02-06 13:15:53] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 45.5% | Move: -0.30% | Window: 53s
+[2026-02-06 13:15:53] ERROR: Trade execution failed
+[2026-02-06 13:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,298.17 (-0.18%)
+   ETH: $1,918.21 (-0.40%)
+[2026-02-06 13:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,324.04 (-0.14%)
+   ETH: $1,920.92 (-0.26%)
+[2026-02-06 13:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,428.23 (+0.02%)
+   ETH: $1,922.56 (-0.17%)
+[2026-02-06 13:30:00] INFO: BTC - New 15-min window at $66,396.17
+[2026-02-06 13:30:00] INFO: ETH - New 15-min window at $1,922.15
+[2026-02-06 13:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,236.79 (-0.24%)
+   ETH: $1,919.37 (-0.14%)
+[2026-02-06 13:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,195.60 (-0.30%)
+   ETH: $1,917.62 (-0.24%)
+[2026-02-06 13:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,304.75 (-0.14%)
+   ETH: $1,921.81 (-0.02%)
+[2026-02-06 13:45:00] INFO: ETH - New 15-min window at $1,922.57
+[2026-02-06 13:45:00] INFO: BTC - New 15-min window at $66,339.43
+[2026-02-06 13:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,427.25 (+0.13%)
+   ETH: $1,924.00 (+0.07%)
+[2026-02-06 13:52:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,401.67 (+0.09%)
+   ETH: $1,921.00 (-0.08%)
+[2026-02-06 13:57:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,538.23 (+0.30%)
+   ETH: $1,923.59 (+0.05%)
+[2026-02-06 14:00:00] INFO: BTC - New 15-min window at $66,557.93
+[2026-02-06 14:00:00] INFO: ETH - New 15-min window at $1,920.91
+[2026-02-06 14:02:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,526.35 (-0.05%)
+   ETH: $1,920.25 (-0.03%)
+[2026-02-06 14:04:46] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 45.1% | Move: +0.52% | Window: 286s
+[2026-02-06 14:04:47] ERROR: Trade execution failed
+[2026-02-06 14:04:51] EXECUTE: BTC - AUTO-EXECUTING: UP | Confidence: 45.0% | Move: +0.52% | Window: 291s
+[2026-02-06 14:04:51] ERROR: Trade execution failed
+[2026-02-06 14:07:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,624.35 (+0.10%)
+   ETH: $1,928.25 (+0.38%)
+[2026-02-06 14:12:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,943.90 (+0.58%)
+   ETH: $1,934.70 (+0.72%)
+[2026-02-06 14:15:00] INFO: BTC - New 15-min window at $67,037.01
+[2026-02-06 14:15:00] INFO: ETH - New 15-min window at $1,942.70
+[2026-02-06 14:17:01] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 45.1% | Move: -0.36% | Window: 121s
+[2026-02-06 14:17:01] ERROR: Trade execution failed
+[2026-02-06 14:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,909.88 (-0.19%)
+   ETH: $1,935.30 (-0.38%)
+[2026-02-06 14:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,361.76 (+0.48%)
+   ETH: $1,950.99 (+0.43%)
+[2026-02-06 14:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,072.93 (+0.05%)
+   ETH: $1,943.76 (+0.05%)
+[2026-02-06 14:30:00] INFO: BTC - New 15-min window at $66,935.99
+[2026-02-06 14:30:00] INFO: ETH - New 15-min window at $1,944.05
+[2026-02-06 14:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,852.10 (-0.13%)
+   ETH: $1,940.00 (-0.21%)
+[2026-02-06 14:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,203.85 (+0.40%)
+   ETH: $1,951.58 (+0.39%)
+[2026-02-06 14:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,368.60 (+0.65%)
+   ETH: $1,955.77 (+0.60%)
+[2026-02-06 14:45:00] INFO: BTC - New 15-min window at $67,232.01
+[2026-02-06 14:45:00] INFO: ETH - New 15-min window at $1,951.87
+[2026-02-06 14:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,318.95 (+0.13%)
+   ETH: $1,954.01 (+0.11%)
+[2026-02-06 14:52:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,337.35 (+0.16%)
+   ETH: $1,951.35 (-0.03%)
+[2026-02-06 14:57:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,380.70 (+0.22%)
+   ETH: $1,952.13 (+0.01%)
+[2026-02-06 15:00:00] INFO: ETH - New 15-min window at $1,950.32
+[2026-02-06 15:00:00] INFO: BTC - New 15-min window at $67,316.82
+[2026-02-06 15:02:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,160.72 (-0.23%)
+   ETH: $1,946.95 (-0.17%)
+[2026-02-06 15:04:29] EXECUTE: BTC - AUTO-EXECUTING: DOWN | Confidence: 45.0% | Move: -0.50% | Window: 269s
+[2026-02-06 15:04:29] ERROR: Trade execution failed
+[2026-02-06 15:07:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,049.17 (-0.40%)
+   ETH: $1,944.68 (-0.29%)
+[2026-02-06 15:12:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,038.30 (-0.41%)
+   ETH: $1,941.04 (-0.48%)
+[2026-02-06 15:15:00] INFO: BTC - New 15-min window at $67,187.02
+[2026-02-06 15:15:00] INFO: ETH - New 15-min window at $1,944.83
+[2026-02-06 15:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,027.07 (-0.24%)
+   ETH: $1,944.40 (-0.02%)
+[2026-02-06 15:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,745.99 (-0.66%)
+   ETH: $1,936.92 (-0.41%)
+[2026-02-06 15:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $66,941.17 (-0.37%)
+   ETH: $1,941.42 (-0.18%)
+[2026-02-06 15:30:00] INFO: BTC - New 15-min window at $67,102.94
+[2026-02-06 15:30:00] INFO: ETH - New 15-min window at $1,949.42
+[2026-02-06 15:30:28] EXECUTE: BTC - AUTO-EXECUTING: UP | Confidence: 47.2% | Move: +0.30% | Window: 28s
+[2026-02-06 15:30:29] ERROR: Trade execution failed
+[2026-02-06 15:30:29] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 47.1% | Move: +0.30% | Window: 29s
+[2026-02-06 15:30:29] ERROR: Trade execution failed
+[2026-02-06 15:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,320.28 (+0.32%)
+   ETH: $1,952.97 (+0.18%)
+[2026-02-06 15:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,131.83 (+1.53%)
+   ETH: $1,981.04 (+1.62%)
+[2026-02-06 15:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,001.92 (+1.34%)
+   ETH: $1,974.04 (+1.26%)
+[2026-02-06 15:45:00] INFO: BTC - New 15-min window at $68,300.00
+[2026-02-06 15:45:00] INFO: ETH - New 15-min window at $1,985.00
+[2026-02-06 15:45:11] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 48.3% | Move: +0.30% | Window: 11s
+[2026-02-06 15:45:12] ERROR: Trade execution failed
+[2026-02-06 15:45:57] EXECUTE: BTC - AUTO-EXECUTING: UP | Confidence: 45.3% | Move: +0.30% | Window: 57s
+[2026-02-06 15:45:57] ERROR: Trade execution failed
+[2026-02-06 15:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,600.34 (+0.44%)
+   ETH: $2,000.49 (+0.78%)
+[2026-02-06 15:52:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,434.00 (+0.20%)
+   ETH: $1,989.92 (+0.25%)
+[2026-02-06 15:57:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,092.50 (-0.30%)
+   ETH: $1,973.51 (-0.58%)
+[2026-02-06 16:00:00] INFO: ETH - New 15-min window at $1,978.83
+[2026-02-06 16:00:00] INFO: BTC - New 15-min window at $68,194.90
+[2026-02-06 16:00:24] EXECUTE: BTC - AUTO-EXECUTING: DOWN | Confidence: 47.4% | Move: -0.30% | Window: 24s
+[2026-02-06 16:00:25] ERROR: Trade execution failed
+[2026-02-06 16:02:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,982.44 (-0.31%)
+   ETH: $1,976.22 (-0.13%)
+[2026-02-06 16:03:10] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 45.0% | Move: -0.42% | Window: 190s
+[2026-02-06 16:03:10] ERROR: Trade execution failed
+[2026-02-06 16:07:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $67,976.49 (-0.32%)
+   ETH: $1,971.25 (-0.38%)
+[2026-02-06 16:12:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,420.96 (+0.33%)
+   ETH: $1,981.21 (+0.12%)
+[2026-02-06 16:15:00] INFO: BTC - New 15-min window at $67,933.43
+[2026-02-06 16:15:00] INFO: ETH - New 15-min window at $1,963.57
+[2026-02-06 16:16:52] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 45.0% | Move: +0.35% | Window: 112s
+[2026-02-06 16:16:53] ERROR: Trade execution failed
+[2026-02-06 16:17:20] EXECUTE: BTC - AUTO-EXECUTING: UP | Confidence: 45.0% | Move: +0.38% | Window: 140s
+[2026-02-06 16:17:21] ERROR: Trade execution failed
+[2026-02-06 16:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,177.19 (+0.36%)
+   ETH: $1,972.64 (+0.46%)
+[2026-02-06 16:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,466.00 (+0.78%)
+   ETH: $1,980.03 (+0.84%)
+[2026-02-06 16:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,014.74 (+0.12%)
+   ETH: $1,969.16 (+0.28%)
+[2026-02-06 16:30:00] INFO: BTC - New 15-min window at $68,170.21
+[2026-02-06 16:30:00] INFO: ETH - New 15-min window at $1,972.99
+[2026-02-06 16:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,098.48 (-0.11%)
+   ETH: $1,971.37 (-0.08%)
+[2026-02-06 16:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,368.15 (+0.29%)
+   ETH: $1,975.99 (+0.15%)
+[2026-02-06 16:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,681.69 (+0.75%)
+   ETH: $1,984.20 (+0.57%)
+[2026-02-06 16:45:00] INFO: ETH - New 15-min window at $1,987.86
+[2026-02-06 16:45:00] INFO: BTC - New 15-min window at $68,810.84
+[2026-02-06 16:45:46] EXECUTE: ETH - AUTO-EXECUTING: UP | Confidence: 46.0% | Move: +0.30% | Window: 46s
+[2026-02-06 16:45:46] ERROR: Trade execution failed
+[2026-02-06 16:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,867.99 (+0.08%)
+   ETH: $1,989.49 (+0.08%)
+[2026-02-06 16:47:49] EXECUTE: BTC - AUTO-EXECUTING: UP | Confidence: 45.0% | Move: +0.40% | Window: 169s
+[2026-02-06 16:47:50] ERROR: Trade execution failed
+[2026-02-06 16:52:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,735.99 (-0.11%)
+   ETH: $1,983.89 (-0.20%)
+[2026-02-06 16:57:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,636.27 (-0.25%)
+   ETH: $1,983.09 (-0.24%)
+[2026-02-06 17:00:00] INFO: BTC - New 15-min window at $68,626.00
+[2026-02-06 17:00:00] INFO: ETH - New 15-min window at $1,980.80
+[2026-02-06 17:00:41] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 46.4% | Move: -0.30% | Window: 41s
+[2026-02-06 17:00:41] ERROR: Trade execution failed
+[2026-02-06 17:02:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $68,830.76 (+0.30%)
+   ETH: $1,987.89 (+0.36%)
+[2026-02-06 17:07:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,003.26 (+0.55%)
+   ETH: $1,994.36 (+0.68%)
+[2026-02-06 17:12:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,310.67 (+1.00%)
+   ETH: $1,999.65 (+0.95%)
+[2026-02-06 17:15:00] INFO: ETH - New 15-min window at $1,998.00
+[2026-02-06 17:15:00] INFO: BTC - New 15-min window at $69,290.00
+[2026-02-06 17:15:06] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 48.6% | Move: -0.30% | Window: 6s
+[2026-02-06 17:15:06] ERROR: Trade execution failed
+[2026-02-06 17:17:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,218.81 (-0.10%)
+   ETH: $1,993.20 (-0.24%)
+[2026-02-06 17:22:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,530.00 (+0.35%)
+   ETH: $2,009.72 (+0.59%)
+[2026-02-06 17:27:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,488.70 (+0.29%)
+   ETH: $2,028.29 (+1.52%)
+[2026-02-06 17:30:00] INFO: BTC - New 15-min window at $69,521.42
+[2026-02-06 17:30:00] INFO: ETH - New 15-min window at $2,031.91
+[2026-02-06 17:30:08] EXECUTE: ETH - AUTO-EXECUTING: DOWN | Confidence: 48.5% | Move: -0.30% | Window: 8s
+[2026-02-06 17:30:08] ERROR: Trade execution failed
+[2026-02-06 17:32:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,545.59 (+0.03%)
+   ETH: $2,029.67 (-0.11%)
+[2026-02-06 17:37:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,646.00 (+0.18%)
+   ETH: $2,034.11 (+0.11%)
+[2026-02-06 17:42:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,708.39 (+0.27%)
+   ETH: $2,032.32 (+0.02%)
+[2026-02-06 17:45:00] INFO: ETH - New 15-min window at $2,034.13
+[2026-02-06 17:45:00] INFO: BTC - New 15-min window at $69,801.99
+[2026-02-06 17:47:34] INFO: 📊 AUTONOMOUS BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 0
+   Win rate: 0/0
+   P&L: $0.00
+   BTC: $69,846.71 (+0.06%)
+   ETH: $2,032.10 (-0.10%)

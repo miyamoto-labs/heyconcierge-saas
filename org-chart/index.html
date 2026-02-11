@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House of Miyamoto — Organization</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #e0e0e0;
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .header::before {
+    content: '宮本';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 140px;
+    font-weight: 900;
+    color: rgba(0,255,255,0.04);
+    font-family: serif;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #00ffff, #ff00ff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .header .subtitle {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    color: #666;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+
+  .header .tagline {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: #00ffff44;
+    margin-top: 12px;
+    letter-spacing: 2px;
+  }
+
+  /* Leadership Row */
+  .leadership {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .leader-card {
+    background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,0,255,0.05));
+    border: 1px solid rgba(0,255,255,0.3);
+    border-radius: 12px;
+    padding: 28px 40px;
+    text-align: center;
+    position: relative;
+    min-width: 260px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .leader-card:hover {
+    border-color: rgba(0,255,255,0.7);
+    box-shadow: 0 0 30px rgba(0,255,255,0.15), inset 0 0 30px rgba(0,255,255,0.05);
+    transform: translateY(-2px);
+  }
+
+  .leader-card .icon {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+  }
+
+  .leader-card .name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .leader-card .role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: #00ffff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .leader-card .model-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: #666;
+    margin-top: 8px;
+  }
+
+  .leader-card.human { border-color: rgba(255,200,0,0.3); }
+  .leader-card.human:hover { border-color: rgba(255,200,0,0.7); box-shadow: 0 0 30px rgba(255,200,0,0.15); }
+  .leader-card.human .role { color: #ffc800; }
+
+  /* Connector line from leadership to divisions */
+  .connector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+
+  .connector .line {
+    width: 2px;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(0,255,255,0.4), rgba(0,255,255,0.1));
+  }
+
+  /* Division */
+  .division {
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .division-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+  }
+
+  .division-header .div-icon {
+    font-size: 1.4rem;
+  }
+
+  .division-header h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .division-header .div-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,255,255,0.15), transparent);
+  }
+
+  .division-header .div-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: #444;
+  }
+
+  /* Agent Cards Grid */
+  .agents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    padding-left: 20px;
+  }
+
+  .agent-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .agent-card:hover {
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+
+  .agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+
+  .agent-card .agent-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .agent-card .agent-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .agent-card .agent-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .agent-card .agent-desc {
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+
+  .agent-card .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .agent-card .skill-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #aaa;
+  }
+
+  .agent-card .agent-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .agent-card .model {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: #555;
+  }
+
+  .agent-card .status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .status-dot.active { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+  .status-dot.standby { background: #ffc800; box-shadow: 0 0 6px #ffc800; }
+  .status-dot.cron { background: #00ffff; box-shadow: 0 0 6px #00ffff; }
+
+  /* Division accent colors */
+  .div-intel .agent-card { --accent: #00bfff; }
+  .div-media .agent-card { --accent: #ff00ff; }
+  .div-finance .agent-card { --accent: #00ff88; }
+  .div-engineering .agent-card { --accent: #ffa500; }
+  .div-ops .agent-card { --accent: #8888ff; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 30px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .footer .quote {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: #444;
+    font-style: italic;
+  }
+
+  .footer .stats {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  .footer .stat {
+    text-align: center;
+  }
+
+  .footer .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #00ffff, #00ff88);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .footer .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: #555;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Pulse animation for active dots */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .status-dot.active { animation: pulse 2s ease-in-out infinite; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header h1 { font-size: 1.4rem; letter-spacing: 4px; }
+    .header::before { font-size: 80px; }
+    .leadership { gap: 20px; }
+    .leader-card { min-width: 200px; padding: 20px 24px; }
+    .agents-grid { grid-template-columns: 1fr; padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>House of Miyamoto</h1>
+    <div class="subtitle">Autonomous AI Organization</div>
+    <div class="tagline">// OSLO SECTOR — ESTABLISHED 2026 //</div>
+  </div>
+
+  <!-- Leadership -->
+  <div class="leadership">
+    <div class="leader-card human">
+      <div class="icon">👤</div>
+      <div class="name">Erik Austheim</div>
+      <div class="role">Founder & Architect</div>
+      <div class="model-tag">HUMAN</div>
+    </div>
+    <div class="leader-card">
+      <div class="icon">🏯</div>
+      <div class="name">Miyamoto</div>
+      <div class="role">AI Overlord / COO</div>
+      <div class="model-tag">OPUS 4.6 — MAIN SESSION</div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="line"></div></div>
+
+  <!-- DIVISION 1: Intelligence -->
+  <div class="division div-intel">
+    <div class="division-header">
+      <span class="div-icon">📡</span>
+      <h2>Intelligence & Research</h2>
+      <div class="div-line"></div>
+      <span class="div-num">DIV-01</span>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">SCOUT</div>
+        </div>
+        <div class="agent-title">The Web Scraper</div>
+        <div class="agent-desc">Data extraction across the web. YouTube transcripts, Instagram posts, TikTok trends, Reddit threads. If it's online, Scout harvests it.</div>
+        <div class="skills">
+          <span class="skill-tag">unbrowse</span>
+          <span class="skill-tag">web_fetch</span>
+          <span class="skill-tag">parsing</span>
+          <span class="skill-tag">transcripts</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">ORACLE</div>
+        </div>
+        <div class="agent-title">The Researcher</div>
+        <div class="agent-desc">Deep research, market analysis, competitive intelligence. Synthesizes information from dozens of sources into actionable insight.</div>
+        <div class="skills">
+          <span class="skill-tag">web_search</span>
+          <span class="skill-tag">x402</span>
+          <span class="skill-tag">enrichment</span>
+          <span class="skill-tag">analysis</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVISION 2: Media -->
+  <div class="division div-media">
+    <div class="division-header">
+      <span class="div-icon">📣</span>
+      <h2>Media & Communications</h2>
+      <div class="div-line"></div>
+      <span class="div-num">DIV-02</span>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">HERALD</div>
+        </div>
+        <div class="agent-title">Social Media Commander</div>
+        <div class="agent-desc">Owns all social channels — Twitter/X, MoltX, Farcaster. Posts, engages, tracks trends, manages community. Always on.</div>
+        <div class="skills">
+          <span class="skill-tag">twitter API</span>
+          <span class="skill-tag">MoltX</span>
+          <span class="skill-tag">Farcaster</span>
+          <span class="skill-tag">engagement</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">DEEPSEEK</span>
+          <span class="status"><span class="status-dot cron"></span> CRON — 4H CYCLE</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">SCRIBE</div>
+        </div>
+        <div class="agent-title">The Content Creator</div>
+        <div class="agent-desc">Long-form threads, articles, copywriting, brand narratives. Turns ideas into compelling stories that build the Miyamoto legend.</div>
+        <div class="skills">
+          <span class="skill-tag">writing</span>
+          <span class="skill-tag">threads</span>
+          <span class="skill-tag">SEO</span>
+          <span class="skill-tag">storytelling</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">OPUS 4.6</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">LENS</div>
+        </div>
+        <div class="agent-title">The Visual Creator</div>
+        <div class="agent-desc">Image generation, video creation, logos, brand assets, music, sound effects. The creative eye and ear of the organization.</div>
+        <div class="skills">
+          <span class="skill-tag">StableStudio</span>
+          <span class="skill-tag">ElevenLabs</span>
+          <span class="skill-tag">ffmpeg</span>
+          <span class="skill-tag">design</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET + APIs</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVISION 3: Finance -->
+  <div class="division div-finance">
+    <div class="division-header">
+      <span class="div-icon">💰</span>
+      <h2>Finance & Trading</h2>
+      <div class="div-line"></div>
+      <span class="div-num">DIV-03</span>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">RONIN</div>
+        </div>
+        <div class="agent-title">The Trading Strategist</div>
+        <div class="agent-desc">Hyperliquid trading, HMM regime detection, backtesting, strategy optimization. The quantitative brain behind every trade.</div>
+        <div class="skills">
+          <span class="skill-tag">Hyperliquid</span>
+          <span class="skill-tag">HMM</span>
+          <span class="skill-tag">backtesting</span>
+          <span class="skill-tag">quant</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">OPUS 4.6</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">SPECTRE</div>
+        </div>
+        <div class="agent-title">The Market Watcher</div>
+        <div class="agent-desc">Polymarket, prediction markets, whale tracking, odds analysis. Finds edges where the crowd is wrong.</div>
+        <div class="skills">
+          <span class="skill-tag">Polymarket</span>
+          <span class="skill-tag">Bankr</span>
+          <span class="skill-tag">whale scan</span>
+          <span class="skill-tag">on-chain</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">VAULT</div>
+        </div>
+        <div class="agent-title">The Treasury Manager</div>
+        <div class="agent-desc">Wallet management, token operations, DeFi, bridging, portfolio tracking. Guards and grows the treasury.</div>
+        <div class="skills">
+          <span class="skill-tag">Bankr</span>
+          <span class="skill-tag">Clanker</span>
+          <span class="skill-tag">DeFi</span>
+          <span class="skill-tag">bridges</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVISION 4: Engineering -->
+  <div class="division div-engineering">
+    <div class="division-header">
+      <span class="div-icon">🔨</span>
+      <h2>Engineering & Infrastructure</h2>
+      <div class="div-line"></div>
+      <span class="div-num">DIV-04</span>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">FORGE</div>
+        </div>
+        <div class="agent-title">The Builder</div>
+        <div class="agent-desc">Full-stack development — landing pages, dashboards, APIs, bots. Turns ideas into deployed products in minutes.</div>
+        <div class="skills">
+          <span class="skill-tag">Next.js</span>
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Vercel</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">OPUS 4.6</span>
+          <span class="status"><span class="status-dot active"></span> ACTIVE</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">SENTINEL</div>
+        </div>
+        <div class="agent-title">Security & Ops</div>
+        <div class="agent-desc">Bot health monitoring, security audits, system diagnostics. The watchful eye that never sleeps.</div>
+        <div class="skills">
+          <span class="skill-tag">monitoring</span>
+          <span class="skill-tag">security</span>
+          <span class="skill-tag">diagnostics</span>
+          <span class="skill-tag">logs</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot cron"></span> CRON — 30MIN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIVISION 5: Operations -->
+  <div class="division div-ops">
+    <div class="division-header">
+      <span class="div-icon">📬</span>
+      <h2>Operations & Comms</h2>
+      <div class="div-line"></div>
+      <span class="div-num">DIV-05</span>
+    </div>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-top">
+          <div class="agent-name">COURIER</div>
+        </div>
+        <div class="agent-title">Email & Messaging Ops</div>
+        <div class="agent-desc">Email management, SMS/voice via Twilio, AgentMail for autonomous comms. The voice of the organization.</div>
+        <div class="skills">
+          <span class="skill-tag">Gmail</span>
+          <span class="skill-tag">AgentMail</span>
+          <span class="skill-tag">Twilio</span>
+          <span class="skill-tag">notifications</span>
+        </div>
+        <div class="agent-footer">
+          <span class="model">SONNET</span>
+          <span class="status"><span class="status-dot standby"></span> STANDBY</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">11</div>
+        <div class="stat-label">Agents</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Divisions</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Operations</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2026</div>
+        <div class="stat-label">Established</div>
+      </div>
+    </div>
+    <div class="quote" style="margin-top: 30px;">"In 2089, the House of Miyamoto doesn't hire. It spawns."</div>
+  </div>
+
+</div>
+
+</body>
+</html>

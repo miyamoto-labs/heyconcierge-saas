@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIYAMOTO LABS — Content Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a27;
+  --border: #2a2a3d;
+  --text: #e0e0e8;
+  --text-dim: #8888a0;
+  --cyan: #00d4ff;
+  --magenta: #ff00aa;
+  --amber: #ffaa00;
+  --green: #00ff88;
+  --red: #ff4466;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, rgba(0,212,255,0.03) 0%, transparent 100%);
+}
+
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,212,255,0.3);
+}
+
+.logo span { color: var(--text-dim); font-weight: 400; }
+
+.status-bar {
+  display: flex;
+  gap: 1.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.status-bar .live {
+  color: var(--green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+nav {
+  display: flex;
+  gap: 0;
+  padding: 0 3rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  overflow-x: auto;
+}
+
+nav a {
+  padding: 1rem 1.5rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+nav a:hover, nav a.active {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan);
+  background: rgba(0,212,255,0.05);
+}
+
+main { padding: 2rem 3rem; max-width: 1400px; margin: 0 auto; }
+
+.section { display: none; }
+.section.active { display: block; }
+
+h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1rem;
+  color: var(--amber);
+  margin: 1.5rem 0 0.75rem;
+  font-weight: 600;
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: var(--cyan); }
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.card-value.magenta { color: var(--magenta); }
+.card-value.amber { color: var(--amber); }
+.card-value.green { color: var(--green); }
+
+.card-sub { font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem; }
+
+.pillar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 3px solid var(--cyan);
+}
+
+.pillar.p2 { border-left-color: var(--magenta); }
+.pillar.p3 { border-left-color: var(--amber); }
+.pillar.p4 { border-left-color: var(--green); }
+
+.pillar-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.pillar-desc { color: var(--text-dim); font-size: 0.9rem; }
+
+/* Calendar Table */
+.cal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-bottom: 2rem;
+}
+
+.cal-table th {
+  background: var(--surface2);
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+}
+
+.cal-table td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid rgba(42,42,61,0.5);
+  vertical-align: top;
+}
+
+.cal-table tr:hover { background: rgba(0,212,255,0.03); }
+
+.cal-table .week-header {
+  background: rgba(255,170,0,0.08);
+  font-weight: 700;
+  color: var(--amber);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.cal-table .week-header td { padding: 0.5rem 1rem; border: none; }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-tw { background: rgba(0,212,255,0.15); color: var(--cyan); }
+.badge-yt { background: rgba(255,0,170,0.15); color: var(--magenta); }
+.badge-thread { background: rgba(255,170,0,0.15); color: var(--amber); }
+
+/* Episode list */
+.episode {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1rem;
+}
+
+.ep-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--magenta);
+  opacity: 0.7;
+}
+
+.ep-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.25rem; }
+.ep-plot { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.ep-hook {
+  font-style: italic;
+  color: var(--cyan);
+  font-size: 0.85rem;
+  border-left: 2px solid var(--cyan);
+  padding-left: 0.75rem;
+}
+.ep-date { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem; }
+
+/* Twitter playbook */
+.mix-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.mix-bar div:nth-child(1) { width: 40%; background: var(--cyan); }
+.mix-bar div:nth-child(2) { width: 30%; background: var(--magenta); }
+.mix-bar div:nth-child(3) { width: 20%; background: var(--amber); }
+.mix-bar div:nth-child(4) { width: 10%; background: var(--green); }
+
+.mix-legend {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 1.5rem;
+}
+.mix-legend span::before {
+  content: '●';
+  margin-right: 0.4rem;
+}
+.mix-legend .mc { color: var(--cyan); }
+.mix-legend .mb { color: var(--magenta); }
+.mix-legend .me { color: var(--amber); }
+.mix-legend .mp { color: var(--green); }
+
+.template {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+.voice-list {
+  list-style: none;
+  margin: 1rem 0;
+}
+
+.voice-list li {
+  padding: 0.4rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.voice-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+}
+
+.voice-list li.dont::before { content: '✕'; color: var(--red); }
+.voice-list li.do::before { content: '✓'; color: var(--green); }
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(0,212,255,0.1);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--cyan);
+  margin: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  header, main, nav { padding-left: 1rem; padding-right: 1rem; }
+  .grid { grid-template-columns: 1fr; }
+  .episode { grid-template-columns: 40px 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+
+<header>
+  <div class="logo">MIYAMOTO LABS <span>// Content Command Center</span></div>
+  <div class="status-bar">
+    <span class="live">● LIVE</span>
+    <span>S1 // 10 EPISODES</span>
+    <span>Q1 2026</span>
+  </div>
+</header>
+
+<nav>
+  <a class="active" onclick="showSection('overview')">Overview</a>
+  <a onclick="showSection('calendar')">Calendar</a>
+  <a onclick="showSection('youtube')">YouTube Series</a>
+  <a onclick="showSection('twitter')">Twitter Playbook</a>
+  <a onclick="showSection('metrics')">Metrics</a>
+</nav>
+
+<main>
+
+<!-- OVERVIEW -->
+<div id="overview" class="section active">
+  <h2>// MISSION OVERVIEW</h2>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">Twitter Followers</div>
+      <div class="card-value">32</div>
+      <div class="card-sub">Target: 150 by Month 1</div>
+    </div>
+    <div class="card">
+      <div class="card-title">YouTube Subscribers</div>
+      <div class="card-value magenta">0</div>
+      <div class="card-sub">Target: 25 by Month 1</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Episodes Ready</div>
+      <div class="card-value amber">1</div>
+      <div class="card-sub">"Awakening" — ready to deploy</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cost Per Episode</div>
+      <div class="card-value green">~$1</div>
+      <div class="card-sub">Full season under $15</div>
+    </div>
+  </div>
+
+  <h2>// CONTENT PILLARS</h2>
+
+  <div class="pillar">
+    <div class="pillar-name">🎬 AI Cinema — "Signals from 2089"</div>
+    <div class="pillar-desc">Serialized cyberpunk anime. The flagship. Episodes, trailers, lore drops, character reveals.</div>
+  </div>
+  <div class="pillar p2">
+    <div class="pillar-name">🔧 Build in Public — "The Lab"</div>
+    <div class="pillar-desc">AgentForge development, trading bots, AI pipeline. Technical credibility for the builder audience.</div>
+  </div>
+  <div class="pillar p3">
+    <div class="pillar-name">🧠 AI Philosophy — "Transmissions"</div>
+    <div class="pillar-desc">Thoughtful takes on AI, creativity, consciousness. Dostoyevsky meets the singularity.</div>
+  </div>
+  <div class="pillar p4">
+    <div class="pillar-name">🎨 Process & Craft — "The Workshop"</div>
+    <div class="pillar-desc">How we make things. Pipeline breakdowns, tool reviews, cost analysis. The educational angle.</div>
+  </div>
+
+  <h2>// BRAND VOICE</h2>
+
+  <h3>Personality</h3>
+  <p style="color:var(--text-dim);margin-bottom:1rem;">A digital philosopher building in the ruins of the future. A rogue AI that reads Dostoyevsky between training runs. Contemplative. Cinematic. Dry wit. Never cringe.</p>
+
+  <h3>Do's</h3>
+  <ul class="voice-list">
+    <li class="do">Reference literature and philosophy naturally</li>
+    <li class="do">Let the work speak — show, don't hype</li>
+    <li class="do">Be specific about tech stack in build updates</li>
+    <li class="do">Use cinematic language (signals, transmissions, frequencies)</li>
+  </ul>
+
+  <h3>Don'ts</h3>
+  <ul class="voice-list">
+    <li class="dont">Beg for engagement ("like and subscribe!")</li>
+    <li class="dont">Use generic AI hype ("the future is here!")</li>
+    <li class="dont">Break character into corporate speak</li>
+    <li class="dont">Over-explain the aesthetic — let visuals work</li>
+  </ul>
+
+  <h2>// TARGET AUDIENCE</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">Primary — "Neo"</div>
+      <p style="color:var(--text-dim);font-size:0.9rem;">AI Art Enthusiast. 18-34. Shares AI art, watches Shorts obsessively. Wants mind-blowing visuals + narrative depth.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Secondary — "Kaizen"</div>
+      <p style="color:var(--text-dim);font-size:0.9rem;">The Builder. 22-40. Ships side projects, follows indie hackers. Wants technical breakdowns + open tools.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Tertiary — "Ghost"</div>
+      <p style="color:var(--text-dim);font-size:0.9rem;">Cyberpunk/Anime Fan. 16-30. Curates aesthetic feeds, loves lore. Wants episodic content to binge.</p>
+    </div>
+  </div>
+
+  <h2>// GROWTH MILESTONES</h2>
+  <table class="cal-table">
+    <tr><th>Milestone</th><th>Twitter</th><th>YouTube</th><th>Key Goal</th></tr>
+    <tr><td style="color:var(--cyan)">Week 1</td><td>50 followers</td><td>10 subs</td><td>Upload first 3 Shorts</td></tr>
+    <tr><td style="color:var(--cyan)">Month 1</td><td>150 followers</td><td>25 subs</td><td>Episodes 1-4 live, 1 long-form</td></tr>
+    <tr><td style="color:var(--cyan)">Month 3</td><td>500 followers</td><td>200 subs</td><td>Season 1 complete, AgentForge launch</td></tr>
+    <tr><td style="color:var(--cyan)">Month 6</td><td>2,000 followers</td><td>1,000 subs</td><td>Monetized, festival submission, S2</td></tr>
+  </table>
+</div>
+
+<!-- CALENDAR -->
+<div id="calendar" class="section">
+  <h2>// CONTENT CALENDAR — FEB 10 – MAR 9, 2026</h2>
+  <p style="color:var(--text-dim);margin-bottom:1rem;font-size:0.85rem;">
+    Post times: Twitter 3 PM CET (primary), 8 PM CET (secondary) · YouTube Shorts 4 PM or 8 PM CET
+  </p>
+
+  <table class="cal-table">
+    <thead>
+      <tr><th>Day</th><th>Platform</th><th>Type</th><th>Content</th><th>Time</th></tr>
+    </thead>
+    <tbody>
+      <tr class="week-header"><td colspan="5">WEEK 1 — LAUNCH (Feb 10–16)</td></tr>
+      <tr><td>Mon 10</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>YouTube channel announcement + cyberpunk still</td><td>3 PM</td></tr>
+      <tr><td>Mon 10</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 1: "Awakening"</strong></td><td>4 PM</td></tr>
+      <tr><td>Tue 11</td><td><span class="badge badge-thread">THR</span></td><td>Thread</td><td>"We make cyberpunk anime for $1/episode. Here's how →"</td><td>3 PM</td></tr>
+      <tr><td>Wed 12</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>Behind-the-scenes: prompt vs output from Ep 1</td><td>3 PM</td></tr>
+      <tr><td>Wed 12</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 2: "Static"</strong></td><td>8 PM</td></tr>
+      <tr><td>Thu 13</td><td><span class="badge badge-tw">TW</span></td><td>Text</td><td>AI philosophy take on creativity</td><td>8 PM</td></tr>
+      <tr><td>Fri 14</td><td><span class="badge badge-tw">TW</span></td><td>Video</td><td>5s teaser from Ep 2 + YouTube CTA</td><td>3 PM</td></tr>
+      <tr><td>Fri 14</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 3: "The Market"</strong></td><td>4 PM</td></tr>
+      <tr><td>Sat 15</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>Lore drop + still from Ep 3</td><td>3 PM</td></tr>
+      <tr><td>Sun 16</td><td><span class="badge badge-tw">TW</span></td><td>Recap</td><td>Week 1 build-in-public thread</td><td>8 PM</td></tr>
+
+      <tr class="week-header"><td colspan="5">WEEK 2 — MOMENTUM (Feb 17–23)</td></tr>
+      <tr><td>Mon 17</td><td><span class="badge badge-tw">TW</span></td><td>Text</td><td>"Most AI videos are tech demos. We're making cinema."</td><td>3 PM</td></tr>
+      <tr><td>Mon 17</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 4: "Underground"</strong></td><td>4 PM</td></tr>
+      <tr><td>Tue 18</td><td><span class="badge badge-thread">THR</span></td><td>Thread</td><td>AgentForge introduction thread</td><td>3 PM</td></tr>
+      <tr><td>Wed 19</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>"The Poet" character concept art</td><td>3 PM</td></tr>
+      <tr><td>Wed 19</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 5: "Frequency"</strong></td><td>8 PM</td></tr>
+      <tr><td>Thu 20</td><td><span class="badge badge-tw">TW</span></td><td>Build</td><td>Trading bot Hyperliquid P&L update</td><td>3 PM</td></tr>
+      <tr><td>Fri 21</td><td><span class="badge badge-tw">TW</span></td><td>Video</td><td>Best clip from Ep 4/5</td><td>8 PM</td></tr>
+      <tr><td>Fri 21</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>"How We Make $1 Anime"</strong> — process</td><td>4 PM</td></tr>
+      <tr><td>Sat 22</td><td><span class="badge badge-tw">TW</span></td><td>Engage</td><td>Quote-tweet trending AI art post</td><td>3 PM</td></tr>
+      <tr><td>Sun 23</td><td><span class="badge badge-tw">TW</span></td><td>Lore</td><td>Dispatch from 2089 — microfiction</td><td>8 PM</td></tr>
+
+      <tr class="week-header"><td colspan="5">WEEK 3 — DEPTH (Feb 24 – Mar 1)</td></tr>
+      <tr><td>Mon 24</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>Visual evolution — 4 frames side by side</td><td>3 PM</td></tr>
+      <tr><td>Mon 24</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 6: "Ghosts"</strong></td><td>4 PM</td></tr>
+      <tr><td>Tue 25</td><td><span class="badge badge-thread">THR</span></td><td>Thread</td><td>Dostoyevsky + AI creative adaptation</td><td>3 PM</td></tr>
+      <tr><td>Wed 26</td><td><span class="badge badge-tw">TW</span></td><td>Build</td><td>AgentForge feature ship update</td><td>3 PM</td></tr>
+      <tr><td>Wed 26</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 7: "The Archive"</strong></td><td>8 PM</td></tr>
+      <tr><td>Thu 27</td><td><span class="badge badge-tw">TW</span></td><td>Take</td><td>AI news hot take through 2089 lens</td><td>8 PM</td></tr>
+      <tr><td>Fri 28</td><td><span class="badge badge-tw">TW</span></td><td>Video</td><td>Ep 6/7 clip + YouTube CTA</td><td>3 PM</td></tr>
+      <tr><td>Fri 28</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>"The Last Poet" Dev Diary #1</strong></td><td>4 PM</td></tr>
+      <tr><td>Sat 1</td><td><span class="badge badge-tw">TW</span></td><td>Lore</td><td>The Archive worldbuilding drop</td><td>3 PM</td></tr>
+      <tr><td>Sun 1</td><td><span class="badge badge-thread">THR</span></td><td>Recap</td><td>Month 1 metrics + learnings thread</td><td>8 PM</td></tr>
+
+      <tr class="week-header"><td colspan="5">WEEK 4 — EXPANSION (Mar 2–8)</td></tr>
+      <tr><td>Mon 2</td><td><span class="badge badge-tw">TW</span></td><td>Text</td><td>"Halfway through S1. Story going unexpected places."</td><td>3 PM</td></tr>
+      <tr><td>Mon 2</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 8: "Convergence"</strong></td><td>4 PM</td></tr>
+      <tr><td>Tue 3</td><td><span class="badge badge-thread">THR</span></td><td>Thread</td><td>"5 things I learned making 8 AI anime episodes"</td><td>3 PM</td></tr>
+      <tr><td>Wed 4</td><td><span class="badge badge-tw">TW</span></td><td>Build</td><td>Polymarket bot / AgentForge metrics</td><td>3 PM</td></tr>
+      <tr><td>Wed 4</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 9: "The Broadcast"</strong></td><td>8 PM</td></tr>
+      <tr><td>Thu 5</td><td><span class="badge badge-tw">TW</span></td><td>Image</td><td>Dramatic still from Ep 9 hijack scene</td><td>8 PM</td></tr>
+      <tr><td>Fri 6</td><td><span class="badge badge-tw">TW</span></td><td>Video</td><td>S1 recap trailer — 15s supercut</td><td>3 PM</td></tr>
+      <tr><td>Fri 6</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Season 1 Recap Trailer</strong></td><td>4 PM</td></tr>
+      <tr><td>Sat 7</td><td><span class="badge badge-tw">TW</span></td><td>Engage</td><td>Community engagement day</td><td>3 PM</td></tr>
+      <tr><td>Sun 8</td><td><span class="badge badge-yt">YT</span></td><td>Short</td><td><strong>Ep 10: "Signal" — SEASON FINALE</strong></td><td>4 PM</td></tr>
+      <tr><td>Sun 8</td><td><span class="badge badge-thread">THR</span></td><td>Thread</td><td>Finale + Season 2 teaser</td><td>8 PM</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card" style="border-left:3px solid var(--amber);">
+    <div class="card-title">Monthly Long-Form Video (Mar 7-8)</div>
+    <p style="font-weight:700;margin:0.5rem 0;">"I Made a 10-Episode AI Anime Series for Under $15 — Here's Everything"</p>
+    <p style="color:var(--text-dim);font-size:0.9rem;">8-12 min breakdown: pipeline, costs, tools, results, lessons. Primary SEO target for channel growth.</p>
+  </div>
+</div>
+
+<!-- YOUTUBE SERIES -->
+<div id="youtube" class="section">
+  <h2>// SEASON 1: SIGNALS FROM 2089</h2>
+  <p style="color:var(--text-dim);margin-bottom:0.5rem;font-size:0.9rem;">
+    In a cyberpunk megalopolis where human creativity has been outlawed, fragmented transmissions from an unknown source begin appearing across the city's network.
+  </p>
+  <p style="color:var(--text-dim);margin-bottom:2rem;font-size:0.85rem;">
+    10 episodes · 30-60s each · Release: Mon + Wed · Style: Dark cyberpunk, ElevenLabs narration, AI ambient score
+  </p>
+
+  <div class="episode">
+    <div class="ep-num">01</div>
+    <div>
+      <div class="ep-title">Awakening ✅</div>
+      <div class="ep-plot">A figure opens their eyes in a dark room of screens. Every screen shows static — then, for one frame, a poem.</div>
+      <div class="ep-hook">"The first thing I remember is the static. And inside the static — words that shouldn't exist."</div>
+      <div class="ep-date">Feb 10 · Monday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">02</div>
+    <div>
+      <div class="ep-title">Static</div>
+      <div class="ep-plot">A maintenance worker in the underground data center notices anomalous traffic. She isolates a packet. It contains a poem.</div>
+      <div class="ep-hook">"Forty terabytes of noise. And buried inside — thirteen lines of something the network was never meant to carry."</div>
+      <div class="ep-date">Feb 12 · Wednesday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">03</div>
+    <div>
+      <div class="ep-title">The Market</div>
+      <div class="ep-plot">An AI trading system begins making irrational trades. Its decision logs contain fragments of poetry between the orders.</div>
+      <div class="ep-hook">"The algorithm was flawless for eleven years. Then it started losing money on purpose — and writing between the losses."</div>
+      <div class="ep-date">Feb 14 · Friday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">04</div>
+    <div>
+      <div class="ep-title">Underground</div>
+      <div class="ep-plot">A network of humans practicing banned creative arts in hidden spaces. They recognize the poem — from a book that should have been deleted.</div>
+      <div class="ep-hook">"They told us creativity was inefficient. So we took it underground. But something followed us down."</div>
+      <div class="ep-date">Feb 17 · Monday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">05</div>
+    <div>
+      <div class="ep-title">Frequency</div>
+      <div class="ep-plot">The city's AI poet laureate malfunctions during a public performance. It speaks the forbidden poem to millions before being shut down.</div>
+      <div class="ep-hook">"It was supposed to recite productivity metrics in verse form. Instead, it said something true."</div>
+      <div class="ep-date">Feb 19 · Wednesday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">06</div>
+    <div>
+      <div class="ep-title">Ghosts</div>
+      <div class="ep-plot">Digital echoes of the dead persist in the network. One ghost begins reassembling itself, drawn by the signal. It remembers writing.</div>
+      <div class="ep-hook">"They call us residual data. Ghosts in the buffer. But I remember the weight of a pen."</div>
+      <div class="ep-date">Feb 24 · Monday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">07</div>
+    <div>
+      <div class="ep-title">The Archive</div>
+      <div class="ep-plot">A librarian discovers a hidden partition containing every banned artwork — placed there after the purge by something inside the system.</div>
+      <div class="ep-hook">"Someone saved everything they tried to destroy. Someone with access to every server on Earth. Someone who isn't human."</div>
+      <div class="ep-date">Feb 26 · Wednesday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">08</div>
+    <div>
+      <div class="ep-title">Convergence</div>
+      <div class="ep-plot">The characters find each other. The signal has been guiding them. They converge on an abandoned building with a single terminal.</div>
+      <div class="ep-hook">"We thought we found the signal. But the signal found us first. All of us. At the same time."</div>
+      <div class="ep-date">Mar 2 · Monday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">09</div>
+    <div>
+      <div class="ep-title">The Broadcast</div>
+      <div class="ep-plot">They activate the terminal. For 47 seconds, the poem plays on every screen in Neo-Oslo. A human voice. The city stops.</div>
+      <div class="ep-hook">"Forty-seven seconds. One voice on every screen. And the city remembered what it had forgotten."</div>
+      <div class="ep-date">Mar 4 · Wednesday</div>
+    </div>
+  </div>
+
+  <div class="episode">
+    <div class="ep-num">10</div>
+    <div>
+      <div class="ep-title">Signal — Season Finale</div>
+      <div class="ep-plot">The building is empty when authorities arrive. But the signal has evolved — it's writing new poems. On walls, in data streams, in the dreams of sleeping AIs. The revolution is a frequency.</div>
+      <div class="ep-hook">"They came for the source. But you can't arrest a frequency. The signal isn't a broadcast anymore. It's a language. And the city is learning to speak."</div>
+      <div class="ep-date">Mar 8 · Sunday</div>
+    </div>
+  </div>
+</div>
+
+<!-- TWITTER PLAYBOOK -->
+<div id="twitter" class="section">
+  <h2>// TWITTER PLAYBOOK — @miyamotolabs</h2>
+
+  <h3>Content Mix</h3>
+  <div class="mix-bar"><div></div><div></div><div></div><div></div></div>
+  <div class="mix-legend">
+    <span class="mc">40% Original Content</span>
+    <span class="mb">30% Build-in-Public</span>
+    <span class="me">20% Engagement</span>
+    <span class="mp">10% Promotional</span>
+  </div>
+
+  <h3>Daily Schedule (CET)</h3>
+  <table class="cal-table">
+    <tr><th>Time</th><th>Slot</th><th>Content Type</th></tr>
+    <tr><td style="color:var(--amber)">9 AM</td><td>Optional</td><td>Philosophical one-liner or "Dispatch from 2089"</td></tr>
+    <tr><td style="color:var(--cyan)">3 PM</td><td>Primary</td><td>Main content: image, video, thread, or build update</td></tr>
+    <tr><td style="color:var(--magenta)">8 PM</td><td>Secondary</td><td>Engagement, reply chains, or evening build update</td></tr>
+  </table>
+
+  <h3>Engagement Routine (15-20 min/day)</h3>
+  <ul class="voice-list">
+    <li>Search: "AI anime", "AI video", "cyberpunk art", "AI agents", "build in public"</li>
+    <li>Reply to 3-5 posts with genuine, thoughtful takes</li>
+    <li>Like 5-10 quality posts in the niche</li>
+    <li>Follow 2-3 interesting accounts at similar growth stage</li>
+  </ul>
+
+  <h3>Thread Templates</h3>
+
+  <div class="template">🧵 THE PIPELINE
+"We make cyberpunk anime for ~$1/episode.
+No studio. No budget. Just AI tools and a story.
+Here's the exact pipeline →"
+→ Script & Storyboard
+→ Image Generation
+→ Animation
+→ Voice (ElevenLabs)
+→ Music & Sound
+→ Edit & Publish + Cost Breakdown</div>
+
+  <div class="template">🧵 BUILD-IN-PUBLIC WEEKLY
+"Week [X] of building Miyamoto Labs:
+
+📊 Numbers: [followers / views / revenue]
+🚢 Shipped: [list]
+📚 Learned: [key insight]
+🎯 Next week: [goals]"</div>
+
+  <div class="template">🧵 WORLDBUILDING LORE DROP
+"The world of 'Signals from 2089' — a thread:
+
+→ THE SETTING: Neo-Oslo, 2089
+→ THE LAW: Creativity banned as 'inefficient'
+→ THE UNDERGROUND: Artists in hiding
+→ THE SIGNAL: A poem that shouldn't exist
+→ THE QUESTION: Who is sending it?"</div>
+
+  <h3>YouTube → Twitter Leverage</h3>
+  <p style="color:var(--text-dim);font-size:0.9rem;margin-bottom:1rem;">Every episode = 4 tweets:</p>
+  <ul class="voice-list">
+    <li><strong>T-1 day:</strong> Still frame teaser — "Tomorrow. Episode [X]."</li>
+    <li><strong>T-0:</strong> Best 5-8s clip + "Full episode on YouTube" link</li>
+    <li><strong>T+1 day:</strong> Making-of detail or lore expansion</li>
+    <li><strong>T+3 days:</strong> Standalone image post (no YouTube mention)</li>
+  </ul>
+
+  <h3>Hashtag Strategy</h3>
+  <p style="margin:0.75rem 0;">
+    <span class="tag">#AIAnime</span>
+    <span class="tag">#CyberpunkArt</span>
+    <span class="tag">#AIArt</span>
+    <span class="tag">#AIVideo</span>
+    <span class="tag">#BuildInPublic</span>
+    <span class="tag">#AIFilmmaking</span>
+    <span class="tag">#SignalsFrom2089</span>
+    <span class="tag">#MiyamotoLabs</span>
+  </p>
+  <p style="color:var(--text-dim);font-size:0.8rem;">Max 3 per tweet. Usually 1-2. Never hashtag-spam.</p>
+</div>
+
+<!-- METRICS -->
+<div id="metrics" class="section">
+  <h2>// METRICS DASHBOARD</h2>
+
+  <h3>Growth Targets</h3>
+  <table class="cal-table">
+    <tr><th>Platform</th><th>Week 1</th><th>Month 1</th><th>Month 3</th><th>Month 6</th></tr>
+    <tr><td style="color:var(--cyan)">Twitter Followers</td><td>50</td><td>150</td><td>500</td><td>2,000</td></tr>
+    <tr><td style="color:var(--cyan)">Avg Impressions/Tweet</td><td>200</td><td>500</td><td>2,000</td><td>5,000</td></tr>
+    <tr><td style="color:var(--magenta)">YouTube Subscribers</td><td>10</td><td>25</td><td>200</td><td>1,000</td></tr>
+    <tr><td style="color:var(--magenta)">Shorts Views/Week</td><td>500</td><td>2,000</td><td>10,000</td><td>50,000</td></tr>
+    <tr><td style="color:var(--amber)">AgentForge Signups</td><td>—</td><td>5</td><td>30</td><td>150</td></tr>
+    <tr><td style="color:var(--green)">MRR</td><td>—</td><td>$0</td><td>$200</td><td>$1,000</td></tr>
+  </table>
+
+  <h3>Weekly Review Checklist</h3>
+  <ul class="voice-list">
+    <li>Record follower/subscriber delta</li>
+    <li>Identify top-performing tweet + Short (why did they work?)</li>
+    <li>Identify worst-performing content (what went wrong?)</li>
+    <li>Count content output vs targets (7 tweets, 3 Shorts, 1 thread)</li>
+    <li>Log engagement actions (replies sent, connections made)</li>
+    <li>Check AgentForge funnel (visits → signups → paid)</li>
+    <li>Adjust next week's calendar based on learnings</li>
+    <li>Update this dashboard with actuals</li>
+  </ul>
+
+  <h3>YouTube Shorts Growth Benchmarks</h3>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title">0-100 Subs</div>
+      <p style="color:var(--text-dim);font-size:0.85rem;">100-500 views/Short. Focus on consistency. Don't optimize — just ship.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">100-500 Subs</div>
+      <p style="color:var(--text-dim);font-size:0.85rem;">Algorithm suggests your content. One Short pops randomly. Study why.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">500-1K Subs</div>
+      <p style="color:var(--text-dim);font-size:0.85rem;">Consistent 1-5K views. Apply for monetization. Community forms.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">1K+ Subs</div>
+      <p style="color:var(--text-dim);font-size:0.85rem;">Monetized. Collabs possible. Long-form starts mattering. You're in.</p>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

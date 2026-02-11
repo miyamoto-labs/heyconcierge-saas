@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 1080px;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1700px;
+        }
+        
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 72px;
+            color: #00ff41;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px #00ff41;
+        }
+        
+        .subtitle {
+            font-size: 28px;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .packages {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        .package {
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+            border: 2px solid #00ff41;
+            padding: 40px 30px;
+        }
+        
+        .package-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 42px;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #00ffff;
+        }
+        
+        .package-price {
+            font-family: 'Orbitron', monospace;
+            font-size: 56px;
+            color: #00ff41;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px #00ff41;
+        }
+        
+        .package-features {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .package-features li {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+        }
+        
+        .package-features li:before {
+            content: "> ";
+            color: #00ffff;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .package-delivery {
+            font-size: 20px;
+            color: #00ffff;
+            text-align: center;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">CHOOSE YOUR PACKAGE</div>
+        <div class="subtitle">// All Packages Include Full Documentation & Support //</div>
+        
+        <div class="packages">
+            <div class="package">
+                <div class="package-name">BASIC</div>
+                <div class="package-price">$500</div>
+                <ul class="package-features">
+                    <li>OpenClaw agent setup</li>
+                    <li>3 custom automations</li>
+                    <li>Email & calendar monitoring</li>
+                    <li>Complete documentation</li>
+                    <li>1 week support</li>
+                </ul>
+                <div class="package-delivery">DELIVERY: 3-5 DAYS</div>
+            </div>
+            
+            <div class="package">
+                <div class="package-name">STANDARD</div>
+                <div class="package-price">$1,200</div>
+                <ul class="package-features">
+                    <li>Everything in Basic</li>
+                    <li>Twitter automation</li>
+                    <li>Trading signals bot</li>
+                    <li>5+ custom workflows</li>
+                    <li>API integrations</li>
+                    <li>2 weeks support</li>
+                </ul>
+                <div class="package-delivery">DELIVERY: 7-10 DAYS</div>
+            </div>
+            
+            <div class="package">
+                <div class="package-name">PREMIUM</div>
+                <div class="package-price">$2,500</div>
+                <ul class="package-features">
+                    <li>Everything in Standard</li>
+                    <li>Multi-bot architecture</li>
+                    <li>Advanced trading systems</li>
+                    <li>Custom integrations</li>
+                    <li>Whale monitoring</li>
+                    <li>4 weeks support</li>
+                    <li>Monthly maintenance option</li>
+                </ul>
+                <div class="package-delivery">DELIVERY: 14-21 DAYS</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

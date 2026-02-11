@@ -1,0 +1,15 @@
+{
+  "strategy_weights": {
+    "llm_forecast": 0.40,
+    "whale_copy": 0.30,
+    "low_risk_bond": 0.20,
+    "news_scalp": 0.10
+  },
+  "adjustments_history": [],
+  "last_updated": "2026-02-07T00:00:00",
+  "notes": [
+    "Weights are automatically adjusted based on performance",
+    "Underperforming strategies (<-15%) are disabled",
+    "Top performers get increased allocation"
+  ]
+}

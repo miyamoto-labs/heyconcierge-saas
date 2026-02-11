@@ -1,0 +1,30 @@
+{
+  "min_confidence": 0.2,
+  "preferred_time_buckets": {
+    "early_0-3m": 0.02,
+    "mid_3-7m": 0.08,
+    "late_7-14m": 0.0
+  },
+  "asset_modifiers": {
+    "BTC": 0.1,
+    "ETH": 0.0
+  },
+  "direction_modifiers": {
+    "UP": 0.1,
+    "DOWN": 0.0
+  },
+  "condition_modifiers": {
+    "asset:ETH|direction:DOWN": -0.04,
+    "asset:ETH|direction:UP": 0.08,
+    "direction:UP|time:early_0-3m": 0.08,
+    "asset:BTC|confidence:med_30-50%": 0.08,
+    "asset:BTC|direction:UP": 0.06,
+    "asset:BTC|direction:DOWN": 0.02,
+    "asset:BTC|time:early_0-3m": 0.04,
+    "direction:UP|time:mid_3-7m": 0.04,
+    "asset:BTC|confidence:high_50-70%": 0.02
+  },
+  "last_updated": "2026-02-08T00:30:00.245648",
+  "total_trades_analyzed": 138,
+  "version": 7
+}

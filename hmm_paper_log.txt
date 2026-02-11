@@ -1,0 +1,92 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[96m[22:28:23][0m [93m🔶 PAPER TRADING MODE — $10,000 virtual capital[0m
+
+[96m
+   ╔═══════════════════════════════════════════════════╗
+   ║  🧠  HMM REGIME DETECTION BOT  🧠               ║
+   ║  Hidden Markov Model + BB Squeeze on Hyperliquid  ║
+   ║  7 States • Volume King • Limit Orders Only       ║
+   ╚═══════════════════════════════════════════════════╝
+[0m
+[96m[22:28:23][0m [94m📊 Starting LIVE mode | BTC | 5x | $10/trade[0m
+[96m[22:28:23][0m [94m📊 TP: 5.0% | SL: 3.0% | Max hold: 24h[0m
+[96m[22:28:23][0m [94m📊 HMM model loaded from disk[0m
+[96m[22:28:24][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:28:24][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:28:26][0m [94m📊 Price: $70946.00/70947.00 | Funding: 0.000005 | Acct: $10000.00[0m
+[96m[22:28:26][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:29:28][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:29:28][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:29:29][0m [94m📊 Price: $70979.00/70980.00 | Funding: 0.000005 | Acct: $10000.00[0m
+[96m[22:29:29][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:30:31][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:30:31][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:30:33][0m [94m📊 Price: $70947.00/70950.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:30:33][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:31:35][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:31:35][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:31:36][0m [94m📊 Price: $70915.00/70916.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:31:36][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:32:37][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:32:37][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:32:38][0m [94m📊 Price: $70843.00/70844.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:32:38][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:33:40][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:33:40][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:33:41][0m [94m📊 Price: $70825.00/70826.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:33:41][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:34:43][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:34:43][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:34:44][0m [94m📊 Price: $70839.00/70840.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:34:44][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:35:46][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:35:46][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:35:47][0m [94m📊 Price: $70737.00/70738.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:35:47][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:36:49][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:36:49][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:36:50][0m [94m📊 Price: $70688.00/70689.00 | Funding: 0.000004 | Acct: $10000.00[0m
+[96m[22:36:50][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:37:52][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:37:52][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:37:53][0m [94m📊 Price: $70667.00/70668.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:37:53][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:38:55][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:38:55][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:38:56][0m [94m📊 Price: $70612.00/70613.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:38:56][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:39:57][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:39:57][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:39:58][0m [94m📊 Price: $70691.00/70692.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:39:58][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:41:00][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:41:00][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:41:01][0m [94m📊 Price: $70712.00/70713.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:41:01][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:42:04][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:42:04][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:42:04][0m [94m📊 Price: $70728.00/70729.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:42:04][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:43:06][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:43:06][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:43:07][0m [94m📊 Price: $70702.00/70703.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:43:07][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:44:09][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:44:09][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:44:10][0m [94m📊 Price: $70762.00/70763.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:44:10][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:45:12][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:45:12][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:45:14][0m [94m📊 Price: $70757.00/70758.00 | Funding: 0.000003 | Acct: $10000.00[0m
+[96m[22:45:14][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:46:16][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:46:16][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:46:17][0m [94m📊 Price: $70760.00/70761.00 | Funding: 0.000002 | Acct: $10000.00[0m
+[96m[22:46:17][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m
+[96m[22:47:19][0m [95m🧠 Current regime: high_vol (state 4)[0m
+[96m[22:47:19][0m [95m🧠 Top probabilities: S4(high_vol): 99.5% | S1(bearish): 0.5% | S5(capitulation): 0.0%[0m
+[96m[22:47:20][0m [94m📊 Price: $70774.00/70775.00 | Funding: 0.000002 | Acct: $10000.00[0m
+[96m[22:47:20][0m [94m📊 Regime 'high_vol' → no trade (capital preservation) 🛡️[0m

@@ -1,0 +1,331 @@
+{
+  "last_updated": "2026-02-08T01:15:00.314288",
+  "overall": {
+    "total": 144,
+    "wins": 91,
+    "losses": 53,
+    "win_rate": 0.6319444444444444,
+    "total_pnl": 144.5,
+    "avg_pnl": 1.0034722222222223
+  },
+  "by_asset": {
+    "BTC": {
+      "total": 61,
+      "wins": 42,
+      "win_rate": 0.6885245901639344,
+      "total_pnl": 94.0,
+      "avg_pnl": 1.540983606557377
+    },
+    "ETH": {
+      "total": 83,
+      "wins": 49,
+      "win_rate": 0.5903614457831325,
+      "total_pnl": 50.5,
+      "avg_pnl": 0.608433734939759
+    }
+  },
+  "by_direction": {
+    "DOWN": {
+      "total": 72,
+      "wins": 40,
+      "win_rate": 0.5555555555555556,
+      "total_pnl": 20.0,
+      "avg_pnl": 0.2777777777777778
+    },
+    "UP": {
+      "total": 72,
+      "wins": 51,
+      "win_rate": 0.7083333333333334,
+      "total_pnl": 124.5,
+      "avg_pnl": 1.7291666666666667
+    }
+  },
+  "by_time_bucket": {
+    "early_0-3m": {
+      "total": 87,
+      "wins": 52,
+      "win_rate": 0.5977011494252874,
+      "total_pnl": 59.0,
+      "avg_pnl": 0.6781609195402298
+    },
+    "mid_3-7m": {
+      "total": 39,
+      "wins": 26,
+      "win_rate": 0.6666666666666666,
+      "total_pnl": 52.0,
+      "avg_pnl": 1.3333333333333333
+    },
+    "late_7-14m": {
+      "total": 18,
+      "wins": 13,
+      "win_rate": 0.7222222222222222,
+      "total_pnl": 33.5,
+      "avg_pnl": 1.8611111111111112
+    }
+  },
+  "by_confidence": {
+    "high_50-70%": {
+      "total": 48,
+      "wins": 32,
+      "win_rate": 0.6666666666666666,
+      "total_pnl": 64.0,
+      "avg_pnl": 1.3333333333333333
+    },
+    "med_30-50%": {
+      "total": 86,
+      "wins": 52,
+      "win_rate": 0.6046511627906976,
+      "total_pnl": 64.0,
+      "avg_pnl": 0.7441860465116279
+    },
+    "very_high_>70%": {
+      "total": 10,
+      "wins": 7,
+      "win_rate": 0.7,
+      "total_pnl": 16.5,
+      "avg_pnl": 1.65
+    }
+  },
+  "rolling_24h": {
+    "total": 133,
+    "wins": 85,
+    "losses": 48,
+    "win_rate": 0.6390977443609023,
+    "total_pnl": 142.5,
+    "avg_pnl": 1.0714285714285714
+  },
+  "rolling_7d": {
+    "total": 144,
+    "wins": 91,
+    "losses": 53,
+    "win_rate": 0.6319444444444444,
+    "total_pnl": 144.5,
+    "avg_pnl": 1.0034722222222223
+  },
+  "condition_combos": {
+    "asset:BTC": {
+      "condition": "asset:BTC",
+      "total_trades": 61,
+      "wins": 42,
+      "losses": 19,
+      "total_pnl": 94.0
+    },
+    "direction:DOWN": {
+      "condition": "direction:DOWN",
+      "total_trades": 72,
+      "wins": 40,
+      "losses": 32,
+      "total_pnl": 20.0
+    },
+    "time:early_0-3m": {
+      "condition": "time:early_0-3m",
+      "total_trades": 87,
+      "wins": 52,
+      "losses": 35,
+      "total_pnl": 59.0
+    },
+    "confidence:high_50-70%": {
+      "condition": "confidence:high_50-70%",
+      "total_trades": 48,
+      "wins": 32,
+      "losses": 16,
+      "total_pnl": 64.0
+    },
+    "asset:BTC|direction:DOWN": {
+      "condition": "asset:BTC|direction:DOWN",
+      "total_trades": 32,
+      "wins": 19,
+      "losses": 13,
+      "total_pnl": 20.5
+    },
+    "asset:BTC|time:early_0-3m": {
+      "condition": "asset:BTC|time:early_0-3m",
+      "total_trades": 39,
+      "wins": 24,
+      "losses": 15,
+      "total_pnl": 33.0
+    },
+    "direction:DOWN|time:early_0-3m": {
+      "condition": "direction:DOWN|time:early_0-3m",
+      "total_trades": 50,
+      "wins": 29,
+      "losses": 21,
+      "total_pnl": 25.5
+    },
+    "asset:BTC|confidence:high_50-70%": {
+      "condition": "asset:BTC|confidence:high_50-70%",
+      "total_trades": 27,
+      "wins": 20,
+      "losses": 7,
+      "total_pnl": 55.0
+    },
+    "asset:ETH": {
+      "condition": "asset:ETH",
+      "total_trades": 83,
+      "wins": 49,
+      "losses": 34,
+      "total_pnl": 50.5
+    },
+    "asset:ETH|direction:DOWN": {
+      "condition": "asset:ETH|direction:DOWN",
+      "total_trades": 40,
+      "wins": 21,
+      "losses": 19,
+      "total_pnl": -0.5
+    },
+    "asset:ETH|time:early_0-3m": {
+      "condition": "asset:ETH|time:early_0-3m",
+      "total_trades": 48,
+      "wins": 28,
+      "losses": 20,
+      "total_pnl": 26.0
+    },
+    "asset:ETH|confidence:high_50-70%": {
+      "condition": "asset:ETH|confidence:high_50-70%",
+      "total_trades": 21,
+      "wins": 12,
+      "losses": 9,
+      "total_pnl": 9.0
+    },
+    "direction:UP": {
+      "condition": "direction:UP",
+      "total_trades": 72,
+      "wins": 51,
+      "losses": 21,
+      "total_pnl": 124.5
+    },
+    "confidence:med_30-50%": {
+      "condition": "confidence:med_30-50%",
+      "total_trades": 86,
+      "wins": 52,
+      "losses": 34,
+      "total_pnl": 64.0
+    },
+    "asset:ETH|direction:UP": {
+      "condition": "asset:ETH|direction:UP",
+      "total_trades": 43,
+      "wins": 28,
+      "losses": 15,
+      "total_pnl": 51.0
+    },
+    "direction:UP|time:early_0-3m": {
+      "condition": "direction:UP|time:early_0-3m",
+      "total_trades": 37,
+      "wins": 23,
+      "losses": 14,
+      "total_pnl": 33.5
+    },
+    "asset:ETH|confidence:med_30-50%": {
+      "condition": "asset:ETH|confidence:med_30-50%",
+      "total_trades": 56,
+      "wins": 33,
+      "losses": 23,
+      "total_pnl": 33.5
+    },
+    "asset:BTC|direction:UP": {
+      "condition": "asset:BTC|direction:UP",
+      "total_trades": 29,
+      "wins": 23,
+      "losses": 6,
+      "total_pnl": 73.5
+    },
+    "asset:BTC|confidence:med_30-50%": {
+      "condition": "asset:BTC|confidence:med_30-50%",
+      "total_trades": 30,
+      "wins": 19,
+      "losses": 11,
+      "total_pnl": 30.5
+    },
+    "time:mid_3-7m": {
+      "condition": "time:mid_3-7m",
+      "total_trades": 39,
+      "wins": 26,
+      "losses": 13,
+      "total_pnl": 52.0
+    },
+    "asset:BTC|time:mid_3-7m": {
+      "condition": "asset:BTC|time:mid_3-7m",
+      "total_trades": 17,
+      "wins": 13,
+      "losses": 4,
+      "total_pnl": 38.5
+    },
+    "direction:DOWN|time:mid_3-7m": {
+      "condition": "direction:DOWN|time:mid_3-7m",
+      "total_trades": 16,
+      "wins": 7,
+      "losses": 9,
+      "total_pnl": -13.5
+    },
+    "asset:ETH|time:mid_3-7m": {
+      "condition": "asset:ETH|time:mid_3-7m",
+      "total_trades": 22,
+      "wins": 13,
+      "losses": 9,
+      "total_pnl": 13.5
+    },
+    "direction:UP|time:mid_3-7m": {
+      "condition": "direction:UP|time:mid_3-7m",
+      "total_trades": 23,
+      "wins": 19,
+      "losses": 4,
+      "total_pnl": 65.5
+    },
+    "time:late_7-14m": {
+      "condition": "time:late_7-14m",
+      "total_trades": 18,
+      "wins": 13,
+      "losses": 5,
+      "total_pnl": 33.5
+    },
+    "asset:ETH|time:late_7-14m": {
+      "condition": "asset:ETH|time:late_7-14m",
+      "total_trades": 13,
+      "wins": 8,
+      "losses": 5,
+      "total_pnl": 11.0
+    },
+    "direction:UP|time:late_7-14m": {
+      "condition": "direction:UP|time:late_7-14m",
+      "total_trades": 12,
+      "wins": 9,
+      "losses": 3,
+      "total_pnl": 25.5
+    },
+    "direction:DOWN|time:late_7-14m": {
+      "condition": "direction:DOWN|time:late_7-14m",
+      "total_trades": 6,
+      "wins": 4,
+      "losses": 2,
+      "total_pnl": 8.0
+    },
+    "confidence:very_high_>70%": {
+      "condition": "confidence:very_high_>70%",
+      "total_trades": 10,
+      "wins": 7,
+      "losses": 3,
+      "total_pnl": 16.5
+    },
+    "asset:BTC|confidence:very_high_>70%": {
+      "condition": "asset:BTC|confidence:very_high_>70%",
+      "total_trades": 4,
+      "wins": 3,
+      "losses": 1,
+      "total_pnl": 8.5
+    },
+    "asset:ETH|confidence:very_high_>70%": {
+      "condition": "asset:ETH|confidence:very_high_>70%",
+      "total_trades": 6,
+      "wins": 4,
+      "losses": 2,
+      "total_pnl": 8.0
+    },
+    "asset:BTC|time:late_7-14m": {
+      "condition": "asset:BTC|time:late_7-14m",
+      "total_trades": 5,
+      "wins": 5,
+      "losses": 0,
+      "total_pnl": 22.5
+    }
+  }
+}

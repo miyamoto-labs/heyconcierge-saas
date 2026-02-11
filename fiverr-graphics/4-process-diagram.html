@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 1080px;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1700px;
+        }
+        
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 72px;
+            color: #00ff41;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px #00ff41;
+        }
+        
+        .subtitle {
+            font-size: 28px;
+            color: #00ffff;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #00ffff;
+            background: #0a0a0a;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 56px;
+            color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        .step-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            color: #00ff41;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .step-desc {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+        
+        .arrow {
+            position: absolute;
+            top: 50px;
+            right: -15px;
+            color: #00ff41;
+            font-size: 48px;
+            z-index: -1;
+        }
+        
+        .step:last-child .arrow {
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 32px;
+            color: #00ff41;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">HOW IT WORKS</div>
+        <div class="subtitle">// From Discovery to Deployment in 5 Steps //</div>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">01</div>
+                <div class="step-title">Discovery</div>
+                <div class="step-desc">30-min call to understand your needs and design optimal automation</div>
+                <div class="arrow">→</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">02</div>
+                <div class="step-title">Design</div>
+                <div class="step-desc">Custom automation plan tailored to your workflow</div>
+                <div class="arrow">→</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">03</div>
+                <div class="step-title">Build</div>
+                <div class="step-desc">I deploy your AI agent with all modules and integrations</div>
+                <div class="arrow">→</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">04</div>
+                <div class="step-title">Test</div>
+                <div class="step-desc">Full system validation and training on operation</div>
+                <div class="arrow">→</div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">05</div>
+                <div class="step-title">Launch</div>
+                <div class="step-desc">Your agent goes live with ongoing support</div>
+            </div>
+        </div>
+        
+        <div class="footer">FAST. TRANSPARENT. PROFESSIONAL.</div>
+    </div>
+</body>
+</html>

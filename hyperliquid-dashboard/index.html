@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miyamoto Labs | Trading Terminal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'hl-green': '#00ff88',
+                        'hl-red': '#ff4466',
+                        'hl-dark': '#050508',
+                        'hl-card': '#0c0c10',
+                        'hl-border': '#1a1a22',
+                        'hl-accent': '#1e1e28',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(180deg, #050508 0%, #0a0a12 100%);
+            overflow-x: hidden;
+        }
+        
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .glass {
+            background: rgba(12, 12, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glow-green { box-shadow: 0 0 40px rgba(0, 255, 136, 0.15); }
+        .glow-red { box-shadow: 0 0 40px rgba(255, 68, 102, 0.15); }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        
+        .chart-btn { transition: all 0.2s; }
+        .chart-btn:hover { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.3); }
+        .chart-btn.active { background: rgba(0, 255, 136, 0.15); border-color: #00ff88; color: #00ff88; }
+        
+        .trade-btn {
+            transition: all 0.15s;
+        }
+        .trade-btn:hover {
+            transform: scale(1.02);
+        }
+        .trade-btn:active {
+            transform: scale(0.98);
+        }
+        
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00ff88; }
+        
+        .ticker-tape { animation: scroll 40s linear infinite; }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .fear-gauge {
+            background: linear-gradient(90deg, #ff4466 0%, #ffaa00 25%, #ffff00 50%, #88ff00 75%, #00ff88 100%);
+        }
+        
+        .news-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+    </style>
+</head>
+<body class="dark text-white min-h-screen">
+
+    <!-- Ticker Tape -->
+    <div class="bg-hl-card border-b border-hl-border overflow-hidden py-1.5">
+        <div class="ticker-tape flex gap-8 whitespace-nowrap text-xs" id="ticker"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="border-b border-hl-border px-4 py-2">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 bg-gradient-to-br from-hl-green to-cyan-400 rounded-lg flex items-center justify-center font-bold text-black text-sm">M</div>
+                    <div>
+                        <div class="font-semibold text-sm">MIYAMOTO LABS</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3 text-xs">
+                    <div><span class="text-gray-500">BTC</span> <span id="header-btc" class="mono text-hl-green">$--,---</span></div>
+                    <div><span class="text-gray-500">ETH</span> <span id="header-eth" class="mono text-hl-green">$--,---</span></div>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-hl-green rounded-full pulse"></span>
+                    <span class="text-xs text-gray-400">Live</span>
+                </div>
+                <div id="clock" class="mono text-xs text-gray-500"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="flex h-[calc(100vh-76px)]">
+        
+        <!-- Left Column: Chart + Bottom Panels -->
+        <div class="flex-1 flex flex-col border-r border-hl-border">
+            
+            <!-- Chart Controls -->
+            <div class="flex items-center justify-between px-3 py-1.5 border-b border-hl-border bg-hl-card">
+                <div class="flex items-center gap-2">
+                    <div class="flex gap-1">
+                        <button onclick="changeAsset('BTC')" id="btn-BTC" class="chart-btn active px-2 py-0.5 text-xs rounded border border-hl-border">BTC</button>
+                        <button onclick="changeAsset('ETH')" id="btn-ETH" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">ETH</button>
+                        <button onclick="changeAsset('SOL')" id="btn-SOL" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">SOL</button>
+                        <button onclick="changeAsset('HYPE')" id="btn-HYPE" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">HYPE</button>
+                    </div>
+                    <div class="w-px h-4 bg-hl-border"></div>
+                    <div class="flex gap-1">
+                        <button onclick="changeInterval('5')" id="tf-5" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">5m</button>
+                        <button onclick="changeInterval('15')" id="tf-15" class="chart-btn active px-2 py-0.5 text-xs rounded border border-hl-border">15m</button>
+                        <button onclick="changeInterval('60')" id="tf-60" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">1H</button>
+                        <button onclick="changeInterval('240')" id="tf-240" class="chart-btn px-2 py-0.5 text-xs rounded border border-hl-border">4H</button>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                    <span class="text-gray-500">Funding: <span id="funding-display" class="mono text-hl-green">--%</span></span>
+                    <span class="text-gray-500">Next: <span id="funding-countdown" class="mono text-yellow-400">--:--:--</span></span>
+                </div>
+                <div class="flex items-center gap-2 text-xs">
+                    <span class="text-gray-600">⌨️</span>
+                    <span class="text-gray-600">L=Long S=Short Esc=Close</span>
+                </div>
+            </div>
+            
+            <!-- Chart -->
+            <div id="chart-container" class="h-[45%] bg-hl-dark">
+                <div id="single-chart" class="w-full h-full"></div>
+            </div>
+            
+            <!-- Bottom Panels -->
+            <div class="flex-1 grid grid-cols-3 gap-px bg-hl-border">
+                
+                <!-- P&L Chart -->
+                <div class="bg-hl-card p-3">
+                    <div class="text-xs text-gray-500 mb-2">P&L (7 DAYS)</div>
+                    <div class="h-[calc(100%-24px)]">
+                        <canvas id="pnl-chart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Fear & Greed + Quick Trade -->
+                <div class="bg-hl-card p-3 space-y-3">
+                    <!-- Fear & Greed -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-2">FEAR & GREED INDEX</div>
+                        <div class="flex items-center gap-3">
+                            <div class="text-3xl font-bold mono" id="fear-value">--</div>
+                            <div>
+                                <div id="fear-label" class="text-sm font-medium">Loading...</div>
+                                <div class="fear-gauge h-2 rounded-full mt-1 relative">
+                                    <div id="fear-needle" class="absolute top-0 w-1 h-2 bg-white rounded" style="left: 50%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Trade Buttons -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-2">QUICK TRADE</div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="quickTrade('LONG')" class="trade-btn bg-hl-green/20 hover:bg-hl-green/30 border border-hl-green/50 text-hl-green rounded-lg py-2 text-sm font-medium">
+                                ▲ LONG
+                            </button>
+                            <button onclick="quickTrade('SHORT')" class="trade-btn bg-hl-red/20 hover:bg-hl-red/30 border border-hl-red/50 text-hl-red rounded-lg py-2 text-sm font-medium">
+                                ▼ SHORT
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <input type="number" id="trade-size" value="20" class="flex-1 bg-hl-dark border border-hl-border rounded px-2 py-1 text-xs mono" placeholder="Size $">
+                            <select id="trade-leverage" class="bg-hl-dark border border-hl-border rounded px-2 py-1 text-xs">
+                                <option value="5">5x</option>
+                                <option value="8" selected>8x</option>
+                                <option value="10">10x</option>
+                                <option value="15">15x</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trading Journal -->
+                <div class="bg-hl-card p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500">TRADING JOURNAL</span>
+                        <button onclick="addJournalEntry()" class="text-xs text-hl-green hover:text-white">+ Add</button>
+                    </div>
+                    <div id="journal-entries" class="space-y-2 overflow-y-auto h-[calc(100%-28px)] text-xs">
+                        <!-- Entries loaded from localStorage -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="w-72 flex flex-col bg-hl-card">
+            
+            <!-- Tabs -->
+            <div class="flex border-b border-hl-border text-xs">
+                <button onclick="showTab('portfolio')" id="tab-portfolio" class="flex-1 px-2 py-2 font-medium border-b-2 border-hl-green text-hl-green">Portfolio</button>
+                <button onclick="showTab('twitter')" id="tab-twitter" class="flex-1 px-2 py-2 font-medium border-b-2 border-transparent text-gray-400">Twitter</button>
+                <button onclick="showTab('news')" id="tab-news" class="flex-1 px-2 py-2 font-medium border-b-2 border-transparent text-gray-400">News</button>
+                <button onclick="showTab('swap')" id="tab-swap" class="flex-1 px-2 py-2 font-medium border-b-2 border-transparent text-gray-400">Swap</button>
+            </div>
+            
+            <!-- Tab Content -->
+            <div class="flex-1 overflow-y-auto">
+                
+                <!-- Portfolio -->
+                <div id="content-portfolio" class="p-3 space-y-3">
+                    <!-- Account Value -->
+                    <div class="glass rounded-xl p-3 glow-green">
+                        <div class="text-xs text-gray-500">ACCOUNT VALUE</div>
+                        <div id="account-value" class="text-2xl font-bold mono gradient-text">$---</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="daily-pnl" class="text-xs mono text-hl-green">+$0.00</span>
+                            <span id="daily-pnl-pct" class="text-xs text-gray-500">(0.00%)</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Positions -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-1">POSITIONS</div>
+                        <div id="positions" class="space-y-1"></div>
+                    </div>
+                    
+                    <!-- Bots -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-1">BOTS</div>
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between glass rounded px-2 py-1.5 text-xs">
+                                <span>HL V2.1</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-hl-green rounded-full pulse"></span><span class="text-hl-green">Live</span></span>
+                            </div>
+                            <div class="flex items-center justify-between glass rounded px-2 py-1.5 text-xs">
+                                <span>Polymarket</span>
+                                <span class="flex items-center gap-1"><span class="w-1.5 h-1.5 bg-yellow-500 rounded-full pulse"></span><span class="text-yellow-500">Paper</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Trades -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-1">RECENT TRADES</div>
+                        <div id="trades" class="space-y-0.5 text-xs"></div>
+                    </div>
+                    
+                    <!-- Funding Heatmap -->
+                    <div>
+                        <div class="text-xs text-gray-500 mb-1">FUNDING RATES</div>
+                        <div id="funding-heatmap" class="grid grid-cols-5 gap-1"></div>
+                    </div>
+                    
+                    <!-- Whale Alerts -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs text-gray-500">🐋 WHALE ALERTS</span>
+                            <span id="whale-sound" onclick="toggleWhaleSound()" class="text-xs cursor-pointer">🔔</span>
+                        </div>
+                        <div id="whale-alerts" class="space-y-1 max-h-32 overflow-y-auto text-xs">
+                            <div class="text-gray-500">Monitoring for trades >$100k...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Twitter -->
+                <div id="content-twitter" class="hidden p-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500">HOME TIMELINE</span>
+                        <button onclick="fetchTwitterFeed()" class="text-xs text-hl-green hover:text-white">↻ Refresh</button>
+                    </div>
+                    <div id="twitter-feed" class="space-y-2 overflow-y-auto" style="max-height: calc(100vh - 180px);">
+                        <div class="text-gray-500 text-xs">Loading tweets...</div>
+                    </div>
+                </div>
+                
+                <!-- News -->
+                <div id="content-news" class="hidden p-3">
+                    <div id="news-feed" class="space-y-2">
+                        <div class="text-gray-500 text-xs">Loading news...</div>
+                    </div>
+                </div>
+                
+                <!-- Swap -->
+                <div id="content-swap" class="hidden h-full">
+                    <iframe src="https://liqd.ag/?embed=true" width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Journal Modal -->
+    <div id="journal-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="glass rounded-xl p-4 w-80">
+            <div class="text-sm font-medium mb-3">Add Journal Entry</div>
+            <textarea id="journal-text" class="w-full bg-hl-dark border border-hl-border rounded p-2 text-sm h-24 resize-none" placeholder="What's your trade thesis?"></textarea>
+            <div class="flex gap-2 mt-3">
+                <button onclick="saveJournalEntry()" class="flex-1 bg-hl-green text-black rounded py-1.5 text-sm font-medium">Save</button>
+                <button onclick="closeJournalModal()" class="flex-1 bg-hl-border rounded py-1.5 text-sm">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Trade Confirm Modal -->
+    <div id="trade-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+        <div class="glass rounded-xl p-4 w-72">
+            <div id="trade-modal-title" class="text-sm font-medium mb-3">Confirm Trade</div>
+            <div id="trade-modal-details" class="text-xs space-y-1 mb-3"></div>
+            <div class="flex gap-2">
+                <button onclick="confirmTrade()" id="trade-confirm-btn" class="flex-1 rounded py-1.5 text-sm font-medium">Confirm</button>
+                <button onclick="closeTradeModal()" class="flex-1 bg-hl-border rounded py-1.5 text-sm">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    
+    <script>
+        // State
+        let currentAsset = 'BTC';
+        let currentInterval = '15';
+        let pendingTrade = null;
+        let whaleSoundEnabled = true;
+        let lastWhaleCheck = 0;
+        
+        // Whale alert sound (simple beep)
+        const whaleAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgkMHHnHNOQ2GRu8e5lGhNUHubxce2l2xVXIegxsOxkmlbYoyjx8Kti2NaZoumxsKqhV9aZ4upx8KnglxZZ4ypx8Kmf1lYZ42qx8KlflhYZ42qx8KlflhXZ42rx8Klf1hXZ42rx8KmgFlXZ4yrx8KmgFpYaIyrx8KmgFpYaIysx8OmgFpYaI2sx8OngVtZaI2tx8OngVtZaY2tx8OogltZaY6tx8OogltZaY6tx8OogltZaY6ux8OogltZaY+ux8Spg1xaaY+ux8Spg1xaaY+ux8Spg1xbaZCvyMSpg1xbaZCvyMSpg1xbaZCvyMSqhF1baZCvyMSqhF1baZGwyMSqhF1caZGwyMWrhV1caZGwyMWrhV5caZKxyMWrhV5caZKxyMWrhV5daZKxyMWsh15daZKxyMWsh15daZOyyMashF5daZOyyMashF5eapOyyMath19eapSyyMeth19eapSzyMathl9eapSzyMath19fapWzyMetiF9fapWzyMetiGBfapW0yMetiGBgapatyMeviGBgapatyMevyWNqb5a1yMiwymhxeZm3yMmxy3N+f520y8u0zXiHipiy0M67znyOlZ6u1dXF0oOYoKOl293Q1oqgqaiZ3uTa2ZGnsa6O4erj3puvuLOC5PDs4qW3wb1z5/Xw5bPBzMVj6Pjz57zMz8hU');
+        
+        function toggleWhaleSound() {
+            whaleSoundEnabled = !whaleSoundEnabled;
+            document.getElementById('whale-sound').textContent = whaleSoundEnabled ? '🔔' : '🔕';
+        }
+        
+        const ASSETS = {
+            'BTC': 'BYBIT:BTCUSDT.P',
+            'ETH': 'BYBIT:ETHUSDT.P',
+            'SOL': 'BYBIT:SOLUSDT.P',
+            'HYPE': 'MEXC:HYPEUSDT'
+        };
+        
+        const CONFIG = {
+            wallet: '0xF1CcD889c2b340636A567DfF3f1d157f7FFD00dB',
+        };
+        
+        // Clock
+        function updateClock() {
+            document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB', { hour12: false, timeZone: 'Europe/Oslo' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+        
+        // Funding Countdown (every 8h: 00:00, 08:00, 16:00 UTC)
+        function updateFundingCountdown() {
+            const now = new Date();
+            const utcHours = now.getUTCHours();
+            const utcMinutes = now.getUTCMinutes();
+            const utcSeconds = now.getUTCSeconds();
+            
+            // Find next funding time (0, 8, or 16 UTC)
+            let nextFunding = Math.ceil(utcHours / 8) * 8;
+            if (nextFunding === utcHours && utcMinutes === 0 && utcSeconds === 0) {
+                nextFunding += 8;
+            }
+            if (nextFunding >= 24) nextFunding = 0;
+            
+            // Calculate remaining time
+            let hoursLeft = nextFunding - utcHours;
+            if (hoursLeft <= 0) hoursLeft += 8;
+            if (utcMinutes > 0 || utcSeconds > 0) hoursLeft--;
+            
+            const minutesLeft = 59 - utcMinutes;
+            const secondsLeft = 59 - utcSeconds;
+            
+            const display = `${hoursLeft.toString().padStart(2, '0')}:${minutesLeft.toString().padStart(2, '0')}:${secondsLeft.toString().padStart(2, '0')}`;
+            const el = document.getElementById('funding-countdown');
+            el.textContent = display;
+            
+            // Flash when < 5 min
+            if (hoursLeft === 0 && minutesLeft < 5) {
+                el.classList.add('pulse', 'text-hl-red');
+                el.classList.remove('text-yellow-400');
+            } else {
+                el.classList.remove('pulse', 'text-hl-red');
+                el.classList.add('text-yellow-400');
+            }
+        }
+        setInterval(updateFundingCountdown, 1000);
+        updateFundingCountdown();
+        
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ignore if typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'l':
+                    quickTrade('LONG');
+                    break;
+                case 's':
+                    quickTrade('SHORT');
+                    break;
+                case 'escape':
+                    closeTradeModal();
+                    closeJournalModal();
+                    break;
+                case 'enter':
+                    if (pendingTrade) confirmTrade();
+                    break;
+                case '1': changeAsset('BTC'); break;
+                case '2': changeAsset('ETH'); break;
+                case '3': changeAsset('SOL'); break;
+                case '4': changeAsset('HYPE'); break;
+            }
+        });
+        
+        // TradingView Chart
+        function initChart() {
+            document.getElementById('single-chart').innerHTML = '';
+            const div = document.createElement('div');
+            div.id = 'tv-main';
+            div.style.width = '100%';
+            div.style.height = '100%';
+            document.getElementById('single-chart').appendChild(div);
+            
+            new TradingView.widget({
+                width: "100%",
+                height: "100%",
+                symbol: ASSETS[currentAsset],
+                interval: currentInterval,
+                timezone: "Europe/Oslo",
+                theme: "dark",
+                style: "1",
+                locale: "en",
+                toolbar_bg: "#0c0c10",
+                enable_publishing: false,
+                container_id: "tv-main",
+                backgroundColor: "#050508",
+                gridColor: "rgba(255,255,255,0.02)",
+                hide_legend: true,
+                studies: ["RSI@tv-basicstudies"]
+            });
+        }
+        
+        function changeAsset(asset) {
+            currentAsset = asset;
+            document.querySelectorAll('[id^="btn-"]').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${asset}`).classList.add('active');
+            initChart();
+        }
+        
+        function changeInterval(tf) {
+            currentInterval = tf;
+            document.querySelectorAll('[id^="tf-"]').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tf-${tf}`).classList.add('active');
+            initChart();
+        }
+        
+        // Tab switching
+        function showTab(tab) {
+            ['portfolio', 'twitter', 'news', 'swap'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.toggle('border-hl-green', t === tab);
+                document.getElementById(`tab-${t}`).classList.toggle('text-hl-green', t === tab);
+                document.getElementById(`tab-${t}`).classList.toggle('border-transparent', t !== tab);
+                document.getElementById(`tab-${t}`).classList.toggle('text-gray-400', t !== tab);
+                document.getElementById(`content-${t}`).classList.toggle('hidden', t !== tab);
+            });
+        }
+        
+        // P&L Chart
+        function initPnLChart() {
+            const ctx = document.getElementById('pnl-chart').getContext('2d');
+            const data = [-12, 8, 15, -5, 22, 18, 25]; // Sample data
+            const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        borderColor: '#00ff88',
+                        backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 2,
+                        pointBackgroundColor: '#00ff88'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { 
+                            grid: { color: 'rgba(255,255,255,0.03)' },
+                            ticks: { color: '#666', font: { size: 9 } }
+                        },
+                        y: { 
+                            grid: { color: 'rgba(255,255,255,0.03)' },
+                            ticks: { 
+                                color: '#666', 
+                                font: { size: 9 },
+                                callback: v => '$' + v
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Fear & Greed (using alternative API)
+        async function fetchFearGreed() {
+            try {
+                const res = await fetch('https://api.alternative.me/fng/');
+                const data = await res.json();
+                const value = parseInt(data.data[0].value);
+                const label = data.data[0].value_classification;
+                
+                document.getElementById('fear-value').textContent = value;
+                document.getElementById('fear-label').textContent = label;
+                document.getElementById('fear-label').className = `text-sm font-medium ${value < 25 ? 'text-hl-red' : value < 45 ? 'text-orange-400' : value < 55 ? 'text-yellow-400' : value < 75 ? 'text-lime-400' : 'text-hl-green'}`;
+                document.getElementById('fear-needle').style.left = value + '%';
+            } catch (e) {
+                document.getElementById('fear-value').textContent = '50';
+                document.getElementById('fear-label').textContent = 'Neutral';
+            }
+        }
+        
+        // Twitter Feed
+        async function fetchTwitterFeed() {
+            try {
+                const res = await fetch('/api/tweets');
+                const tweets = await res.json();
+                
+                const container = document.getElementById('twitter-feed');
+                if (!tweets || tweets.length === 0) {
+                    container.innerHTML = '<div class="text-gray-500 text-xs">No tweets loaded. Make sure bird CLI is authenticated.</div>';
+                    return;
+                }
+                
+                container.innerHTML = tweets.slice(0, 15).map(tweet => {
+                    const author = tweet.author || {};
+                    const name = author.name || 'Unknown';
+                    const handle = author.username || '';
+                    const text = tweet.text || '';
+                    const time = tweet.createdAt ? new Date(tweet.createdAt).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'}) : '';
+                    const likes = tweet.likeCount || 0;
+                    const retweets = tweet.retweetCount || 0;
+                    const url = `https://x.com/${handle}/status/${tweet.id}`;
+                    
+                    return `
+                        <a href="${url}" target="_blank" class="block glass rounded-lg p-2 hover:bg-white/5 transition">
+                            <div class="flex items-start gap-2">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-hl-green to-cyan-400 flex items-center justify-center text-black text-xs font-bold">
+                                    ${name.charAt(0).toUpperCase()}
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center gap-1 text-xs">
+                                        <span class="font-medium truncate">${name}</span>
+                                        <span class="text-gray-500">@${handle}</span>
+                                        <span class="text-gray-600">·</span>
+                                        <span class="text-gray-500">${time}</span>
+                                    </div>
+                                    <div class="text-xs text-gray-300 mt-1 line-clamp-3">${text}</div>
+                                    <div class="flex gap-4 mt-2 text-[10px] text-gray-500">
+                                        <span>♥ ${likes}</span>
+                                        <span>↻ ${retweets}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } catch (e) {
+                document.getElementById('twitter-feed').innerHTML = `
+                    <div class="text-gray-500 text-xs">
+                        <p>Could not load tweets.</p>
+                        <p class="mt-1 text-gray-600">Run server: <code class="bg-hl-dark px-1 rounded">node server.js</code></p>
+                    </div>
+                `;
+            }
+        }
+        
+        // News Feed
+        async function fetchNews() {
+            try {
+                // Using CryptoCompare news API (free)
+                const res = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN&categories=BTC,ETH,Trading');
+                const data = await res.json();
+                
+                const container = document.getElementById('news-feed');
+                container.innerHTML = data.Data.slice(0, 15).map(item => `
+                    <a href="${item.url}" target="_blank" class="news-item block rounded p-2 transition">
+                        <div class="text-xs font-medium line-clamp-2">${item.title}</div>
+                        <div class="text-xs text-gray-500 mt-1">${item.source_info.name} • ${new Date(item.published_on * 1000).toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit'})}</div>
+                    </a>
+                `).join('');
+            } catch (e) {
+                document.getElementById('news-feed').innerHTML = '<div class="text-gray-500 text-xs">Failed to load news</div>';
+            }
+        }
+        
+        // Quick Trade
+        function quickTrade(direction) {
+            const size = document.getElementById('trade-size').value;
+            const leverage = document.getElementById('trade-leverage').value;
+            
+            pendingTrade = { direction, size, leverage, asset: currentAsset };
+            
+            const modal = document.getElementById('trade-modal');
+            const title = document.getElementById('trade-modal-title');
+            const details = document.getElementById('trade-modal-details');
+            const btn = document.getElementById('trade-confirm-btn');
+            
+            title.textContent = `Confirm ${direction}`;
+            details.innerHTML = `
+                <div class="flex justify-between"><span class="text-gray-400">Asset:</span><span>${currentAsset}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Size:</span><span>$${size}</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Leverage:</span><span>${leverage}x</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Direction:</span><span class="${direction === 'LONG' ? 'text-hl-green' : 'text-hl-red'}">${direction}</span></div>
+            `;
+            btn.className = `flex-1 rounded py-1.5 text-sm font-medium ${direction === 'LONG' ? 'bg-hl-green text-black' : 'bg-hl-red text-white'}`;
+            
+            modal.classList.remove('hidden');
+        }
+        
+        function confirmTrade() {
+            if (!pendingTrade) return;
+            
+            // Here you would call the Hyperliquid API
+            alert(`Trade submitted: ${pendingTrade.direction} ${pendingTrade.asset} $${pendingTrade.size} @ ${pendingTrade.leverage}x\n\n(Connect to bot for actual execution)`);
+            
+            closeTradeModal();
+        }
+        
+        function closeTradeModal() {
+            document.getElementById('trade-modal').classList.add('hidden');
+            pendingTrade = null;
+        }
+        
+        // Trading Journal
+        function loadJournal() {
+            const entries = JSON.parse(localStorage.getItem('tradingJournal') || '[]');
+            const container = document.getElementById('journal-entries');
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<div class="text-gray-500">No entries yet. Click + to add.</div>';
+                return;
+            }
+            
+            container.innerHTML = entries.slice(-10).reverse().map((e, i) => `
+                <div class="glass rounded p-2">
+                    <div class="flex justify-between text-gray-500 mb-1">
+                        <span>${new Date(e.time).toLocaleDateString('en-GB')}</span>
+                        <button onclick="deleteJournalEntry(${entries.length - 1 - i})" class="hover:text-hl-red">×</button>
+                    </div>
+                    <div class="text-gray-300">${e.text}</div>
+                </div>
+            `).join('');
+        }
+        
+        function addJournalEntry() {
+            document.getElementById('journal-modal').classList.remove('hidden');
+            document.getElementById('journal-text').value = '';
+            document.getElementById('journal-text').focus();
+        }
+        
+        function saveJournalEntry() {
+            const text = document.getElementById('journal-text').value.trim();
+            if (!text) return;
+            
+            const entries = JSON.parse(localStorage.getItem('tradingJournal') || '[]');
+            entries.push({ time: Date.now(), text });
+            localStorage.setItem('tradingJournal', JSON.stringify(entries));
+            
+            closeJournalModal();
+            loadJournal();
+        }
+        
+        function deleteJournalEntry(index) {
+            const entries = JSON.parse(localStorage.getItem('tradingJournal') || '[]');
+            entries.splice(index, 1);
+            localStorage.setItem('tradingJournal', JSON.stringify(entries));
+            loadJournal();
+        }
+        
+        function closeJournalModal() {
+            document.getElementById('journal-modal').classList.add('hidden');
+        }
+        
+        // Fetch Hyperliquid data
+        async function fetchPrices() {
+            try {
+                const res = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'allMids' })
+                });
+                const data = await res.json();
+                
+                document.getElementById('header-btc').textContent = '$' + parseFloat(data.BTC).toLocaleString(undefined, {maximumFractionDigits: 0});
+                document.getElementById('header-eth').textContent = '$' + parseFloat(data.ETH).toLocaleString(undefined, {maximumFractionDigits: 0});
+                
+                // Ticker
+                const ticker = document.getElementById('ticker');
+                const html = Object.entries(data).slice(0, 15).map(([s, p]) => 
+                    `<span><span class="text-gray-500">${s}</span> <span class="mono text-hl-green">$${parseFloat(p).toLocaleString(undefined, {maximumFractionDigits: 2})}</span></span>`
+                ).join('');
+                ticker.innerHTML = html + html;
+            } catch (e) {}
+        }
+        
+        async function fetchPortfolio() {
+            try {
+                const res = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'clearinghouseState', user: CONFIG.wallet })
+                });
+                const data = await res.json();
+                
+                document.getElementById('account-value').textContent = '$' + parseFloat(data.marginSummary?.accountValue || 0).toFixed(2);
+                
+                const positions = data.assetPositions || [];
+                document.getElementById('positions').innerHTML = positions.length === 0 
+                    ? '<div class="text-gray-500 text-xs">No positions</div>'
+                    : positions.map(pos => {
+                        const p = pos.position;
+                        const size = parseFloat(p.szi);
+                        const pnl = parseFloat(p.unrealizedPnl || 0);
+                        return `
+                            <div class="glass rounded px-2 py-1.5 flex items-center justify-between text-xs">
+                                <div><span class="font-medium">${p.coin}</span> <span class="${size > 0 ? 'text-hl-green' : 'text-hl-red'}">${size > 0 ? 'LONG' : 'SHORT'}</span></div>
+                                <div class="mono ${pnl >= 0 ? 'text-hl-green' : 'text-hl-red'}">$${pnl.toFixed(2)}</div>
+                            </div>
+                        `;
+                    }).join('');
+            } catch (e) {}
+        }
+        
+        async function fetchTrades() {
+            try {
+                const res = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'userFills', user: CONFIG.wallet })
+                });
+                const fills = await res.json();
+                
+                document.getElementById('trades').innerHTML = fills.slice(-5).reverse().map(f => `
+                    <div class="flex justify-between py-0.5">
+                        <span class="${f.side === 'B' ? 'text-hl-green' : 'text-hl-red'}">${f.side === 'B' ? 'BUY' : 'SELL'} ${f.coin}</span>
+                        <span class="mono text-gray-400">${parseFloat(f.sz).toFixed(4)}</span>
+                    </div>
+                `).join('') || '<div class="text-gray-500">No trades</div>';
+            } catch (e) {}
+        }
+        
+        async function fetchFunding() {
+            try {
+                const res = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'meta' })
+                });
+                const meta = await res.json();
+                
+                const assets = ['BTC', 'ETH', 'SOL', 'HYPE', 'DOGE', 'ARB', 'OP', 'AVAX', 'LINK', 'SUI'];
+                document.getElementById('funding-heatmap').innerHTML = assets.map(sym => {
+                    const info = meta.universe?.find(u => u.name === sym);
+                    const rate = info?.funding ? (parseFloat(info.funding) * 100) : 0;
+                    const bg = rate > 0.01 ? 'bg-green-900/50' : rate < -0.01 ? 'bg-red-900/50' : 'bg-gray-800/50';
+                    const tc = rate > 0 ? 'text-hl-green' : rate < 0 ? 'text-hl-red' : 'text-gray-500';
+                    return `<div class="${bg} rounded p-1 text-center"><div class="text-[10px] text-gray-500">${sym}</div><div class="mono text-[10px] ${tc}">${rate.toFixed(3)}%</div></div>`;
+                }).join('');
+                
+                const btc = meta.universe?.find(u => u.name === 'BTC');
+                if (btc?.funding) {
+                    const r = (parseFloat(btc.funding) * 100).toFixed(4);
+                    const el = document.getElementById('funding-display');
+                    el.textContent = r + '%';
+                    el.className = `mono ${parseFloat(r) >= 0 ? 'text-hl-green' : 'text-hl-red'}`;
+                }
+            } catch (e) {}
+        }
+        
+        // Whale Alert Detection
+        const whaleAlerts = [];
+        async function checkWhaleAlerts() {
+            try {
+                const res = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'recentTrades', coin: currentAsset })
+                });
+                const trades = await res.json();
+                
+                // Get prices for USD value
+                const priceRes = await fetch('https://api.hyperliquid.xyz/info', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'allMids' })
+                });
+                const prices = await priceRes.json();
+                const price = parseFloat(prices[currentAsset] || 0);
+                
+                // Filter for large trades (>$100k)
+                const now = Date.now();
+                const largeTradesNew = trades.filter(t => {
+                    const usdValue = parseFloat(t.sz) * price;
+                    const tradeTime = t.time || now;
+                    return usdValue > 100000 && tradeTime > lastWhaleCheck;
+                });
+                
+                if (largeTradesNew.length > 0) {
+                    largeTradesNew.forEach(t => {
+                        const usdValue = (parseFloat(t.sz) * price).toFixed(0);
+                        const side = t.side === 'B' ? 'BUY' : 'SELL';
+                        const alert = {
+                            time: new Date().toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'}),
+                            asset: currentAsset,
+                            side: side,
+                            size: parseFloat(t.sz).toFixed(4),
+                            usd: usdValue
+                        };
+                        whaleAlerts.unshift(alert);
+                        
+                        // Play sound
+                        if (whaleSoundEnabled) {
+                            whaleAudio.play().catch(() => {});
+                        }
+                    });
+                    
+                    // Keep only last 10 alerts
+                    while (whaleAlerts.length > 10) whaleAlerts.pop();
+                    
+                    // Update display
+                    renderWhaleAlerts();
+                }
+                
+                lastWhaleCheck = now;
+            } catch (e) {}
+        }
+        
+        function renderWhaleAlerts() {
+            const container = document.getElementById('whale-alerts');
+            if (whaleAlerts.length === 0) {
+                container.innerHTML = '<div class="text-gray-500">Monitoring for trades >$100k...</div>';
+                return;
+            }
+            container.innerHTML = whaleAlerts.map(a => `
+                <div class="glass rounded px-2 py-1 flex justify-between">
+                    <span class="text-gray-500">${a.time}</span>
+                    <span class="${a.side === 'BUY' ? 'text-hl-green' : 'text-hl-red'}">${a.side} ${a.asset}</span>
+                    <span class="mono">$${parseInt(a.usd).toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+        
+        async function refresh() {
+            await Promise.all([fetchPrices(), fetchPortfolio(), fetchTrades(), fetchFunding(), checkWhaleAlerts()]);
+        }
+        
+        // Init
+        initChart();
+        initPnLChart();
+        loadJournal();
+        fetchFearGreed();
+        fetchNews();
+        fetchTwitterFeed();
+        refresh();
+        
+        setInterval(refresh, 15000);
+        setInterval(fetchNews, 300000); // News every 5 min
+        setInterval(fetchFearGreed, 600000); // Fear/Greed every 10 min
+        setInterval(fetchTwitterFeed, 300000); // Twitter every 5 min
+    </script>
+</body>
+</html>

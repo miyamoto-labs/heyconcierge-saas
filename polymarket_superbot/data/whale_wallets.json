@@ -1,0 +1,41 @@
+{
+  "tracked_whales": {
+    "ImJustKen": {
+      "address": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "profit": 2400000,
+      "specialty": "politics",
+      "tracked_since": "2026-02-07",
+      "last_checked": null
+    },
+    "fengdubiying": {
+      "address": "0x17db3fcd93ba12d38382a0cade24b200185c5f6d",
+      "profit": 2900000,
+      "specialty": "esports",
+      "tracked_since": "2026-02-07",
+      "last_checked": null
+    },
+    "Walrus": {
+      "address": "0xfde62dd29574bab38f9f3e4f1da3c1b98c67dfb8",
+      "profit": 1300000,
+      "specialty": "crypto",
+      "tracked_since": "2026-02-07",
+      "last_checked": null
+    },
+    "Domer": {
+      "address": "0x7bce56c30bb2e09c33ed0b4a68a5c0b6e8c6dc97",
+      "profit": 1200000,
+      "specialty": "politics",
+      "tracked_since": "2026-02-07",
+      "last_checked": null
+    },
+    "Fredi9999": {
+      "address": "0x3b90fb6b60c8e8f57f9e0a8d35fe4f7c30c07e91",
+      "profit": 600000,
+      "specialty": "general",
+      "tracked_since": "2026-02-07",
+      "last_checked": null
+    }
+  },
+  "copied_trades": [],
+  "last_updated": "2026-02-07T00:00:00"
+}

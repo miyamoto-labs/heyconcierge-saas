@@ -1,0 +1,29 @@
+{
+  "daily_pnl": -4.869722000000165,
+  "daily_trades": 24,
+  "consecutive_losses": 4,
+  "peak_balance": 600.316724,
+  "last_trade_time": "2026-02-07T06:26:25.327569",
+  "total_trades": 72,
+  "winning_trades": 22,
+  "losing_trades": 50,
+  "open_positions": {
+    "BTC": {
+      "coin": "BTC",
+      "size": 0.0004,
+      "side": "LONG",
+      "entry_price": 69694.0,
+      "unrealized_pnl": -0.0716,
+      "leverage": 10.0,
+      "size_usd": 27.8776
+    }
+  },
+  "paused_until": null,
+  "last_reset_date": "2026-02-07",
+  "asset_trades_today": {
+    "BTC": 24
+  },
+  "asset_pnl_today": {
+    "BTC": -4.869722000000165
+  }
+}

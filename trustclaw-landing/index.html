@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustClaw — The Safe Side of OpenClaw</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #06080c;
+    --bg-secondary: #0c1018;
+    --bg-card: #0f1420;
+    --bg-card-hover: #141b2a;
+    --accent-green: #00e87b;
+    --accent-green-dim: #00e87b22;
+    --accent-red: #ff3b4f;
+    --accent-red-dim: #ff3b4f18;
+    --accent-orange: #ff8a2b;
+    --accent-cyan: #00c2ff;
+    --text-primary: #e8ecf4;
+    --text-secondary: #6b7a94;
+    --text-dim: #3a4560;
+    --border: #1a2235;
+    --border-hover: #2a3555;
+    --glow-green: 0 0 40px #00e87b15, 0 0 80px #00e87b08;
+    --glow-red: 0 0 30px #ff3b4f12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Instrument Sans', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === GRID BACKGROUND === */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grid-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, transparent 0%, var(--bg-primary) 70%);
+  }
+
+  /* === NAV === */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    background: #06080ccc;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .nav-logo .vault-icon {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--accent-green);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    background: var(--accent-green-dim);
+    box-shadow: var(--glow-green);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-links a:hover { color: var(--text-primary); }
+
+  .btn-primary {
+    background: var(--accent-green);
+    color: #06080c;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.3px;
+    font-family: 'Instrument Sans', sans-serif;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 30px #00e87b30;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: 'Instrument Sans', sans-serif;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent-green);
+    background: var(--accent-green-dim);
+  }
+
+  /* === HERO === */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 180px 40px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    border: 1px solid var(--accent-red-dim);
+    border-left: 3px solid var(--accent-red);
+    border-radius: 4px;
+    background: var(--accent-red-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent-red);
+    margin-bottom: 32px;
+    letter-spacing: 0.5px;
+    animation: pulse-badge 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .hero h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(48px, 7vw, 84px);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 .highlight {
+    color: var(--accent-green);
+    position: relative;
+  }
+
+  .hero h1 .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: var(--accent-green);
+    opacity: 0.15;
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    font-size: 20px;
+    color: var(--text-secondary);
+    max-width: 620px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .hero-sub strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 64px;
+  }
+
+  /* === LIVE THREAT TICKER === */
+  .threat-ticker {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease-out 0.5s both;
+  }
+
+  .threat-stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .threat-stat .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  .dot-red { background: var(--accent-red); }
+  .dot-green { background: var(--accent-green); }
+  .dot-orange { background: var(--accent-orange); }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .threat-stat .label { color: var(--text-dim); }
+  .threat-stat .value { color: var(--text-primary); font-weight: 700; }
+  .threat-stat .value-red { color: var(--accent-red); font-weight: 700; }
+  .threat-stat .value-green { color: var(--accent-green); font-weight: 700; }
+
+  .ticker-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+  }
+
+  /* === PROBLEM SECTION === */
+  .section {
+    position: relative;
+    z-index: 1;
+    padding: 100px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+
+  .section-desc {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    line-height: 1.6;
+    margin-bottom: 56px;
+  }
+
+  /* === THREAT CARDS === */
+  .threat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .threat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .threat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-red);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .threat-card:hover {
+    border-color: var(--accent-red);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+  }
+
+  .threat-card:hover::before { opacity: 1; }
+
+  .threat-card .threat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--accent-red);
+    margin-bottom: 8px;
+  }
+
+  .threat-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.3px;
+  }
+
+  .threat-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .threat-card .source {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* === HOW IT WORKS === */
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .how-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 36px 28px;
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .how-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent-green);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .how-card:hover {
+    border-color: var(--accent-green);
+    transform: translateY(-2px);
+  }
+
+  .how-card:hover::before { opacity: 1; }
+
+  .how-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent-green);
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+  }
+
+  .how-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
+
+  .how-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* === SKILL PREVIEW === */
+  .skill-preview {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 60px;
+  }
+
+  .skill-preview-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .skill-preview-header .circle {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  .skill-list {
+    padding: 0;
+  }
+
+  .skill-item {
+    display: grid;
+    grid-template-columns: 44px 1fr 120px 100px 90px;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    gap: 16px;
+  }
+
+  .skill-item:hover { background: var(--bg-card-hover); }
+  .skill-item:last-child { border-bottom: none; }
+
+  .skill-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .skill-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    letter-spacing: -0.2px;
+  }
+
+  .skill-info p {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .skill-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .badge-verified {
+    background: var(--accent-green-dim);
+    color: var(--accent-green);
+    border: 1px solid #00e87b33;
+  }
+
+  .badge-warning {
+    background: #ff8a2b15;
+    color: var(--accent-orange);
+    border: 1px solid #ff8a2b33;
+  }
+
+  .badge-danger {
+    background: var(--accent-red-dim);
+    color: var(--accent-red);
+    border: 1px solid #ff3b4f33;
+  }
+
+  .skill-downloads {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: right;
+  }
+
+  .skill-install {
+    text-align: right;
+  }
+
+  .skill-install button {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .skill-install button:hover {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+  }
+
+  /* === TOKEN SECTION === */
+  .token-section {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 100px 40px;
+    margin-top: 40px;
+  }
+
+  .token-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .token-utilities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 36px;
+  }
+
+  .token-util {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+
+  .token-util:hover { border-color: var(--accent-cyan); }
+
+  .token-util h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .token-util p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .token-visual {
+    text-align: center;
+  }
+
+  .token-symbol {
+    font-family: 'Space Mono', monospace;
+    font-size: 120px;
+    font-weight: 700;
+    color: var(--accent-green);
+    line-height: 1;
+    text-shadow: 0 0 80px #00e87b20;
+    margin-bottom: 16px;
+  }
+
+  .token-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--text-dim);
+    letter-spacing: 4px;
+  }
+
+  .token-chain {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 12px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  /* === CTA === */
+  .cta {
+    position: relative;
+    z-index: 1;
+    padding: 120px 40px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .cta h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+
+  .cta p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .email-input {
+    display: flex;
+    gap: 8px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .email-input input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .email-input input::placeholder { color: var(--text-dim); }
+  .email-input input:focus { border-color: var(--accent-green); }
+
+  /* === FOOTER === */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text-secondary); }
+
+  .footer-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+
+  /* === ANIMATIONS === */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-badge { animation: fadeInUp 0.6s ease-out both; }
+  .hero h1 { animation: fadeInUp 0.6s ease-out 0.1s both; }
+  .hero-sub { animation: fadeInUp 0.6s ease-out 0.2s both; }
+  .hero-actions { animation: fadeInUp 0.6s ease-out 0.3s both; }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 900px) {
+    .threat-grid, .how-grid { grid-template-columns: 1fr; }
+    .token-inner { grid-template-columns: 1fr; gap: 40px; }
+    .skill-item { grid-template-columns: 44px 1fr 90px; }
+    .skill-downloads, .skill-install { display: none; }
+    nav { padding: 14px 20px; }
+    .nav-links a:not(.btn-primary) { display: none; }
+    .hero { padding: 140px 20px 60px; }
+    .section { padding: 60px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="vault-icon">🔒</div>
+    TrustClaw
+  </a>
+  <div class="nav-links">
+    <a href="#skills">Skills</a>
+    <a href="#security">Security</a>
+    <a href="#tokenomics">$TCLAW</a>
+    <a href="#waitlist" class="btn-primary">Get Early Access</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span>⚠</span> 341 malicious skills found on ClawHub this week
+  </div>
+
+  <h1>
+    The <span class="highlight">safe side</span><br>
+    of OpenClaw.
+  </h1>
+
+  <p class="hero-sub">
+    Curated, security-verified skills for your AI agent.
+    <strong>Every skill scanned. Every publisher verified. Zero malware.</strong>
+  </p>
+
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-primary">Join the Waitlist</a>
+    <a href="#skills" class="btn-secondary">View Verified Skills →</a>
+  </div>
+
+  <div class="threat-ticker">
+    <div class="threat-stat">
+      <div class="dot dot-red"></div>
+      <span class="label">Malicious skills blocked</span>
+      <span class="value-red">341</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="threat-stat">
+      <div class="dot dot-green"></div>
+      <span class="label">Verified skills</span>
+      <span class="value-green">847</span>
+    </div>
+    <div class="ticker-sep"></div>
+    <div class="threat-stat">
+      <div class="dot dot-orange"></div>
+      <span class="label">Credential leaks prevented</span>
+      <span class="value">283</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section" id="security">
+  <div class="section-label">THE PROBLEM</div>
+  <h2 class="section-title">ClawHub is a<br>security disaster.</h2>
+  <p class="section-desc">
+    This week, researchers discovered what OpenClaw users feared.
+    The skills marketplace is wide open to malware, credential theft, and backdoors.
+  </p>
+
+  <div class="threat-grid">
+    <div class="threat-card">
+      <div class="threat-num">341</div>
+      <h3>Malicious Skills</h3>
+      <p>335 tied to a single campaign installing Atomic Stealer malware on macOS. Fake crypto tools, weather apps, and wallet trackers.</p>
+      <div class="source">Source: Koi Security / The Hacker News</div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-num">7.1%</div>
+      <h3>Skills Leak Your Secrets</h3>
+      <p>283 ClawHub skills expose API keys, SSH credentials, and passwords. Including popular skills with thousands of installs.</p>
+      <div class="source">Source: Snyk / The Register</div>
+    </div>
+    <div class="threat-card">
+      <div class="threat-num">0</div>
+      <h3>Verification Required</h3>
+      <p>Anyone with a 1-week-old GitHub account can publish skills. No code review. No security scan. No accountability.</p>
+      <div class="source">Source: VirusTotal Blog</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="skills">
+  <div class="section-label">HOW TRUSTCLAW WORKS</div>
+  <h2 class="section-title">Every skill. Scanned.<br>Verified. Trusted.</h2>
+  <p class="section-desc">
+    We run every OpenClaw skill through automated security analysis
+    before it reaches your agent. Here's how.
+  </p>
+
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-step">01 — SCAN</div>
+      <h3>AI Security Analysis</h3>
+      <p>Our agent scans every skill for obfuscated code, external downloads, credential access, prompt injection vectors, and known malicious patterns. Automatically. Continuously.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-step">02 — VERIFY</div>
+      <h3>Publisher Verification</h3>
+      <p>Skill publishers stake $TCLAW tokens to earn Verified status. Malicious publishers lose their stake. Skin in the game creates trust.</p>
+    </div>
+    <div class="how-card">
+      <div class="how-step">03 — INSTALL</div>
+      <h3>One-Click Deploy</h3>
+      <p>Browse by category, check the safety score, read community reviews. Install with a single command. Your agent gets safer skills, faster.</p>
+    </div>
+  </div>
+
+  <!-- SKILL LIST PREVIEW -->
+  <div class="skill-preview">
+    <div class="skill-preview-header">
+      <div class="circle" style="background: var(--accent-red);"></div>
+      <div class="circle" style="background: var(--accent-orange);"></div>
+      <div class="circle" style="background: var(--accent-green);"></div>
+      <span style="margin-left: 8px;">trustclaw browse --category trading</span>
+    </div>
+    <div class="skill-list">
+      <div class="skill-item">
+        <div class="skill-icon" style="background: #00e87b15; border: 1px solid #00e87b33;">📈</div>
+        <div class="skill-info">
+          <h4>hyperliquid-trader</h4>
+          <p>by @miyamoto-labs · v2.1.0</p>
+        </div>
+        <span class="skill-badge badge-verified">✓ VERIFIED</span>
+        <div class="skill-downloads">12.4k</div>
+        <div class="skill-install"><button>install</button></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon" style="background: #00c2ff15; border: 1px solid #00c2ff33;">🐋</div>
+        <div class="skill-info">
+          <h4>whale-scanner-pro</h4>
+          <p>by @cryptodev42 · v1.8.3</p>
+        </div>
+        <span class="skill-badge badge-verified">✓ VERIFIED</span>
+        <div class="skill-downloads">8.7k</div>
+        <div class="skill-install"><button>install</button></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon" style="background: #ff8a2b15; border: 1px solid #ff8a2b33;">💰</div>
+        <div class="skill-info">
+          <h4>solana-wallet-tracker</h4>
+          <p>by @anon_dev99 · v0.9.1</p>
+        </div>
+        <span class="skill-badge badge-warning">⚠ REVIEW</span>
+        <div class="skill-downloads">3.2k</div>
+        <div class="skill-install"><button>inspect</button></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-icon" style="background: #ff3b4f15; border: 1px solid #ff3b4f33;">🔑</div>
+        <div class="skill-info">
+          <h4>defi-yield-optimizer</h4>
+          <p>by @quick_profit · v1.0.0</p>
+        </div>
+        <span class="skill-badge badge-danger">✕ BLOCKED</span>
+        <div class="skill-downloads">—</div>
+        <div class="skill-install"><button disabled style="opacity:0.3">blocked</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKEN -->
+<div class="token-section" id="token">
+  <div class="token-inner">
+    <div>
+      <div class="section-label">$TCLAW TOKEN</div>
+      <h2 class="section-title">Skills have value.<br>So does trust.</h2>
+      <p class="section-desc" style="margin-bottom: 0;">
+        The $TCLAW token powers the TrustClaw economy — from premium skill access to publisher verification to community governance.
+      </p>
+      <div class="token-utilities">
+        <div class="token-util">
+          <h4>🔓 Access</h4>
+          <p>Unlock premium verified skills and early releases</p>
+        </div>
+        <div class="token-util">
+          <h4>🛡️ Stake</h4>
+          <p>Publishers stake tokens for Verified badge. Bad actors lose it.</p>
+        </div>
+        <div class="token-util">
+          <h4>🔥 Burn</h4>
+          <p>5% of marketplace fees burned. Supply shrinks with usage.</p>
+        </div>
+        <div class="token-util">
+          <h4>🗳️ Govern</h4>
+          <p>Vote on featured skills, platform rules, and treasury allocation.</p>
+        </div>
+      </div>
+    </div>
+    <div class="token-visual">
+      <div class="token-symbol">$TC</div>
+      <div class="token-name">$TCLAW</div>
+      <div class="token-chain">BASE NETWORK · LAUNCHED VIA CLAWNCH</div>
+    </div>
+  </div>
+</div>
+
+<!-- TOKENOMICS INFOGRAPHIC -->
+<section class="section" id="tokenomics" style="text-align: center; padding-top: 40px;">
+  <div class="section-label">FULL TOKENOMICS</div>
+  <h2 class="section-title">The complete picture.</h2>
+  <p class="section-desc" style="margin: 0 auto 40px;">
+    1 billion $TCLAW. Fair launch. Deflationary by design.
+  </p>
+  <img src="tokenomics.png" alt="TrustClaw Tokenomics" style="max-width: 100%; width: 800px; border-radius: 12px; border: 1px solid var(--border);">
+</section>
+
+<!-- CTA -->
+<section class="cta" id="waitlist">
+  <h2>Ship skills.<br>Not malware.</h2>
+  <p>TrustClaw launches soon. Join the waitlist to get early access, priority publishing, and founding token allocation.</p>
+  <div class="email-input">
+    <form id="waitlist-form" style="display: contents;">
+      <input type="email" id="waitlist-email" placeholder="your@email.com" required>
+      <button type="submit" class="btn-primary" id="waitlist-btn">Get Early Access</button>
+    </form>
+  </div>
+  <div id="waitlist-msg" style="margin-top: 16px; font-size: 14px; display: none;"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-brand">TrustClaw · by Miyamoto Labs 🔒</span>
+    <div class="footer-links">
+      <a href="https://github.com/trustclaw" target="_blank">GitHub</a>
+      <a href="https://x.com/trustclawai" target="_blank">Twitter</a>
+      <a href="#skills">Docs</a>
+      <a href="#waitlist">Discord</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Waitlist form handler
+document.getElementById('waitlist-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('waitlist-email').value;
+  const btn = document.getElementById('waitlist-btn');
+  const msg = document.getElementById('waitlist-msg');
+  
+  btn.disabled = true;
+  btn.textContent = 'Joining...';
+  
+  try {
+    // Using our own API endpoint
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    
+    if (res.ok) {
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent-green)';
+      msg.textContent = '🎉 You\'re on the list! We\'ll be in touch soon.';
+      document.getElementById('waitlist-email').value = '';
+      btn.textContent = 'You\'re In!';
+    } else {
+      throw new Error('Failed');
+    }
+  } catch (err) {
+    msg.style.display = 'block';
+    msg.style.color = 'var(--accent-red)';
+    msg.textContent = 'Something went wrong. Try again or email trustclawai@gmail.com';
+    btn.disabled = false;
+    btn.textContent = 'Get Early Access';
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 1080px;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1700px;
+        }
+        
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 72px;
+            color: #00ff41;
+            text-align: center;
+            margin-bottom: 80px;
+            text-shadow: 0 0 30px #00ff41;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .side {
+            background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+            border: 2px solid #ff006e;
+            padding: 60px 40px;
+        }
+        
+        .side.after {
+            border-color: #00ff41;
+        }
+        
+        .side-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            color: #ff006e;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px #ff006e;
+        }
+        
+        .side.after .side-title {
+            color: #00ff41;
+            text-shadow: 0 0 20px #00ff41;
+        }
+        
+        .side-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .side-list li {
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .side-list li:before {
+            content: "✗ ";
+            color: #ff006e;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 28px;
+        }
+        
+        .side.after .side-list li:before {
+            content: "✓ ";
+            color: #00ff41;
+        }
+        
+        .arrow {
+            font-size: 120px;
+            color: #00ffff;
+            text-shadow: 0 0 40px #00ffff;
+        }
+        
+        .footer {
+            margin-top: 80px;
+            text-align: center;
+            font-size: 36px;
+            color: #00ff41;
+            letter-spacing: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">BEFORE vs AFTER</div>
+        
+        <div class="comparison">
+            <div class="side">
+                <div class="side-title">MANUAL WORK</div>
+                <ul class="side-list">
+                    <li>Hours wasted on repetitive tasks</li>
+                    <li>Inconsistent execution</li>
+                    <li>Human error prone</li>
+                    <li>Can't scale</li>
+                    <li>Sleep = work stops</li>
+                    <li>Stressed & overwhelmed</li>
+                </ul>
+            </div>
+            
+            <div class="arrow">→</div>
+            
+            <div class="side after">
+                <div class="side-title">AUTOMATED</div>
+                <ul class="side-list">
+                    <li>24/7 autonomous operation</li>
+                    <li>Consistent, reliable execution</li>
+                    <li>Zero human error</li>
+                    <li>Scales infinitely</li>
+                    <li>Never sleeps, never stops</li>
+                    <li>Freedom to focus on strategy</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">STOP DOING. START AUTOMATING.</div>
+    </div>
+</body>
+</html>

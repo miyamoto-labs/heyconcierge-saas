@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::selection {
+    background-color: rgba(16, 185, 129, 0.3);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .glow {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.15),
+      0 0 80px rgba(16, 185, 129, 0.05);
+  }
+  .glow-sm {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);
+  }
+}

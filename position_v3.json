@@ -1,0 +1,20 @@
+{
+  "side": "LONG",
+  "entry_price": 70554.0,
+  "size_coins": 0.00111,
+  "size_usd": 77.98863399999999,
+  "stop_loss": 68790.15,
+  "take_profit": 74081.7,
+  "trailing_active": false,
+  "trailing_stop": 0.0,
+  "highest_price": 70691.5,
+  "lowest_price": 70554.0,
+  "entry_time": "2026-02-09T22:05:28.337059",
+  "reasons": [
+    "15m EMA9 > EMA21",
+    "Pullback to EMA21 (0.26%)",
+    "RSI pullback zone (44)",
+    "Above EMA50"
+  ],
+  "trend_score": 49.0
+}

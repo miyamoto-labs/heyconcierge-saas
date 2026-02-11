@@ -1,0 +1,35 @@
+[
+  {
+    "timestamp": "2026-02-06T08:29:49.899173",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 64915.5,
+    "stop_loss": 65434.824,
+    "take_profit": 64266.345,
+    "size_usd": 12.9831,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish (64973 < 65122)",
+      "Price below fast EMA",
+      "RSI momentum (38.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:21:10.266151",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "RANGE",
+    "entry_price": 65359.5,
+    "stop_loss": 65686.29749999999,
+    "take_profit": 64895.4,
+    "size_usd": 13.071900000000001,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Price at upper Bollinger (108.7%)",
+      "RSI overbought (77.0)"
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "lastChecks": {
+    "email": null,
+    "calendar": null,
+    "weather": null,
+    "simmer": null
+  },
+  "lastSimmerError": "Withdrawn manually by Erik - $40 recovered",
+  "lastSimmerErrorTime": "2026-02-10T11:21:00Z",
+  "simmerStatus": "closed",
+  "activeProject": "EasyPoly Polymarket Integration",
+  "projectStatus": "Auth capture complete, ready to test bet placement",
+  "lastUpdated": "2026-02-10T22:30:00Z"
+}

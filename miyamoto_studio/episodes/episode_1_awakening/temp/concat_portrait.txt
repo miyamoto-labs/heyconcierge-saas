@@ -1,0 +1,4 @@
+file '/Users/erik/.openclaw/workspace/miyamoto_studio/episodes/episode_1_awakening/temp/s1_portrait.mp4'
+file '/Users/erik/.openclaw/workspace/miyamoto_studio/episodes/episode_1_awakening/temp/s2_portrait.mp4'
+file '/Users/erik/.openclaw/workspace/miyamoto_studio/episodes/episode_1_awakening/temp/s3_portrait.mp4'
+file '/Users/erik/.openclaw/workspace/miyamoto_studio/episodes/episode_1_awakening/temp/s4_portrait.mp4'

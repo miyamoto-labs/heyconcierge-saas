@@ -1,0 +1,1769 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+======================================================================
+🤖 Hyperliquid Autonomous Trading Bot v1.0
+======================================================================
+
+📋 Loading configuration...
+🔑 Loading Hyperliquid credentials...
+🔌 Connecting to Hyperliquid...
+✅ Connected to Hyperliquid MAINNET
+
+✅ Bot initialized successfully!
+📊 Autonomous mode: True
+📊 Paper mode: False
+💰 Account: 0xF1CcD889...7FFD00dB
+
+======================================================================
+🚀 STARTING AUTONOMOUS TRADING BOT
+======================================================================
+
+
+======================================================================
+🔄 Iteration 1 - 2026-02-06 00:46:37
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 00:46:41
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 2 - 2026-02-06 00:51:41
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 3 - 2026-02-06 00:56:45
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 4 - 2026-02-06 01:01:48
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 5 - 2026-02-06 01:06:52
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 6 - 2026-02-06 01:11:57
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 7 - 2026-02-06 01:17:01
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 8 - 2026-02-06 01:22:06
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 9 - 2026-02-06 01:27:12
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 10 - 2026-02-06 01:32:18
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 11 - 2026-02-06 01:37:22
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 12 - 2026-02-06 01:42:27
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 13 - 2026-02-06 01:47:32
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 01:47:38
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 14 - 2026-02-06 01:52:38
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 15 - 2026-02-06 01:57:42
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 16 - 2026-02-06 02:02:46
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 17 - 2026-02-06 02:07:50
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 18 - 2026-02-06 02:12:56
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 19 - 2026-02-06 02:18:00
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 20 - 2026-02-06 02:23:07
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 21 - 2026-02-06 02:28:11
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 22 - 2026-02-06 02:33:16
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 23 - 2026-02-06 02:38:20
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 24 - 2026-02-06 02:43:24
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 25 - 2026-02-06 02:48:28
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 02:48:34
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 26 - 2026-02-06 02:53:34
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 27 - 2026-02-06 02:58:38
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 28 - 2026-02-06 03:03:42
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 29 - 2026-02-06 03:08:45
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 30 - 2026-02-06 03:13:50
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 31 - 2026-02-06 03:18:53
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 32 - 2026-02-06 03:23:57
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 33 - 2026-02-06 03:29:01
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 34 - 2026-02-06 03:34:04
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 35 - 2026-02-06 03:39:10
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 36 - 2026-02-06 03:44:14
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 37 - 2026-02-06 03:49:17
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 03:49:21
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 38 - 2026-02-06 03:54:22
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 39 - 2026-02-06 03:59:26
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 40 - 2026-02-06 04:04:29
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 41 - 2026-02-06 04:09:33
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 42 - 2026-02-06 04:14:36
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 43 - 2026-02-06 04:19:40
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 44 - 2026-02-06 04:24:43
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 45 - 2026-02-06 04:29:47
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 46 - 2026-02-06 04:34:51
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 47 - 2026-02-06 04:39:54
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 48 - 2026-02-06 04:44:58
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 49 - 2026-02-06 04:50:02
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 04:50:06
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 50 - 2026-02-06 04:55:06
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 51 - 2026-02-06 05:00:11
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 52 - 2026-02-06 05:05:15
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 53 - 2026-02-06 05:10:18
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 54 - 2026-02-06 05:15:22
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 55 - 2026-02-06 05:20:26
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 56 - 2026-02-06 05:25:30
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 57 - 2026-02-06 05:30:33
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 58 - 2026-02-06 05:35:36
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 59 - 2026-02-06 05:40:40
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 60 - 2026-02-06 05:45:43
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 61 - 2026-02-06 05:50:47
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 05:50:51
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 62 - 2026-02-06 05:55:51
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 63 - 2026-02-06 06:00:55
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 64 - 2026-02-06 06:05:59
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 65 - 2026-02-06 06:11:03
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 66 - 2026-02-06 06:16:07
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 67 - 2026-02-06 06:21:10
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 68 - 2026-02-06 06:26:14
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 69 - 2026-02-06 06:31:17
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 70 - 2026-02-06 06:36:20
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 71 - 2026-02-06 06:41:25
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 72 - 2026-02-06 06:46:28
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 73 - 2026-02-06 06:51:31
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 06:51:36
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 74 - 2026-02-06 06:56:37
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 75 - 2026-02-06 07:01:41
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 76 - 2026-02-06 07:06:44
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 77 - 2026-02-06 07:11:47
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 78 - 2026-02-06 07:16:52
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 79 - 2026-02-06 07:21:55
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 80 - 2026-02-06 07:26:59
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 81 - 2026-02-06 07:32:03
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 82 - 2026-02-06 07:37:08
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 83 - 2026-02-06 07:42:11
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 84 - 2026-02-06 07:47:14
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 85 - 2026-02-06 07:52:18
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 07:52:22
+
+💰 Balance: $100.00
+📊 Open Positions: 0
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 86 - 2026-02-06 07:57:22
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 87 - 2026-02-06 08:02:26
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 88 - 2026-02-06 08:07:29
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 89 - 2026-02-06 08:12:33
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 90 - 2026-02-06 08:17:37
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 91 - 2026-02-06 08:22:40
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 92 - 2026-02-06 08:27:44
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 93 - 2026-02-06 08:32:47
+======================================================================
+💰 Account Balance: $99.97
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 94 - 2026-02-06 08:37:50
+======================================================================
+💰 Account Balance: $99.93
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 95 - 2026-02-06 08:42:54
+======================================================================
+💰 Account Balance: $99.91
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 96 - 2026-02-06 08:47:58
+======================================================================
+💰 Account Balance: $99.97
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 97 - 2026-02-06 08:53:02
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 08:53:07
+
+💰 Balance: $100.00
+📊 Open Positions: 1
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 98 - 2026-02-06 08:58:07
+======================================================================
+💰 Account Balance: $100.02
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 99 - 2026-02-06 09:03:11
+======================================================================
+💰 Account Balance: $100.08
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 100 - 2026-02-06 09:08:15
+======================================================================
+💰 Account Balance: $99.98
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 101 - 2026-02-06 09:13:19
+======================================================================
+💰 Account Balance: $99.99
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 102 - 2026-02-06 09:18:23
+======================================================================
+💰 Account Balance: $100.02
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 103 - 2026-02-06 09:23:27
+======================================================================
+💰 Account Balance: $99.98
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 104 - 2026-02-06 09:28:32
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 105 - 2026-02-06 09:33:35
+======================================================================
+💰 Account Balance: $100.08
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 106 - 2026-02-06 09:38:40
+======================================================================
+💰 Account Balance: $100.02
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 107 - 2026-02-06 09:43:44
+======================================================================
+💰 Account Balance: $100.04
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 108 - 2026-02-06 09:48:48
+======================================================================
+💰 Account Balance: $100.00
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 109 - 2026-02-06 09:53:52
+======================================================================
+💰 Account Balance: $99.97
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 09:53:56
+
+💰 Balance: $99.97
+📊 Open Positions: 1
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 110 - 2026-02-06 09:58:56
+======================================================================
+💰 Account Balance: $100.02
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 111 - 2026-02-06 10:04:00
+======================================================================
+💰 Account Balance: $100.02
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 112 - 2026-02-06 10:09:05
+======================================================================
+💰 Account Balance: $100.01
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 113 - 2026-02-06 10:14:09
+======================================================================
+💰 Account Balance: $99.99
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 114 - 2026-02-06 10:19:13
+======================================================================
+💰 Account Balance: $99.98
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 115 - 2026-02-06 10:24:18
+======================================================================
+💰 Account Balance: $599.96
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 116 - 2026-02-06 10:29:22
+======================================================================
+💰 Account Balance: $599.93
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 117 - 2026-02-06 10:34:26
+======================================================================
+💰 Account Balance: $599.86
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 118 - 2026-02-06 10:39:31
+======================================================================
+💰 Account Balance: $599.63
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 119 - 2026-02-06 10:44:35
+======================================================================
+💰 Account Balance: $599.75
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 120 - 2026-02-06 10:49:39
+======================================================================
+💰 Account Balance: $599.75
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+😴 Sleeping for 300 seconds...
+
+======================================================================
+🔄 Iteration 121 - 2026-02-06 10:54:42
+======================================================================
+💰 Account Balance: $599.63
+
+🔍 Checking open positions...
+
+📊 Generating trading signals...
+
+⏸️  No trading signal generated
+
+----------------------------------------------------------------------
+STATUS_REPORT
+📊 BOT STATUS REPORT
+
+⏰ 2026-02-06 10:54:46
+
+💰 Balance: $599.64
+📊 Open Positions: 1
+📈 Total Trades: 0
+✅ Win Rate: 0.0%
+📉 Daily P&L: $0.00
+🔄 Consecutive Losses: 0
+
+----------------------------------------------------------------------
+
+
+😴 Sleeping for 300 seconds...

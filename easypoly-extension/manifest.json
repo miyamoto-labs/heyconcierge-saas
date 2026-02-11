@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "EasyPoly Connect",
+  "version": "1.0.0",
+  "description": "One-click Polymarket connection for EasyPoly",
+  "permissions": [
+    "activeTab",
+    "cookies",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://polymarket.com/*",
+    "https://*.polymarket.com/*",
+    "https://easypoly.bet/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://polymarket.com/*", "https://*.polymarket.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

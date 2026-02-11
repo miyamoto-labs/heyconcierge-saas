@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --trust-green: #00e87b;
+  --dark-bg: #06080c;
+  --dark-card: #0d1117;
+  --dark-border: #1f2937;
+}
+
+body {
+  background-color: var(--dark-bg);
+  color: #e5e7eb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Trust green button */
+.btn-trust {
+  @apply bg-trust-green text-dark-bg font-semibold px-4 py-2 rounded-lg transition-all duration-200;
+}
+
+.btn-trust:hover {
+  @apply bg-trust-green-dark shadow-lg;
+  box-shadow: 0 0 20px rgba(0, 232, 123, 0.3);
+}
+
+.btn-trust:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Card style */
+.card {
+  @apply bg-dark-card border border-dark-border rounded-xl p-6;
+}
+
+/* Status badges */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-pending {
+  @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+}
+
+.badge-verified {
+  @apply bg-trust-green/20 text-trust-green border border-trust-green/30;
+}
+
+.badge-rejected {
+  @apply bg-red-500/20 text-red-400 border border-red-500/30;
+}
+
+.badge-scanning {
+  @apply bg-blue-500/20 text-blue-400 border border-blue-500/30;
+}
+
+.badge-blocked {
+  @apply bg-gray-500/20 text-gray-400 border border-gray-500/30;
+}
+
+/* Scan result badges */
+.badge-pass {
+  @apply bg-trust-green/20 text-trust-green border border-trust-green/30;
+}
+
+.badge-warn {
+  @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30;
+}
+
+.badge-fail {
+  @apply bg-red-500/20 text-red-400 border border-red-500/30;
+}
+
+/* Input styles */
+.input {
+  @apply w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2 text-white placeholder-dark-muted focus:outline-none focus:border-trust-green focus:ring-1 focus:ring-trust-green transition-colors;
+}
+
+/* Table styles */
+.table-header {
+  @apply text-left text-xs font-medium text-dark-muted uppercase tracking-wider px-4 py-3;
+}
+
+.table-cell {
+  @apply px-4 py-4 text-sm;
+}
+
+/* Glow effect */
+.glow-green {
+  box-shadow: 0 0 20px rgba(0, 232, 123, 0.2);
+}
+
+/* Animated border */
+@keyframes border-glow {
+  0%, 100% { border-color: rgba(0, 232, 123, 0.3); }
+  50% { border-color: rgba(0, 232, 123, 0.6); }
+}
+
+.animate-border-glow {
+  animation: border-glow 2s ease-in-out infinite;
+}

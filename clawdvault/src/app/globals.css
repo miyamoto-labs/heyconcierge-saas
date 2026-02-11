@@ -1,0 +1,211 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* === DESIGN SYSTEM === */
+:root {
+  --bg-primary: #06080c;
+  --bg-secondary: #0c1018;
+  --bg-card: #0f1420;
+  --bg-card-hover: #141b2a;
+  --accent-green: #00e87b;
+  --accent-green-dim: #00e87b22;
+  --accent-red: #ff3b4f;
+  --accent-red-dim: #ff3b4f18;
+  --accent-orange: #ff8a2b;
+  --accent-cyan: #00c2ff;
+  --text-primary: #e8ecf4;
+  --text-secondary: #6b7a94;
+  --text-dim: #3a4560;
+  --border: #1a2235;
+  --border-hover: #2a3555;
+  --glow-green: 0 0 40px #00e87b15, 0 0 80px #00e87b08;
+  --glow-red: 0 0 30px #ff3b4f12;
+  
+  --radius: 0.5rem;
+  --background: #06080c;
+  --foreground: #e8ecf4;
+  --card: #0f1420;
+  --card-foreground: #e8ecf4;
+  --popover: #0f1420;
+  --popover-foreground: #e8ecf4;
+  --primary: #00e87b;
+  --primary-foreground: #06080c;
+  --secondary: #1a2235;
+  --secondary-foreground: #e8ecf4;
+  --muted: #1a2235;
+  --muted-foreground: #6b7a94;
+  --accent: #1a2235;
+  --accent-foreground: #e8ecf4;
+  --destructive: #ff3b4f;
+  --border: #1a2235;
+  --input: #1a2235;
+  --ring: #00e87b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* === GRID BACKGROUND === */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 60px 60px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.grid-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, transparent 0%, var(--bg-primary) 70%);
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-badge {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.animate-fade-in-up-delay-3 {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.animate-fade-in-up-delay-5 {
+  animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.animate-pulse-badge {
+  animation: pulse-badge 3s ease-in-out infinite;
+}
+
+.animate-blink {
+  animation: blink 2s ease-in-out infinite;
+}
+
+/* === CUSTOM CLASSES === */
+.btn-primary {
+  background: var(--accent-green);
+  color: #06080c;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s;
+  letter-spacing: 0.3px;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px #00e87b30;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-green);
+  background: var(--accent-green-dim);
+}
+
+/* Badge styles */
+.badge-verified {
+  background: var(--accent-green-dim);
+  color: var(--accent-green);
+  border: 1px solid #00e87b33;
+}
+
+.badge-warning {
+  background: #ff8a2b15;
+  color: var(--accent-orange);
+  border: 1px solid #ff8a2b33;
+}
+
+.badge-danger {
+  background: var(--accent-red-dim);
+  color: var(--accent-red);
+  border: 1px solid #ff3b4f33;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s;
+}
+
+.card-hover:hover {
+  border-color: var(--accent-green);
+  transform: translateY(-2px);
+}
+
+.card-hover-danger:hover {
+  border-color: var(--accent-red);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+/* Glow effects */
+.glow-green {
+  box-shadow: var(--glow-green);
+}
+
+/* Typography */
+.font-mono-heading {
+  font-family: 'Space Mono', monospace;
+  letter-spacing: -0.5px;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Tailwind v4 base layer */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+}

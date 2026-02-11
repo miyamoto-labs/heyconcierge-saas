@@ -1,0 +1,47 @@
+{
+  "will-trump-deport-1250000-1500000-people": {
+    "market_slug": "will-trump-deport-1250000-1500000-people",
+    "direction": "UP",
+    "size_usd": 1.0,
+    "entry_price": 0.999,
+    "timestamp": "2026-02-08T00:17:54.575979+00:00",
+    "strategy": "llm_forecast",
+    "order_id": "PAPER_1770509874_73414222"
+  },
+  "will-trump-deport-2000000-or-more-people": {
+    "market_slug": "will-trump-deport-2000000-or-more-people",
+    "direction": "UP",
+    "size_usd": 1.0,
+    "entry_price": 0.999,
+    "timestamp": "2026-02-08T00:18:05.117442+00:00",
+    "strategy": "llm_forecast",
+    "order_id": "PAPER_1770509885_72012724"
+  },
+  "will-trump-deport-1750000-2000000-people": {
+    "market_slug": "will-trump-deport-1750000-2000000-people",
+    "direction": "UP",
+    "size_usd": 1.0,
+    "entry_price": 0.999,
+    "timestamp": "2026-02-08T00:18:02.485784+00:00",
+    "strategy": "llm_forecast",
+    "order_id": "PAPER_1770509882_24682525"
+  },
+  "will-trump-deport-1000000-1250000-people": {
+    "market_slug": "will-trump-deport-1000000-1250000-people",
+    "direction": "UP",
+    "size_usd": 1.0,
+    "entry_price": 0.999,
+    "timestamp": "2026-02-08T00:17:59.850173+00:00",
+    "strategy": "llm_forecast",
+    "order_id": "PAPER_1770509879_13018971"
+  },
+  "will-trump-deport-1500000-1750000-people": {
+    "market_slug": "will-trump-deport-1500000-1750000-people",
+    "direction": "UP",
+    "size_usd": 1.0,
+    "entry_price": 0.999,
+    "timestamp": "2026-02-08T00:17:57.274580+00:00",
+    "strategy": "llm_forecast",
+    "order_id": "PAPER_1770509877_72354723"
+  }
+}

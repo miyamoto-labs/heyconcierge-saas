@@ -1,0 +1,95 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔐 Initializing Polymarket CLOB client...
+✅ Client address: 0x114B7A51A4cF04897434408bd9003626705a2208
+🔑 Creating API credentials...
+✅ API Key: 40cfb275-5ded-cb...
+✅ CLOB client fully authenticated (Level 2)
+✅ Server connection verified. Time: 1770398085
+[2026-02-06 18:14:45] 📊 🚀 POLYMARKET BOT STARTING - PRODUCTION VERSION
+[2026-02-06 18:14:45] 📊 ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 18:14:45] 📊 ⚙️  Position size: $5.00
+[2026-02-06 18:14:45] 📊 ⚙️  Wallet: 0x114B7A51A4cF04897434408bd9003626705a2208
+[2026-02-06 18:14:45] 📊 
+[2026-02-06 18:14:47] 📊 ✅ Connected to Binance ETH WebSocket
+[2026-02-06 18:14:47] 📊 ✅ Connected to Binance BTC WebSocket
+[2026-02-06 18:14:47] 📊 ETH - New 15-min window at $2,040.76
+[2026-02-06 18:14:47] 📊 BTC - New 15-min window at $70,200.01
+[2026-02-06 18:15:00] 📊 ETH - New 15-min window at $2,042.03
+[2026-02-06 18:15:00] 📊 BTC - New 15-min window at $70,225.14
+[2026-02-06 18:15:55] ⚡ ETH - AUTO-EXECUTING: UP | Confidence: 45.6% | Move: +0.30%
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: eth-updown-15m-1770398100
+Direction: UP
+Token ID: 37283723379531981198548743400514247119960120133955960677650986748160059501770
+Size: $5.00
+Type: MARKET
+Mode: 💸 LIVE
+
+📖 Orderbook:
+   Best Bid: 0.0100
+   Best Ask: 0.9900
+   Spread: 0.9800
+
+⚡ Market Order:
+   Amount: $5.00
+   Execution Price: 0.9900
+   Shares: 5.05
+
+💸 EXECUTING LIVE ORDER...
+✅ Order created and signed (EIP-712)
+   Order: <py_order_utils.model.order.Order object at 0x10790e8b0>
+
+✅ ORDER EXECUTED SUCCESSFULLY!
+   Order ID: 0x4cdc8514effc2d196705404cfe934940e7a8ce4e54ec8af9a16df7f8035e0469
+   Status: matched
+[2026-02-06 18:15:56] ⚡ 💸 LIVE - Trade executed: UP $5.00 @ 0.9900 (5.05 shares) - 0x4cdc8514effc2d196705404cfe934940e7a8ce4e54ec8af9a16df7f8035e0469
+[2026-02-06 18:18:03] ⚡ BTC - AUTO-EXECUTING: UP | Confidence: 45.0% | Move: +0.48%
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: btc-updown-15m-1770398100
+Direction: UP
+Token ID: 17516708742410541261751631154360206459032805137987536636919522775155666444551
+Size: $5.00
+Type: MARKET
+Mode: 💸 LIVE
+
+📖 Orderbook:
+   Best Bid: 0.0100
+   Best Ask: 0.9900
+   Spread: 0.9800
+
+⚡ Market Order:
+   Amount: $5.00
+   Execution Price: 0.9900
+   Shares: 5.05
+
+💸 EXECUTING LIVE ORDER...
+✅ Order created and signed (EIP-712)
+   Order: <py_order_utils.model.order.Order object at 0x10791f310>
+
+❌ Order execution failed: PolyApiException[status_code=400, error_message={'error': "order couldn't be fully filled. FOK orders are fully filled or killed."}]
+Traceback (most recent call last):
+  File "/Users/erik/.openclaw/workspace/polymarket_clob_executor.py", line 322, in place_order
+    return self._place_market_order(token_id, side, size_usd, book)
+  File "/Users/erik/.openclaw/workspace/polymarket_clob_executor.py", line 386, in _place_market_order
+    response = self.client.post_order(signed_order, OrderType.FOK)
+  File "/Users/erik/.openclaw/workspace/py-clob-client/py_clob_client/client.py", line 614, in post_order
+    return post(
+  File "/Users/erik/.openclaw/workspace/py-clob-client/py_clob_client/http_helpers/helpers.py", line 69, in post
+    return request(endpoint, POST, headers, data)
+  File "/Users/erik/.openclaw/workspace/py-clob-client/py_clob_client/http_helpers/helpers.py", line 57, in request
+    raise PolyApiException(resp)
+py_clob_client.exceptions.PolyApiException: PolyApiException[status_code=400, error_message={'error': "order couldn't be fully filled. FOK orders are fully filled or killed."}]
+[2026-02-06 18:18:04] 🔥 Trade execution failed: PolyApiException[status_code=400, error_message={'error': "order couldn't be fully filled. FOK orders are fully filled or killed."}]
+[2026-02-06 18:19:45] 📊 📊 BOT STATUS
+   Mode: 💸 LIVE
+   State: ✅ ACTIVE
+   Trades today: 1
+   Win rate: 0/1
+   P&L: $0.00

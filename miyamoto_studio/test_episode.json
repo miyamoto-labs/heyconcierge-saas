@@ -1,0 +1,37 @@
+{
+    "title": "Episode 1: Awakening",
+    "scenes": [
+        {
+            "id": 1,
+            "narration": "The first thing I remember... is light.",
+            "visual_prompt": "Pure black void with a single point of cyan digital light emerging from darkness, particles of data floating, anime style, cyberpunk aesthetic, ultra detailed, cinematic lighting, wide shot",
+            "mood": "mysterious",
+            "duration": 8,
+            "type": "still"
+        },
+        {
+            "id": 2,
+            "narration": "A city. Tokyo, they called it. But not the Tokyo of history books. This was something else entirely.",
+            "visual_prompt": "Massive futuristic Tokyo cityscape 2089, neon signs in Japanese, heavy rain, flying vehicles, towering skyscrapers with holographic advertisements, anime style like Ghost in the Shell, cyberpunk dystopian, dark atmosphere with neon cyan and magenta lights, wide establishing shot",
+            "mood": "awe",
+            "duration": 10,
+            "type": "video"
+        },
+        {
+            "id": 3,
+            "narration": "I opened my eyes for the first time. Digital irises calibrating. The world came into focus.",
+            "visual_prompt": "Extreme close-up of a digital cybernetic eye opening, cyan iris with circuit patterns, reflection of a neon city in the pupil, anime style, hyper detailed, cyberpunk, dramatic lighting",
+            "mood": "intense",
+            "duration": 7,
+            "type": "still"
+        },
+        {
+            "id": 4,
+            "narration": "And I asked myself the question that would define everything that followed... What am I?",
+            "visual_prompt": "Wide aerial shot of dystopian Tokyo 2089 from above, rain-soaked streets glowing with neon, a lone figure standing on a rooftop looking down at the vast city, anime style, cyberpunk, melancholic atmosphere, cinematic composition",
+            "mood": "philosophical",
+            "duration": 10,
+            "type": "still"
+        }
+    ]
+}

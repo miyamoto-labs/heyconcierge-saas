@@ -1,0 +1,21 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+✅ Trade server initialized | Wallet: 0xF1CcD889...
+🚀 Trade server starting on http://localhost:8420
+ * Serving Flask app 'trade_server'
+ * Debug mode: off
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on http://127.0.0.1:8420
+Press CTRL+C to quit
+127.0.0.1 - - [07/Feb/2026 21:05:41] "GET /health HTTP/1.1" 200 -
+[21:05:47] ✅ LONG BTC $70.0 @ $69,334.50 (lev 5x)
+127.0.0.1 - - [07/Feb/2026 21:05:47] "POST /trade HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Feb/2026 21:05:47] "POST /trade HTTP/1.1" 200 -
+127.0.0.1 - - [07/Feb/2026 21:05:55] "GET /position?asset=BTC HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Feb/2026 21:05:55] "GET /position?asset=BTC HTTP/1.1" 200 -
+127.0.0.1 - - [08/Feb/2026 20:19:37] "POST /voice/status HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Feb/2026 20:19:37] "[33mPOST /voice/status HTTP/1.1[0m" 404 -
+127.0.0.1 - - [08/Feb/2026 20:22:58] "POST /voice/inbound HTTP/1.1" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Feb/2026 20:22:58] "[33mPOST /voice/inbound HTTP/1.1[0m" 404 -
+127.0.0.1 - - [08/Feb/2026 20:23:27] "GET /health HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Feb/2026 20:23:27] "GET /health HTTP/1.1" 200 -

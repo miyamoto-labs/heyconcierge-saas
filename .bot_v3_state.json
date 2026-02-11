@@ -1,0 +1,61 @@
+{
+  "bankroll": 102.66,
+  "paper_bankroll": 1000.0,
+  "total_pnl": 0.0,
+  "daily_pnl": 0.0,
+  "daily_date": "2026-02-09",
+  "positions": [
+    {
+      "id": "430d7ca95b",
+      "market_slug": "lol-tes-we-2026-02-10-game2-kill-over-38pt5",
+      "question": "Total Kills Over/Under 38.5 in Game 2?",
+      "token_id": "52153532350886486508645006774845259646620333269836498551873942707108098337031",
+      "side": "no",
+      "entry_price": 0.006,
+      "size_usd": 20.0,
+      "shares": 3333.3333333333335,
+      "opened_at": "2026-02-09T09:53:45.042935",
+      "expected_resolution": "2026-02-09T12:00:00Z",
+      "status": "filled"
+    },
+    {
+      "id": "b6e6b5cf4d",
+      "market_slug": "lol-tes-we-2026-02-10-game2-kill-over-42pt5",
+      "question": "Total Kills Over/Under 42.5 in Game 2?",
+      "token_id": "71280068146640042185451304927852926758328614656272839309108366432237966980315",
+      "side": "no",
+      "entry_price": 0.006,
+      "size_usd": 20.0,
+      "shares": 3333.3333333333335,
+      "opened_at": "2026-02-09T09:53:45.043593",
+      "expected_resolution": "2026-02-09T12:00:00Z",
+      "status": "filled"
+    }
+  ],
+  "history": [
+    {
+      "time": "2026-02-09T09:53:45.043207",
+      "market": "Total Kills Over/Under 38.5 in Game 2?",
+      "side": "no",
+      "price": 0.006,
+      "size": 20.0,
+      "edge": 0.9439,
+      "whale": false
+    },
+    {
+      "time": "2026-02-09T09:53:45.043721",
+      "market": "Total Kills Over/Under 42.5 in Game 2?",
+      "side": "no",
+      "price": 0.006,
+      "size": 20.0,
+      "edge": 0.9439,
+      "whale": false
+    }
+  ],
+  "cycle_count": 3,
+  "total_trades": 2,
+  "wins": 0,
+  "losses": 0,
+  "markets_scanned": 107,
+  "opportunities_found": 91
+}

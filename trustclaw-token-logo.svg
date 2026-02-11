@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00FF94"/>
+      <stop offset="100%" style="stop-color:#00DC82"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="250" fill="#0a0a0a"/>
+  <circle cx="256" cy="256" r="240" fill="#111111" stroke="url(#shieldGrad)" stroke-width="3"/>
+  
+  <!-- Shield -->
+  <g filter="url(#glow)">
+    <path d="M256 64L96 128v128c0 123.7 81.9 239.4 160 272 78.1-32.6 160-148.3 160-272V128L256 64z" 
+          fill="url(#shieldGrad)" opacity="0.9"/>
+  </g>
+  
+  <!-- Checkmark -->
+  <path d="M224 288l-48-48-24 24 72 72 128-128-24-24L224 288z" 
+        fill="#0a0a0a" stroke="#0a0a0a" stroke-width="8" stroke-linejoin="round"/>
+  
+  <!-- $tCLAW text at bottom -->
+  <text x="256" y="480" font-family="Arial Black, sans-serif" font-size="42" font-weight="bold" 
+        fill="url(#shieldGrad)" text-anchor="middle">$tCLAW</text>
+</svg>

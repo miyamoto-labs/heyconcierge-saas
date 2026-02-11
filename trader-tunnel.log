@@ -1,0 +1,29 @@
+2026-02-10T08:30:29Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2026-02-10T08:30:29Z INF Requesting new quick Tunnel on trycloudflare.com...
+2026-02-10T08:30:33Z INF +--------------------------------------------------------------------------------------------+
+2026-02-10T08:30:33Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2026-02-10T08:30:33Z INF |  https://minds-nonprofit-convert-lauren.trycloudflare.com                                  |
+2026-02-10T08:30:33Z INF +--------------------------------------------------------------------------------------------+
+2026-02-10T08:30:33Z INF Version 2026.2.0 (Checksum 659e90c91014a0017ec933e4a5c924e5ed1c77e3033bf768c47509c2120e598d)
+2026-02-10T08:30:33Z INF GOOS: darwin, GOVersion: go1.25.7, GoArch: arm64
+2026-02-10T08:30:33Z INF Settings: map[cred-file:/Users/erik/.cloudflared/c1d8170d-2d9d-46d4-8125-72ae0340d4fb.json credentials-file:/Users/erik/.cloudflared/c1d8170d-2d9d-46d4-8125-72ae0340d4fb.json ha-connections:1 protocol:quic url:http://localhost:3001]
+2026-02-10T08:30:33Z INF cloudflared will not automatically update if installed by a package manager.
+2026-02-10T08:30:33Z INF Generated Connector ID: 459901c5-c6a3-4040-908e-73d248f39620
+2026-02-10T08:30:33Z INF Initial protocol quic
+2026-02-10T08:30:33Z INF ICMP proxy will use 10.0.0.35 as source for IPv4
+2026-02-10T08:30:33Z INF ICMP proxy will use fe80::10eb:8932:5e86:8b47 in zone en1 as source for IPv6
+2026-02-10T08:30:33Z INF Created ICMP proxy listening on 10.0.0.35:0
+2026-02-10T08:30:33Z INF ICMP proxy will use 10.0.0.35 as source for IPv4
+2026-02-10T08:30:33Z INF ICMP proxy will use fe80::10eb:8932:5e86:8b47 in zone en1 as source for IPv6
+2026-02-10T08:30:33Z INF Starting metrics server on 127.0.0.1:20241/metrics
+2026-02-10T08:30:33Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.37
+2026-02-10T08:30:34Z INF Registered tunnel connection connIndex=0 connection=3e2dc1da-d7ea-4bff-8e28-71e4c94ad7ca event=0 ip=198.41.192.37 location=arn06 protocol=quic
+2026-02-10T08:31:21Z INF Initiating graceful shutdown due to signal terminated ...
+2026-02-10T08:31:21Z ERR failed to run the datagram handler error="context canceled" connIndex=0 event=0 ip=198.41.192.37
+2026-02-10T08:31:21Z ERR failed to serve tunnel connection error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.37
+2026-02-10T08:31:21Z ERR Serve tunnel error error="accept stream listener encountered a failure while serving" connIndex=0 event=0 ip=198.41.192.37
+2026-02-10T08:31:21Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.37
+2026-02-10T08:31:21Z ERR Connection terminated connIndex=0
+2026-02-10T08:31:21Z ERR no more connections active and exiting
+2026-02-10T08:31:21Z INF Tunnel server stopped
+2026-02-10T08:31:21Z INF Metrics server stopped

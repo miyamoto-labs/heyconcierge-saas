@@ -1,0 +1,107 @@
+21:00:22 [INFO] Scanning 50 events...
+21:01:14 [INFO] 
+============================================================
+21:01:14 [INFO] 🔄 CYCLE #1 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+21:01:14 [INFO] ============================================================
+21:01:14 [INFO] 
+🔍 Scanning markets...
+21:01:14 [INFO] Scanning 50 events...
+21:03:23 [INFO] 
+============================================================
+21:03:23 [INFO] 🔄 CYCLE #1 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+21:03:23 [INFO] ============================================================
+21:03:23 [INFO] 
+🔍 Scanning markets...
+21:03:23 [INFO] Scanning 50 events...
+21:04:43 [INFO] Found 0 tradeable markets (spread < 30%)
+21:04:43 [INFO] No tradeable markets found this cycle.
+21:05:33 [INFO] 
+============================================================
+21:05:33 [INFO] 🔄 CYCLE #2 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+21:05:33 [INFO] ============================================================
+21:05:33 [INFO] 
+🔍 Scanning markets...
+21:05:34 [INFO] Scanning 50 events...
+21:07:02 [INFO] Found 0 tradeable markets (spread < 30%)
+21:07:02 [INFO] No tradeable markets found this cycle.
+21:07:31 [INFO] 
+============================================================
+21:07:31 [INFO] 🔄 CYCLE #3 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+21:07:31 [INFO] ============================================================
+21:07:31 [INFO] 
+🔍 Scanning markets...
+21:07:32 [INFO] Scanning 50 events...
+09:49:55 [INFO] 
+============================================================
+09:49:55 [INFO] 🔄 CYCLE #3 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+09:49:55 [INFO] ============================================================
+09:49:55 [INFO] 
+🔍 Scanning markets...
+09:49:56 [INFO] Scanning 50 events...
+09:50:54 [INFO] 
+============================================================
+09:50:54 [INFO] 🔄 CYCLE #3 | Bankroll: $1000.00 | PnL: $+0.00 | Positions: 0
+09:50:54 [INFO] ============================================================
+09:50:54 [INFO] 
+🔍 Scanning markets...
+09:50:54 [INFO] Scanning 50 events...
+09:52:42 [INFO] Found 110 tradeable markets (spread < 30%)
+09:52:42 [INFO] 
+📈 Scoring opportunities...
+09:52:44 [INFO] 
+🎯 Top 5 Opportunities:
+09:52:44 [INFO]   1. NO @ 0.006 | (Total Kills Over/Under 36.5 in Game 2?) | Edge: 94.4% | Spread: 0.5% | Depth: $16955 | Vol24h: $1,042,674 | Resolves in 0d
+09:52:44 [INFO]   2. NO @ 0.006 | (Total Kills Over/Under 37.5 in Game 2?) | Edge: 94.4% | Spread: 0.7% | Depth: $16956 | Vol24h: $1,042,674 | Resolves in 0d
+09:52:44 [INFO]   3. NO @ 0.006 | (Total Kills Over/Under 38.5 in Game 2?) | Edge: 94.4% | Spread: 0.7% | Depth: $16953 | Vol24h: $1,042,674 | Resolves in 0d
+09:52:44 [INFO]   4. NO @ 0.006 | (Total Kills Over/Under 45.5 in Game 2?) | Edge: 94.4% | Spread: 0.7% | Depth: $16925 | Vol24h: $1,042,674 | Resolves in 0d
+09:52:44 [INFO]   5. NO @ 0.006 | (Total Kills Over/Under 44.5 in Game 2?) | Edge: 94.4% | Spread: 0.9% | Depth: $1109 | Vol24h: $1,042,674 | Resolves in 0d
+09:52:44 [INFO] 
+💹 Attempting: NO @ 0.006
+09:52:44 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 36.5 in Game 2?
+09:52:44 [INFO] 
+💹 Attempting: NO @ 0.006
+09:52:44 [INFO]   ✅ PAPER FILL: NO @ 0.006 | $20.00 | 3333.3 shares | Edge: 94.4%
+09:52:44 [INFO] 
+💹 Attempting: NO @ 0.006
+09:52:44 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 38.5 in Game 2?
+09:52:44 [INFO] 
+💹 Attempting: NO @ 0.006
+09:52:44 [INFO]   ✅ PAPER FILL: NO @ 0.006 | $20.00 | 3333.3 shares | Edge: 94.4%
+09:52:44 [INFO] 
+💹 Attempting: NO @ 0.006
+09:52:44 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 44.5 in Game 2?
+09:52:44 [INFO] 
+📋 Open Positions (2):
+09:52:44 [INFO]   • NO Total Kills Over/Under 37.5 in Game 2? @ 0.006 → 0.000 | $+0.00
+09:52:44 [INFO]   • NO Total Kills Over/Under 45.5 in Game 2? @ 0.006 → 0.000 | $+0.00
+09:52:44 [INFO]   Total exposure: $40.00 | Unrealized: $+0.00
+09:53:42 [INFO] Found 107 tradeable markets (spread < 30%)
+09:53:42 [INFO] 
+📈 Scoring opportunities...
+09:53:45 [INFO] 
+🎯 Top 5 Opportunities:
+09:53:45 [INFO]   1. NO @ 0.006 | (Total Kills Over/Under 36.5 in Game 2?) | Edge: 94.4% | Spread: 0.3% | Depth: $16954 | Vol24h: $1,042,674 | Resolves in 0d
+09:53:45 [INFO]   2. NO @ 0.006 | (Total Kills Over/Under 38.5 in Game 2?) | Edge: 94.4% | Spread: 0.5% | Depth: $16952 | Vol24h: $1,042,674 | Resolves in 0d
+09:53:45 [INFO]   3. NO @ 0.006 | (Total Kills Over/Under 45.5 in Game 2?) | Edge: 94.4% | Spread: 0.5% | Depth: $16924 | Vol24h: $1,042,674 | Resolves in 0d
+09:53:45 [INFO]   4. NO @ 0.006 | (Total Kills Over/Under 44.5 in Game 2?) | Edge: 94.4% | Spread: 0.9% | Depth: $1109 | Vol24h: $1,042,674 | Resolves in 0d
+09:53:45 [INFO]   5. NO @ 0.006 | (Total Kills Over/Under 42.5 in Game 2?) | Edge: 94.4% | Spread: 0.9% | Depth: $1109 | Vol24h: $1,042,674 | Resolves in 0d
+09:53:45 [INFO] 
+💹 Attempting: NO @ 0.006
+09:53:45 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 36.5 in Game 2?
+09:53:45 [INFO] 
+💹 Attempting: NO @ 0.006
+09:53:45 [INFO]   ✅ PAPER FILL: NO @ 0.006 | $20.00 | 3333.3 shares | Edge: 94.4%
+09:53:45 [INFO] 
+💹 Attempting: NO @ 0.006
+09:53:45 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 45.5 in Game 2?
+09:53:45 [INFO] 
+💹 Attempting: NO @ 0.006
+09:53:45 [INFO]   📋 LIMIT ORDER NOT FILLED (simulated): NO @ 0.006 on Total Kills Over/Under 44.5 in Game 2?
+09:53:45 [INFO] 
+💹 Attempting: NO @ 0.006
+09:53:45 [INFO]   ✅ PAPER FILL: NO @ 0.006 | $20.00 | 3333.3 shares | Edge: 94.4%
+09:53:45 [INFO] 
+📋 Open Positions (2):
+09:53:45 [INFO]   • NO Total Kills Over/Under 38.5 in Game 2? @ 0.006 → 0.000 | $+0.00
+09:53:45 [INFO]   • NO Total Kills Over/Under 42.5 in Game 2? @ 0.006 → 0.000 | $+0.00
+09:53:45 [INFO]   Total exposure: $40.00 | Unrealized: $+0.00

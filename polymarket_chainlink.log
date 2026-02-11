@@ -1,0 +1,44 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+🔐 Initializing Polymarket CLOB client...
+✅ Client address: 0x114B7A51A4cF04897434408bd9003626705a2208
+🔑 Creating API credentials...
+✅ API Key: 40cfb275-5ded-cb...
+✅ CLOB client fully authenticated (Level 2)
+✅ Server connection verified. Time: 1770416953
+[2026-02-06 23:29:13.446] 📊 🚀 CHAINLINK LAG BOT STARTING
+[2026-02-06 23:29:13.446] 📊 ⚙️  Mode: 💸 LIVE TRADING
+[2026-02-06 23:29:13.446] 📊 ⚙️  Position size: $3.00
+[2026-02-06 23:29:13.446] 📊 ⚙️  Min price move: 0.30%
+[2026-02-06 23:29:13.446] 📊 ⚙️  Trade window: First 300s of 15-min markets
+[2026-02-06 23:29:13.446] 📊 
+[2026-02-06 23:29:14.736] ✅ ✅ Connected to Binance BTC WebSocket
+[2026-02-06 23:29:14.738] ✅ ✅ Connected to Binance ETH WebSocket
+[2026-02-06 23:29:14.788] 📊 ETH - New 15-min window started at $2,064.00
+[2026-02-06 23:29:14.917] 📊 BTC - New 15-min window started at $70,783.49
+[2026-02-06 23:30:00.059] 📊 BTC - New 15-min window started at $70,812.20
+[2026-02-06 23:30:00.128] 📊 ETH - New 15-min window started at $2,064.34
+[2026-02-06 23:30:13.467] 📊 📊 STATUS UPDATE
+   Total trades: 0
+   Win rate: N/A
+   P&L: $0.00
+   BTC: $70,880.00 (+0.10% | 13s)
+   ETH: $2,067.56 (+0.16% | 13s)
+[2026-02-06 23:31:13.470] 📊 📊 STATUS UPDATE
+   Total trades: 0
+   Win rate: N/A
+   P&L: $0.00
+   BTC: $70,898.53 (+0.12% | 73s)
+   ETH: $2,065.00 (+0.03% | 73s)
+[2026-02-06 23:32:13.452] 📊 📊 STATUS UPDATE
+   Total trades: 0
+   Win rate: N/A
+   P&L: $0.00
+   BTC: $70,846.99 (+0.05% | 133s)
+   ETH: $2,065.38 (+0.05% | 133s)
+[2026-02-06 23:33:13.452] 📊 📊 STATUS UPDATE
+   Total trades: 0
+   Win rate: N/A
+   P&L: $0.00
+   BTC: $70,877.44 (+0.09% | 193s)
+   ETH: $2,064.42 (+0.00% | 193s)

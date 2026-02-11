@@ -1,0 +1,191 @@
+{
+  "last_updated": "2026-02-08",
+  "source_notes": "Compiled from Polymarket leaderboard, news articles, on-chain analysis, PolyTrack, and public reporting",
+  "whales": [
+    {
+      "address": "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+      "username": "Theo4",
+      "name": "Théo (French Whale)",
+      "estimated_pnl": "$22M+ (this account alone, ~$85M across all accounts)",
+      "strategy": "Information edge - commissioned private YouGov polls, concentrated political bets",
+      "win_rate": "67%",
+      "specialty": "political events, elections",
+      "volume": "$43.2M",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit",
+      "notes": "Used 11+ accounts. Known accounts: Theo4, Fredi9999, PrincessCaro, Michie, zxgngl. Bet $30-40M on Trump 2024 election at ~40c, won ~$85M total."
+    },
+    {
+      "address": "0x3b90fb6b60c8e8f57f9e0a8d35fe4f7c30c07e91",
+      "username": "Fredi9999",
+      "name": "Théo (French Whale) - Account 2",
+      "estimated_pnl": "$16.6M",
+      "strategy": "Same as Theo4 - political events, private polling edge",
+      "win_rate": "67%",
+      "specialty": "political events",
+      "volume": "$76.6M",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit"
+    },
+    {
+      "address": null,
+      "username": "kch123",
+      "name": "kch123 (Market Maker)",
+      "estimated_pnl": "$9.4M",
+      "strategy": "High-volume market making, liquidity provision",
+      "win_rate": "52%",
+      "specialty": "market making",
+      "volume": "$229M",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit",
+      "notes": "Extremely high volume relative to PnL - classic market maker profile"
+    },
+    {
+      "address": null,
+      "username": "Len9311238",
+      "name": "Len9311238",
+      "estimated_pnl": "$8.7M",
+      "strategy": "Concentrated political bets",
+      "win_rate": "65%",
+      "specialty": "politics",
+      "volume": "$16.4M",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit"
+    },
+    {
+      "address": null,
+      "username": "zxgngl",
+      "name": "Théo (French Whale) - Account 3",
+      "estimated_pnl": "$7.8M",
+      "strategy": "Same cluster as Theo4/Fredi9999",
+      "win_rate": "67%",
+      "specialty": "political events",
+      "volume": "$40.7M",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit"
+    },
+    {
+      "address": null,
+      "username": "RepTrump",
+      "name": "RepTrump",
+      "estimated_pnl": "$7.5M",
+      "strategy": "Political conviction trading",
+      "win_rate": "70%",
+      "specialty": "US politics",
+      "volume": "unknown",
+      "source": "https://polymarket.com/leaderboard/overall/all/profit"
+    },
+    {
+      "address": null,
+      "username": "Beachboy4",
+      "name": "Beachboy4",
+      "estimated_pnl": "$6.1M (single day record)",
+      "strategy": "Sports betting - concentrated football and NBA positions",
+      "win_rate": "54%",
+      "specialty": "sports (NFL, NBA, EPL)",
+      "volume": "unknown",
+      "source": "https://finbold.com/heres-the-most-successful-trader-on-polymarket-after-netting-over-6-million-in-a-day/",
+      "notes": "Made $6.12M in a single day on sports bets. Previously was net negative ~$688K. Still has ~$2M in open positions."
+    },
+    {
+      "address": "0x9d84ce0306f8551e02efef1680475fc0f1dc1344",
+      "username": "ImJustKen",
+      "name": "ImJustKen",
+      "estimated_pnl": "$2.4M",
+      "strategy": "Political specialist",
+      "win_rate": "72%",
+      "specialty": "politics",
+      "volume": "unknown",
+      "source": "polymarket_superbot config + leaderboard"
+    },
+    {
+      "address": "0x17db3fcd93ba12d38382a0cade24b200185c5f6d",
+      "username": "fengdubiying",
+      "name": "fengdubiying",
+      "estimated_pnl": "$2.9M",
+      "strategy": "Esports and gaming specialist",
+      "win_rate": "61%",
+      "specialty": "esports",
+      "volume": "unknown",
+      "source": "polymarket_superbot config"
+    },
+    {
+      "address": null,
+      "username": "WindWalk3",
+      "name": "WindWalk3",
+      "estimated_pnl": "$500K+",
+      "strategy": "Multi-category, aggressive sizing",
+      "win_rate": "58%",
+      "specialty": "politics, sports",
+      "volume": "unknown",
+      "source": "https://www.webopedia.com/crypto/learn/top-polymarket-traders/"
+    },
+    {
+      "address": null,
+      "username": "HyperLiquid0xb",
+      "name": "HyperLiquid0xb",
+      "estimated_pnl": "$500K+",
+      "strategy": "Cross-platform arbitrage and directional",
+      "win_rate": "60%",
+      "specialty": "crypto, arbitrage",
+      "volume": "unknown",
+      "source": "https://www.webopedia.com/crypto/learn/top-polymarket-traders/"
+    },
+    {
+      "address": null,
+      "username": "Erasmus",
+      "name": "Erasmus",
+      "estimated_pnl": "$500K+",
+      "strategy": "Political and sports specialist",
+      "win_rate": "65%",
+      "specialty": "politics, sports",
+      "volume": "unknown",
+      "source": "https://www.webopedia.com/crypto/learn/top-polymarket-traders/"
+    },
+    {
+      "address": null,
+      "username": "Axios",
+      "name": "Axios",
+      "estimated_pnl": "$200K+",
+      "strategy": "Mentions market specialist - 96% win rate in niche",
+      "win_rate": "96%",
+      "specialty": "mentions markets",
+      "volume": "unknown",
+      "source": "https://news.polymarket.com/p/this-tool-finds-polymarket-traders",
+      "notes": "Dominates mentions markets category with near-perfect win rate. Likely has news/information edge."
+    },
+    {
+      "address": "0xfde62dd29574bab38f9f3e4f1da3c1b98c67dfb8",
+      "username": "Walrus",
+      "name": "Walrus",
+      "estimated_pnl": "$1.3M",
+      "strategy": "Crypto price markets specialist",
+      "win_rate": "65%",
+      "specialty": "crypto",
+      "volume": "unknown",
+      "source": "polymarket_superbot config"
+    },
+    {
+      "address": "0x7bce56c30bb2e09c33ed0b4a68a5c0b6e8c6dc97",
+      "username": "Domer",
+      "name": "Domer",
+      "estimated_pnl": "$1.2M",
+      "strategy": "Political specialist",
+      "win_rate": "69%",
+      "specialty": "politics",
+      "volume": "unknown",
+      "source": "polymarket_superbot config"
+    }
+  ],
+  "key_insights": {
+    "top_10_combined_pnl": "$157M+",
+    "avg_top_100_win_rate": "58.3%",
+    "only_0.51_pct_wallets_profit_over_1000": true,
+    "arbitrageurs_extracted_40M_risk_free": "April 2024 - April 2025",
+    "top_3_arb_wallets_made_4.2M": true,
+    "profitable_strategies": [
+      "Information edge (private polls, expert networks) - highest alpha",
+      "Market making (liquidity provision) - steady but needs capital",
+      "Cross-platform arbitrage (Polymarket vs Kalshi) - risk-free but competitive",
+      "Settlement arbitrage (buying near-certain outcomes <$1.00)",
+      "Whale copy trading (following proven wallets with >70% win rate)"
+    ],
+    "copy_trading_speed": "30-60 seconds is sufficient for most markets. Only news-scalping needs sub-10s.",
+    "best_categories_for_copy_trading": ["politics", "crypto prices", "sports (high volume)"]
+  }
+}

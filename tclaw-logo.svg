@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16a34a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="url(#bgGrad)"/>
+  
+  <!-- Shield -->
+  <path d="M256 56 L416 120 L416 256 C416 352 336 432 256 456 C176 432 96 352 96 256 L96 120 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="#15803d" 
+        stroke-width="4"/>
+  
+  <!-- Checkmark -->
+  <path d="M196 256 L236 296 L316 196" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Claw marks (subtle) -->
+  <g opacity="0.3" stroke="#0f172a" stroke-width="6" stroke-linecap="round">
+    <path d="M340 340 L380 380"/>
+    <path d="M360 320 L400 360"/>
+    <path d="M380 300 L420 340"/>
+  </g>
+</svg>

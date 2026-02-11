@@ -1,0 +1,440 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+======================================================================
+🤖 POLYMARKET SUPERBOT - INITIALIZING
+======================================================================
+✅ LLM Forecaster initialized with Claude 3 Haiku
+
+💼 Capital: $100.00
+📊 Mode: 📝 PAPER TRADING
+
+🎯 Active Strategies (3):
+   • llm_forecast: 40% allocation
+   • whale_copy: 30% allocation
+   • low_risk_bond: 20% allocation
+
+✅ Superbot initialized successfully!
+======================================================================
+
+
+======================================================================
+🚀 STARTING CONTINUOUS MODE
+======================================================================
+Cycle interval: 180s (3.0 minutes)
+Press Ctrl+C to stop
+======================================================================
+
+
+======================================================================
+🔄 CYCLE #1
+======================================================================
+
+======================================================================
+🔄 STARTING TRADING CYCLE - 2026-02-08 16:57:05
+======================================================================
+
+======================================================================
+🤖 LLM_FORECAST - Scanning for opportunities...
+======================================================================
+✅ Scanned 49 active markets
+📊 Analyzing 49 markets with LLM...
+
+🤖 Forecasting: Will Trump deport less than 250,000?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: less
+   🎯 EDGE FOUND: +56.1% (Claude 3 Haiku)
+
+✅ Found opportunity:
+   Market: Will Trump deport less than 250,000?...
+   Edge: +56.1%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 250,000-500,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 250,000-500,000
+   🎯 EDGE FOUND: -11.1% (Claude 3 Haiku)
+
+✅ Found opportunity:
+   Market: Will Trump deport 250,000-500,000 people?...
+   Edge: -11.1%
+   Confidence: MEDIUM
+   Direction: DOWN
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 500,000-750,000- people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 500,000-750,000-
+   🎯 EDGE FOUND: +13.3% (Claude 3 Haiku)
+
+✅ Found opportunity:
+   Market: Will Trump deport 500,000-750,000- people?...
+   Edge: +13.3%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 750,000-1,000,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 750,000-1,000,000
+
+✅ Found opportunity:
+   Market: Will Trump deport 750,000-1,000,000 people?...
+   Edge: +9.3%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 1,000,000-1,250,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,000,000-1,250,000
+
+✅ Found opportunity:
+   Market: Will Trump deport 1,000,000-1,250,000 people?...
+   Edge: +9.4%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 1,250,000-1,500,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,250,000-1,500,000
+   🎯 EDGE FOUND: +14.6% (Claude 3 Haiku)
+
+✅ Found opportunity:
+   Market: Will Trump deport 1,250,000-1,500,000 people?...
+   Edge: +14.6%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 1,500,000-1,750,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,500,000-1,750,000
+
+✅ Found opportunity:
+   Market: Will Trump deport 1,500,000-1,750,000 people?...
+   Edge: +9.4%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 1,750,000-2,000,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,750,000-2,000,000
+
+🤖 Forecasting: Will Trump deport 2,000,000 or more people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 2,000,000
+
+✅ Found opportunity:
+   Market: Will Trump deport 2,000,000 or more people?...
+   Edge: +9.6%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+🤖 Forecasting: Will Trump deport 750,000 or more people in 2025?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 750,000
+   🎯 EDGE FOUND: +10.0% (Claude 3 Haiku)
+
+✅ Found opportunity:
+   Market: Will Trump deport 750,000 or more people in 2025?...
+   Edge: +10.0%
+   Confidence: MEDIUM
+   Direction: UP
+   Size: $1.00
+
+📈 Found 9 opportunities (LLM Forecast)
+======================================================================
+
+
+======================================================================
+🐋 WHALE_COPY - Monitoring whale wallets...
+======================================================================
+
+🐋 Found 0 whale copy opportunities
+======================================================================
+
+
+======================================================================
+💰 LOW_RISK_BOND - Scanning for bond opportunities...
+======================================================================
+✅ Scanned 99 active markets
+📊 Found 65 high-probability markets (>95%)
+   ⚠️ Skipping (low liquidity): Will Trump deport 750,000 or more people in 2025?...
+   ⚠️ Skipping (low liquidity): Will Elon and DOGE cut less than $50b in federal s...
+
+💰 Found 0 bond opportunities
+======================================================================
+
+
+📊 OPPORTUNITY RANKING
+======================================================================
+Found 9 total opportunities
+
+Top 9 by Expected Value:
+
+1. LLM_FORECAST
+   Market: Will Trump deport less than 250,000?...
+   Direction: UP
+   Size: $1.00
+   Return: 56.1%
+   Confidence: 50%
+   EV: $0.28
+
+2. LLM_FORECAST
+   Market: Will Trump deport 1,250,000-1,500,000 people?...
+   Direction: UP
+   Size: $1.00
+   Return: 14.6%
+   Confidence: 50%
+   EV: $0.07
+
+3. LLM_FORECAST
+   Market: Will Trump deport 500,000-750,000- people?...
+   Direction: UP
+   Size: $1.00
+   Return: 13.3%
+   Confidence: 50%
+   EV: $0.07
+
+4. LLM_FORECAST
+   Market: Will Trump deport 250,000-500,000 people?...
+   Direction: DOWN
+   Size: $1.00
+   Return: 11.1%
+   Confidence: 50%
+   EV: $0.06
+
+5. LLM_FORECAST
+   Market: Will Trump deport 750,000 or more people in 2025?...
+   Direction: UP
+   Size: $1.00
+   Return: 10.0%
+   Confidence: 50%
+   EV: $0.05
+
+6. LLM_FORECAST
+   Market: Will Trump deport 2,000,000 or more people?...
+   Direction: UP
+   Size: $1.00
+   Return: 9.6%
+   Confidence: 50%
+   EV: $0.05
+
+7. LLM_FORECAST
+   Market: Will Trump deport 1,000,000-1,250,000 people?...
+   Direction: UP
+   Size: $1.00
+   Return: 9.4%
+   Confidence: 50%
+   EV: $0.05
+
+8. LLM_FORECAST
+   Market: Will Trump deport 1,500,000-1,750,000 people?...
+   Direction: UP
+   Size: $1.00
+   Return: 9.4%
+   Confidence: 50%
+   EV: $0.05
+
+9. LLM_FORECAST
+   Market: Will Trump deport 750,000-1,000,000 people?...
+   Direction: UP
+   Size: $1.00
+   Return: 9.3%
+   Confidence: 50%
+   EV: $0.05
+
+⚡ EXECUTING TRADES
+======================================================================
+
+🎯 Executing opportunity #1
+
+======================================================================
+📈 EXECUTING TRADE
+======================================================================
+Market: will-trump-deport-less-than-250000
+Direction: UP
+Size: $1.00
+Strategy: llm_forecast
+Mode: 📝 PAPER
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: will-trump-deport-less-than-250000
+Direction: UP
+Token ID: 101676997363687199724245607342877036148401850938023978421879460310389391082353
+Size: $1.00
+Type: MARKET
+Mode: 📝 PAPER
+
+📖 Orderbook:
+   Best Bid: 0.0010
+   Best Ask: 0.9990
+   Spread: 0.9980
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+======================================================================
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+
+🎯 Executing opportunity #1
+
+======================================================================
+📈 EXECUTING TRADE
+======================================================================
+Market: will-trump-deport-1250000-1500000-people
+Direction: UP
+Size: $1.00
+Strategy: llm_forecast
+Mode: 📝 PAPER
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: will-trump-deport-1250000-1500000-people
+Direction: UP
+Token ID: 73414222381656326204771753454630063673548497164758947581648273905027617570612
+Size: $1.00
+Type: MARKET
+Mode: 📝 PAPER
+
+📖 Orderbook:
+   Best Bid: 0.0010
+   Best Ask: 0.9990
+   Spread: 0.9980
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+======================================================================
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+
+🎯 Executing opportunity #1
+
+======================================================================
+📈 EXECUTING TRADE
+======================================================================
+Market: will-trump-deport-500000-750000-people
+Direction: UP
+Size: $1.00
+Strategy: llm_forecast
+Mode: 📝 PAPER
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: will-trump-deport-500000-750000-people
+Direction: UP
+Token ID: 100074770378634056601572485653252702850363676459996771990439989989293515601975
+Size: $1.00
+Type: MARKET
+Mode: 📝 PAPER
+
+📖 Orderbook:
+   Best Bid: 0.0010
+   Best Ask: 0.9990
+   Spread: 0.9980
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+======================================================================
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+
+🎯 Executing opportunity #1
+
+======================================================================
+📈 EXECUTING TRADE
+======================================================================
+Market: will-trump-deport-250000-500000-people
+Direction: DOWN
+Size: $1.00
+Strategy: llm_forecast
+Mode: 📝 PAPER
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: will-trump-deport-250000-500000-people
+Direction: DOWN
+Token ID: 30442780799048074404860985387051749017905070253466005720364298335239299761065
+Size: $1.00
+Type: MARKET
+Mode: 📝 PAPER
+
+📖 Orderbook:
+   Best Bid: 0.0010
+   Best Ask: 0.9990
+   Spread: 0.9980
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+======================================================================
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+
+🎯 Executing opportunity #1
+
+======================================================================
+📈 EXECUTING TRADE
+======================================================================
+Market: will-trump-deport-750000-or-more-people-in-2025
+Direction: UP
+Size: $1.00
+Strategy: llm_forecast
+Mode: 📝 PAPER
+✅ Found market via events: will-trump-deport-750000-or-more-people-in-2025
+
+======================================================================
+📊 PLACING ORDER
+======================================================================
+Market: will-trump-deport-750000-or-more-people-in-2025
+Direction: UP
+Token ID: 97449340182256366014320155718265676486703217567849039806162053075113517266910
+Size: $1.00
+Type: MARKET
+Mode: 📝 PAPER
+
+📖 Orderbook:
+   Best Bid: 0.0010
+   Best Ask: 0.9990
+   Spread: 0.9980
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+======================================================================
+
+❌ Trade failed: Odds too high (0.9990 > 0.65) - need 100%+ win rate
+
+📊 CYCLE SUMMARY
+======================================================================
+Duration: 32.5s
+Opportunities Found: 9
+Trades Executed: 0
+
+💼 Portfolio Status:
+   Capital: $100.00
+   Active Positions: 5
+   Exposure: $5.00 (5.0%)
+   Daily Trades: 0
+   Daily P&L: $+0.00
+
+======================================================================
+
+
+⏰ Next cycle in 180s...
+======================================================================
+

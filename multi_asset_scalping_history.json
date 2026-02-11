@@ -1,0 +1,1377 @@
+[
+  {
+    "timestamp": "2026-02-06T10:12:20.751906",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 64974.5,
+    "stop_loss": 64454.704,
+    "take_profit": 65624.245,
+    "size_usd": 10.0,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (64908 > 64890)",
+      "Price > VWAP",
+      "RSI momentum (57.8)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:12:24.277857",
+    "asset": "HYPE",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 32.4685,
+    "stop_loss": 32.793185,
+    "take_profit": 31.9814725,
+    "size_usd": 10.0,
+    "confidence": 60,
+    "leverage": 12,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (46.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:12:27.793277",
+    "asset": "FARTCOIN",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 0.18332,
+    "stop_loss": 0.1842366,
+    "take_profit": 0.18185344,
+    "size_usd": 11.99940792,
+    "confidence": 55,
+    "leverage": 15,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "3 bearish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:14:28.671002",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 65040.5,
+    "stop_loss": 64520.176,
+    "take_profit": 65690.905,
+    "size_usd": 15.0,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (64933 > 64901)",
+      "Price > VWAP",
+      "RSI momentum (61.6)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:14:33.751954",
+    "asset": "HYPE",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 32.5615,
+    "stop_loss": 32.3986925,
+    "take_profit": 32.821992,
+    "size_usd": 18.0,
+    "confidence": 60,
+    "leverage": 12,
+    "reasons": [
+      "Bid imbalance (89.8%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:14:39.765590",
+    "asset": "FARTCOIN",
+    "side": "LONG",
+    "strategy": "VOLUME_SPIKE",
+    "entry_price": 0.18404,
+    "stop_loss": 0.1831198,
+    "take_profit": 0.18569635999999998,
+    "size_usd": 20.0,
+    "confidence": 70,
+    "leverage": 15,
+    "reasons": [
+      "Volume spike (4.1x)",
+      "Bullish candle + volume",
+      "Strong body (81.6%)",
+      "Exceptional volume"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:15:00.667174",
+    "asset": "FARTCOIN",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 0.18368,
+    "stop_loss": 0.1845984,
+    "take_profit": 0.18221056000000002,
+    "size_usd": 20.0,
+    "confidence": 55,
+    "leverage": 15,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "3 bearish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:36:41.678778",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 65817.5,
+    "stop_loss": 66146.5875,
+    "take_profit": 65051.65,
+    "size_usd": 89.97352575,
+    "confidence": 80,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (100.8%)",
+      "RSI overbought (91.6)",
+      "Rejection forming"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:37:09.664321",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 65739.5,
+    "stop_loss": 66068.1975,
+    "take_profit": 65047.9,
+    "size_usd": 89.9853174,
+    "confidence": 80,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (96.8%)",
+      "RSI overbought (86.3)",
+      "Rejection forming"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:47:34.288434",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 65608.5,
+    "stop_loss": 65477.283,
+    "take_profit": 65870.934,
+    "size_usd": 90.03123000000001,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (65650 > 65407)",
+      "Price > VWAP",
+      "RSI momentum (69.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T10:49:17.905437",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 65968.5,
+    "stop_loss": 66067.45275,
+    "take_profit": 65150.4,
+    "size_usd": 89.9533062,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (96.6%)",
+      "RSI overbought (85.2)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T11:21:04.318594",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 66110.5,
+    "stop_loss": 65978.279,
+    "take_profit": 66374.942,
+    "size_usd": 89.9038512,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (65943 > 65753)",
+      "Price > VWAP",
+      "RSI momentum (61.5)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T11:22:44.826860",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 65926.5,
+    "stop_loss": 65794.647,
+    "take_profit": 66190.206,
+    "size_usd": 89.85216464999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (65884 > 65728)",
+      "Price > VWAP",
+      "RSI momentum (52.8)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T11:22:48.505784",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 65941.5,
+    "stop_loss": 65809.617,
+    "take_profit": 66205.266,
+    "size_usd": 89.84937525000001,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (65892 > 65731)",
+      "Price > VWAP",
+      "RSI momentum (54.4)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T11:54:25.938652",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 65903.5,
+    "stop_loss": 65837.5965,
+    "take_profit": 66035.307,
+    "size_usd": 89.75800844999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (91.1%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T12:02:28.714795",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 65815.5,
+    "stop_loss": 65749.6845,
+    "take_profit": 65947.131,
+    "size_usd": 89.70935835,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (86.2%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T12:37:26.402962",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 66117.5,
+    "stop_loss": 65985.265,
+    "take_profit": 66381.97,
+    "size_usd": 89.79461235000001,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (66049 > 65963)",
+      "Price > VWAP",
+      "RSI momentum (65.3)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T12:57:30.423070",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 66619.5,
+    "stop_loss": 66719.42925,
+    "take_profit": 66050.95,
+    "size_usd": 89.88850395,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (115.1%)",
+      "RSI overbought (96.7)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:05:14.486436",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 66800.5,
+    "stop_loss": 66900.70075,
+    "take_profit": 66375.55,
+    "size_usd": 89.82802274999999,
+    "confidence": 80,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (104.0%)",
+      "RSI overbought (92.3)",
+      "Rejection forming"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:13:17.877719",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 67050.5,
+    "stop_loss": 67151.07575,
+    "take_profit": 66409.65,
+    "size_usd": 89.78376359999999,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (120.6%)",
+      "RSI overbought (81.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:20:19.638688",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 67247.5,
+    "stop_loss": 67348.37125000001,
+    "take_profit": 66508.8,
+    "size_usd": 89.72438685,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (107.0%)",
+      "RSI overbought (82.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:22:28.586736",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 67383.5,
+    "stop_loss": 67484.57525000001,
+    "take_profit": 66515.6,
+    "size_usd": 89.67060059999999,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (113.6%)",
+      "RSI overbought (83.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:29:53.991675",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 66836.5,
+    "stop_loss": 66702.827,
+    "take_profit": 67103.846,
+    "size_usd": 89.77446615,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (66975 > 66733)",
+      "Price > VWAP",
+      "RSI momentum (62.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:50:11.287011",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67565.5,
+    "stop_loss": 67430.369,
+    "take_profit": 67835.762,
+    "size_usd": 89.8879431,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67344 > 67057)",
+      "Price > VWAP",
+      "RSI momentum (63.0)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T14:52:24.049711",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67273.5,
+    "stop_loss": 67138.953,
+    "take_profit": 67542.594,
+    "size_usd": 89.81599229999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67249 > 67016)",
+      "Price > VWAP",
+      "RSI momentum (52.1)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:04:04.983000",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67032.5,
+    "stop_loss": 66898.435,
+    "take_profit": 67300.63,
+    "size_usd": 89.7583776,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67221 > 67075)",
+      "Price > VWAP",
+      "RSI momentum (58.1)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:12:05.793277",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 66974.5,
+    "stop_loss": 67041.4745,
+    "take_profit": 66840.551,
+    "size_usd": 89.7022449,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (81.8%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:14:53.338541",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 67153.5,
+    "stop_loss": 67220.65349999999,
+    "take_profit": 67019.193,
+    "size_usd": 89.65735649999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (81.1%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:14:56.959852",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67146.5,
+    "stop_loss": 67012.207,
+    "take_profit": 67415.086,
+    "size_usd": 89.6520867,
+    "confidence": 55,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67122 > 67059)",
+      "Price > VWAP",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:15:24.972855",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 67104.5,
+    "stop_loss": 67171.60449999999,
+    "take_profit": 66970.291,
+    "size_usd": 89.64621435,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (91.9%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:31:13.856317",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67275.5,
+    "stop_loss": 67140.949,
+    "take_profit": 67544.602,
+    "size_usd": 89.58360165,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67068 > 67032)",
+      "Price > VWAP",
+      "RSI momentum (50.2)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:34:31.487031",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 67968.5,
+    "stop_loss": 67832.563,
+    "take_profit": 68240.374,
+    "size_usd": 89.70032729999998,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (67284 > 67124)",
+      "Price > VWAP",
+      "RSI momentum (63.9)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:46:14.165200",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 68500.5,
+    "stop_loss": 68603.25075,
+    "take_profit": 67313.4,
+    "size_usd": 89.79944805000001,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (111.1%)",
+      "RSI overbought (78.1)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:56:32.226638",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 68056.0,
+    "stop_loss": 68124.056,
+    "take_profit": 67919.888,
+    "size_usd": 89.89113975,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (77.6%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T15:58:16.194979",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 68161.5,
+    "stop_loss": 68093.3385,
+    "take_profit": 68297.823,
+    "size_usd": 89.83286654999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (98.0%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:00:57.224117",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "VOLUME_SPIKE",
+    "entry_price": 67929.0,
+    "stop_loss": 68064.858,
+    "take_profit": 67657.284,
+    "size_usd": 89.7733038,
+    "confidence": 70,
+    "leverage": 10,
+    "reasons": [
+      "Volume spike (3.2x)",
+      "Bearish candle + volume",
+      "Strong body (88.0%)",
+      "Exceptional volume"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:05:13.367248",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 68061.5,
+    "stop_loss": 67925.377,
+    "take_profit": 68333.746,
+    "size_usd": 89.727327,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (68063 > 67783)",
+      "Price > VWAP",
+      "RSI momentum (65.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:06:20.825680",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 68089.0,
+    "stop_loss": 67952.822,
+    "take_profit": 68361.356,
+    "size_usd": 89.68511085,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (68075 > 67788)",
+      "Price > VWAP",
+      "RSI momentum (68.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:40:06.970226",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 68576.5,
+    "stop_loss": 68439.347,
+    "take_profit": 68850.806,
+    "size_usd": 89.78302694999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (68425 > 68172)",
+      "Price > VWAP",
+      "RSI momentum (60.8)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:41:47.529477",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 68523.5,
+    "stop_loss": 68386.453,
+    "take_profit": 68797.594,
+    "size_usd": 89.7390843,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (68396 > 68160)",
+      "Price > VWAP",
+      "RSI momentum (57.8)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:48:14.975857",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 69073.5,
+    "stop_loss": 69177.11025,
+    "take_profit": 67997.8,
+    "size_usd": 89.841474,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (93.3%)",
+      "RSI overbought (82.3)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T16:54:20.318565",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 68306.5,
+    "stop_loss": 68169.887,
+    "take_profit": 68579.726,
+    "size_usd": 89.9436885,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (68524 > 68303)",
+      "Price > VWAP",
+      "RSI momentum (53.8)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:18:42.583528",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 70442.5,
+    "stop_loss": 70548.16375,
+    "take_profit": 69472.3,
+    "size_usd": 90.0475086,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (91.9%)",
+      "RSI overbought (73.3)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:24:33.196335",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 70636.5,
+    "stop_loss": 70742.45475,
+    "take_profit": 69571.85,
+    "size_usd": 90.00420824999999,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (93.0%)",
+      "RSI overbought (73.2)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:28:00.727207",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 70818.5,
+    "stop_loss": 70924.72775,
+    "take_profit": 69664.15,
+    "size_usd": 89.95531394999999,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (94.1%)",
+      "RSI overbought (72.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:31:24.493422",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 71040.5,
+    "stop_loss": 71147.06075,
+    "take_profit": 69801.35,
+    "size_usd": 89.90371875,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (97.8%)",
+      "RSI overbought (88.4)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:32:30.040333",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 71203.5,
+    "stop_loss": 71310.30525,
+    "take_profit": 69809.5,
+    "size_usd": 89.85342419999999,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (102.3%)",
+      "RSI overbought (89.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T18:53:28.106234",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70589.5,
+    "stop_loss": 70448.321,
+    "take_profit": 70871.85800000001,
+    "size_usd": 89.7947985,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70763 > 70485)",
+      "Price > VWAP",
+      "RSI momentum (50.1)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:06:36.006971",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70138.5,
+    "stop_loss": 70208.63849999999,
+    "take_profit": 69998.223,
+    "size_usd": 89.73409079999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (88.1%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:23:19.806541",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 69462.0,
+    "stop_loss": 69357.807,
+    "take_profit": 70329.95,
+    "size_usd": 89.85490035000001,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Oversold (6.3%)",
+      "RSI oversold (19.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:24:54.952134",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 69308.5,
+    "stop_loss": 69204.53725000001,
+    "take_profit": 70322.75,
+    "size_usd": 89.8110828,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Oversold (0.3%)",
+      "RSI oversold (17.9)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:38:15.617014",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 69911.5,
+    "stop_loss": 70051.323,
+    "take_profit": 69631.854,
+    "size_usd": 89.9086536,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (37.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:39:20.379266",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 70021.5,
+    "stop_loss": 70161.543,
+    "take_profit": 69741.414,
+    "size_usd": 89.86472535,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (40.7)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T19:41:34.113717",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70184.5,
+    "stop_loss": 70254.68449999999,
+    "take_profit": 70044.131,
+    "size_usd": 89.82246765000001,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (93.8%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T20:25:34.806472",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70288.5,
+    "stop_loss": 70147.923,
+    "take_profit": 70569.654,
+    "size_usd": 89.77976265,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70089 > 70013)",
+      "Price > VWAP",
+      "RSI momentum (63.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T20:53:52.081110",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 70794.5,
+    "stop_loss": 70900.69175,
+    "take_profit": 70034.05,
+    "size_usd": 89.87835764999998,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (104.8%)",
+      "RSI overbought (90.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T21:17:27.481226",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70187.5,
+    "stop_loss": 70117.3125,
+    "take_profit": 70327.875,
+    "size_usd": 89.98018484999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (96.9%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T21:35:51.914146",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70846.5,
+    "stop_loss": 70704.807,
+    "take_profit": 71129.886,
+    "size_usd": 90.07533314999999,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70641 > 70507)",
+      "Price > VWAP",
+      "RSI momentum (62.0)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T21:38:05.738774",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70650.5,
+    "stop_loss": 70509.199,
+    "take_profit": 70933.102,
+    "size_usd": 90.023574,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70589 > 70485)",
+      "Price > VWAP",
+      "RSI momentum (51.8)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T21:39:42.858919",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70369.5,
+    "stop_loss": 70439.86949999999,
+    "take_profit": 70228.761,
+    "size_usd": 89.9693775,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (76.9%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T23:04:38.860682",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70495.5,
+    "stop_loss": 70354.509,
+    "take_profit": 70777.482,
+    "size_usd": 89.92046775,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70325 > 70258)",
+      "Price > VWAP",
+      "RSI momentum (60.5)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-06T23:14:12.124422",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70370.5,
+    "stop_loss": 70229.759,
+    "take_profit": 70651.982,
+    "size_usd": 89.86887645,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70402 > 70317)",
+      "Price > VWAP",
+      "RSI momentum (63.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:00:15.408559",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 71324.0,
+    "stop_loss": 71395.324,
+    "take_profit": 71181.352,
+    "size_usd": 89.97071534999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (96.5%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:03:39.126547",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "VOLUME_SPIKE",
+    "entry_price": 71598.5,
+    "stop_loss": 71455.303,
+    "take_profit": 71884.894,
+    "size_usd": 89.9101788,
+    "confidence": 70,
+    "leverage": 10,
+    "reasons": [
+      "Volume spike (5.4x)",
+      "Bullish candle + volume",
+      "Strong body (86.5%)",
+      "Exceptional volume"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:08:47.600061",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 71430.5,
+    "stop_loss": 71287.639,
+    "take_profit": 71716.222,
+    "size_usd": 89.86172715,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (71390 > 71090)",
+      "Price > VWAP",
+      "RSI momentum (68.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:12:08.952472",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 71208.5,
+    "stop_loss": 71066.083,
+    "take_profit": 71493.334,
+    "size_usd": 89.8051836,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (71310 > 71096)",
+      "Price > VWAP",
+      "RSI momentum (50.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:14:53.854462",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 71084.5,
+    "stop_loss": 71013.4155,
+    "take_profit": 71226.669,
+    "size_usd": 89.76284399999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (98.6%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T00:35:45.438755",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70733.5,
+    "stop_loss": 70804.23349999999,
+    "take_profit": 70592.033,
+    "size_usd": 89.71239975,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (83.9%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:01:58.360178",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 70124.5,
+    "stop_loss": 70264.749,
+    "take_profit": 69844.002,
+    "size_usd": 89.81414969999999,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (31.8)",
+      "3 bearish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:23:26.881479",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 70338.5,
+    "stop_loss": 70479.177,
+    "take_profit": 70057.146,
+    "size_usd": 89.7655329,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (36.2)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:36:07.595007",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 69803.5,
+    "stop_loss": 69943.107,
+    "take_profit": 69524.286,
+    "size_usd": 89.86824405,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (32.5)",
+      "3 bearish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:50:57.929617",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 70000.5,
+    "stop_loss": 70140.501,
+    "take_profit": 69720.498,
+    "size_usd": 89.81800305,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (44.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:52:37.107783",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70162.5,
+    "stop_loss": 70092.3375,
+    "take_profit": 70302.825,
+    "size_usd": 89.76998505,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (81.0%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T01:56:36.480711",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 69968.5,
+    "stop_loss": 70108.437,
+    "take_profit": 69688.626,
+    "size_usd": 89.72445884999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (36.0)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T02:35:22.998547",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70162.5,
+    "stop_loss": 70092.3375,
+    "take_profit": 70302.825,
+    "size_usd": 89.67873405,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Bid imbalance (84.1%)",
+      "Strong buying pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T04:14:15.903312",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 70672.5,
+    "stop_loss": 70531.155,
+    "take_profit": 70955.19,
+    "size_usd": 89.7745623,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70474 > 70390)",
+      "Price > VWAP",
+      "RSI momentum (66.5)",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T05:12:32.313123",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 71197.0,
+    "stop_loss": 71303.79550000001,
+    "take_profit": 70643.8,
+    "size_usd": 89.8779105,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (99.5%)",
+      "RSI overbought (82.5)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T05:21:15.892708",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MEAN_REVERSION",
+    "entry_price": 71392.5,
+    "stop_loss": 71499.58875000001,
+    "take_profit": 70738.1,
+    "size_usd": 89.82798404999998,
+    "confidence": 65,
+    "leverage": 10,
+    "reasons": [
+      "Overbought (98.0%)",
+      "RSI overbought (97.6)"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T05:42:01.855554",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "MOMENTUM",
+    "entry_price": 70750.5,
+    "stop_loss": 70892.001,
+    "take_profit": 70467.498,
+    "size_usd": 89.92862475,
+    "confidence": 75,
+    "leverage": 10,
+    "reasons": [
+      "EMA bearish",
+      "Price < VWAP",
+      "RSI momentum (38.1)",
+      "3 bearish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T06:15:43.671137",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "ORDERBOOK",
+    "entry_price": 70910.5,
+    "stop_loss": 70981.4105,
+    "take_profit": 70768.679,
+    "size_usd": 89.87919554999999,
+    "confidence": 60,
+    "leverage": 10,
+    "reasons": [
+      "Ask imbalance (72.9%)",
+      "Strong selling pressure"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T06:22:01.050026",
+    "asset": "BTC",
+    "side": "LONG",
+    "strategy": "MOMENTUM",
+    "entry_price": 71080.5,
+    "stop_loss": 70938.33899999999,
+    "take_profit": 71364.822,
+    "size_usd": 89.8272057,
+    "confidence": 55,
+    "leverage": 10,
+    "reasons": [
+      "EMA bullish (70929 > 70880)",
+      "Price > VWAP",
+      "3 bullish candles"
+    ]
+  },
+  {
+    "timestamp": "2026-02-07T06:26:25.324044",
+    "asset": "BTC",
+    "side": "SHORT",
+    "strategy": "VOLUME_SPIKE",
+    "entry_price": 70797.5,
+    "stop_loss": 70939.095,
+    "take_profit": 70514.31,
+    "size_usd": 89.7569292,
+    "confidence": 70,
+    "leverage": 10,
+    "reasons": [
+      "Volume spike (2.7x)",
+      "Bearish candle + volume",
+      "Strong body (68.0%)",
+      "Exceptional volume"
+    ]
+  }
+]

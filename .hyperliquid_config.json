@@ -1,0 +1,15 @@
+{
+  "note": "Hyperliquid API Configuration - KEEP SECRET",
+  "network": "mainnet",
+  "public_wallet": "0xF1CcD889c2b340636A567DfF3f1d157f7FFD00dB",
+  "api_wallet": "0x20b361f7df0633fba47bd757dfac4a81072b1ece",
+  "api_private_key": "0xc5c22aac3e8c2722231e7240928cbd7fc30c54bf5b79ad7bbd50be066285ca7a",
+  "approved_for_trading": true,
+  "max_position_size": 0,
+  "notes": [
+    "API wallet: Miyamoto Bot",
+    "Valid until: May 6, 2026",
+    "DO NOT share this file",
+    "This file should NEVER leave this machine"
+  ]
+}

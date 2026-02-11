@@ -1,0 +1,26 @@
+{
+  "name": "heyconcierge-backend",
+  "version": "1.0.0",
+  "description": "HeyConcierge WhatsApp + Claude AI backend",
+  "main": "whatsapp_server.js",
+  "scripts": {
+    "start": "node whatsapp_server.js",
+    "dev": "nodemon whatsapp_server.js",
+    "test": "node test_whatsapp.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "@supabase/supabase-js": "^2.3.4",
+    "axios": "^1.13.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "ical": "^0.8.0",
+    "twilio": "^4.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "last_update": "2026-02-07T15:37:20.848904",
+  "daily_pnl": 0.0,
+  "daily_trades": 0,
+  "consecutive_losses": 0,
+  "peak_balance": 603.872454,
+  "total_trades": 0,
+  "winning_trades": 0,
+  "losing_trades": 0,
+  "last_trade_time": null,
+  "open_positions": {},
+  "emergency_stop": false,
+  "paused_until": null,
+  "last_status_report": null
+}

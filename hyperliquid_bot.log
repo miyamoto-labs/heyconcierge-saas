@@ -1,0 +1,93 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+======================================================================
+🚀 HYPERLIQUID BOT V2.1 - MULTI-TIMEFRAME TREND FOLLOWING 🚀
+======================================================================
+⏰ Started: 2026-02-07 17:36:09
+📚 Loaded 1 historical trades, 151 open
+🧠 Learning Layer initialized
+   History: hyperliquid_trade_history_v2.json
+   Params: hyperliquid_learned_params_v2.json
+   Trades loaded: 1
+   Open positions: 151
+🧠 Learning layer: ENABLED
+
+⚠️ ORPHANED POSITION DETECTED!
+   LONG 0.005 BTC @ $69,381.50
+   Closing immediately...
+   ✅ Closed: {'status': 'ok', 'response': {'type': 'order', 'data': {'statuses': [{'filled': {'totalSz': '0.005', 'avgPx': '69249.0', 'oid': 315112789334}}]}}}
+💵 Balance: $586.04
+
+======================================================================
+🎯 V2.1 CRITICAL UPGRADES:
+   ✅ Multi-timeframe trend (5m/15m/30m/1h)
+   ✅ HARD BLOCKS - Never fight the trend!
+   ✅ Trailing stops - Let winners run!
+   ✅ Regime detection - Adapt to market!
+   ✅ Trend scoring (-100 to +100)
+======================================================================
+
+
+🚀 Starting multi-timeframe trend-following bot...
+   ✅ Position monitoring: ACTIVE (every 10 seconds)
+   ✅ Signal generation: Every 30 seconds
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: 13.7 (-100 to +100)
+   Direction: BOTH
+   Regime: RANGING
+   Min Confidence: 55
+   Position Multiplier: 1.0
+   Funding: -0.000009
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: 13.7 (-100 to +100)
+   Direction: BOTH
+   Regime: RANGING
+   Min Confidence: 55
+   Position Multiplier: 1.0
+   Funding: -0.000009
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: 17.7 (-100 to +100)
+   Direction: BOTH
+   Regime: RANGING
+   Min Confidence: 55
+   Position Multiplier: 1.0
+   Funding: -0.000009
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: 20.3 (-100 to +100)
+   Direction: BOTH
+   Regime: RANGING
+   Min Confidence: 55
+   Position Multiplier: 1.0
+   Funding: -0.000009
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L

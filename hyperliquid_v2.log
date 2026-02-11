@@ -1,0 +1,660 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+======================================================================
+🚀 HYPERLIQUID BOT V2.1 - MULTI-TIMEFRAME TREND FOLLOWING 🚀
+======================================================================
+⏰ Started: 2026-02-07 18:16:38
+📚 Loaded 1 historical trades, 152 open
+🧠 Learning Layer initialized
+   History: hyperliquid_trade_history_v2.json
+   Params: hyperliquid_learned_params_v2.json
+   Trades loaded: 1
+   Open positions: 152
+🧠 Learning layer: ENABLED
+💵 Balance: $585.56
+
+======================================================================
+🎯 V2.1 CRITICAL UPGRADES:
+   ✅ Multi-timeframe trend (5m/15m/30m/1h)
+   ✅ HARD BLOCKS - Never fight the trend!
+   ✅ Trailing stops - Let winners run!
+   ✅ Regime detection - Adapt to market!
+   ✅ Trend scoring (-100 to +100)
+======================================================================
+
+
+🚀 Starting multi-timeframe trend-following bot...
+   ✅ Position monitoring: ACTIVE (every 10 seconds)
+   ✅ Signal generation: Every 30 seconds
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -35.0 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000008
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -35.0 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000008
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -37.7 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000009
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -41.7 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000008
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -41.7 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000008
+
+🔍 Signal Generation:
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+
+📊 Fetching multi-timeframe data...
+   ✅ Loaded timeframes: 5m, 15m, 30m, 1h
+
+🎯 TREND ANALYSIS:
+   Score: -31.0 (-100 to +100)
+   Direction: SHORT_ONLY
+   Regime: WEAK_TREND_DOWN
+   Min Confidence: 65
+   Position Multiplier: 1.0
+   Funding: -0.000008
+
+🔍 Signal Generation:
+   ✅ MOMENTUM SHORT: 75% confidence
+
+======================================================================
+🎯 EXECUTING SHORT TRADE
+======================================================================
+📈 Strategy: MOMENTUM
+💰 Price: $68,866.50
+📊 Size: $46.84 (0.00068 BTC)
+⚡ Leverage: 8x
+🎯 Confidence: 75%
+📊 Trend Score: -31.0
+🌊 Regime: WEAK_TREND_DOWN
+🛑 Stop: $69,038.67
+✅ Target: $68,608.25
+📝 Reasons:
+   • EMA death cross
+   • Price below fast EMA
+   • RSI sweet spot (38.9)
+   • ✅ Trend-following SHORT (score: -31.0)
+
+✅ ORDER EXECUTED!
+   Result: {'status': 'ok', 'response': {'type': 'order', 'data': {'statuses': [{'filled': {'totalSz': '0.00068', 'avgPx': '68866.0', 'oid': 315138500241}}]}}}
+   🛡️ Placing exchange stops...
+      Stop Loss: $69,038.67
+      Take Profit: $68,608.25
+📝 Trade recorded: BTC_20260207_182011_MOM
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,877.50 | P&L: $-0.01 (-0.02%) | Peak: 0.00%
+   💼 BTC: $68,868.50 | P&L: $-0.03 (-0.00%) | Peak: 0.00%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,837.50 | P&L: $0.02 (+0.04%) | Peak: 0.04%
+   💼 BTC: $68,837.50 | P&L: $0.02 (+0.04%) | Peak: 0.04%
+   💼 BTC: $68,842.50 | P&L: $0.02 (+0.03%) | Peak: 0.04%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,845.50 | P&L: $0.01 (+0.03%) | Peak: 0.04%
+   💼 BTC: $68,897.50 | P&L: $-0.02 (-0.05%) | Peak: 0.04%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,912.50 | P&L: $-0.03 (-0.07%) | Peak: 0.04%
+   💼 BTC: $68,897.50 | P&L: $-0.03 (-0.05%) | Peak: 0.04%
+   💼 BTC: $68,875.50 | P&L: $-0.01 (-0.01%) | Peak: 0.04%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,852.50 | P&L: $0.02 (+0.02%) | Peak: 0.04%
+   💼 BTC: $68,850.50 | P&L: $0.01 (+0.02%) | Peak: 0.04%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,837.50 | P&L: $0.02 (+0.04%) | Peak: 0.04%
+   💼 BTC: $68,835.50 | P&L: $0.02 (+0.04%) | Peak: 0.05%
+   💼 BTC: $68,831.50 | P&L: $0.03 (+0.05%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,832.50 | P&L: $0.02 (+0.05%) | Peak: 0.05%
+   💼 BTC: $68,899.50 | P&L: $-0.02 (-0.05%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,902.50 | P&L: $-0.02 (-0.05%) | Peak: 0.05%
+   💼 BTC: $68,899.50 | P&L: $-0.02 (-0.05%) | Peak: 0.05%
+   💼 BTC: $68,923.50 | P&L: $-0.04 (-0.08%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,885.50 | P&L: $-0.02 (-0.03%) | Peak: 0.05%
+   💼 BTC: $68,891.50 | P&L: $-0.02 (-0.04%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,901.50 | P&L: $-0.02 (-0.05%) | Peak: 0.05%
+   💼 BTC: $68,910.50 | P&L: $-0.03 (-0.06%) | Peak: 0.05%
+   💼 BTC: $68,933.50 | P&L: $-0.04 (-0.10%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,922.00 | P&L: $-0.05 (-0.08%) | Peak: 0.05%
+   💼 BTC: $68,941.50 | P&L: $-0.05 (-0.11%) | Peak: 0.05%
+
+📊 Stats: 0 trades | 0.0% win rate | $0.00 daily P&L
+   💼 BTC: $68,956.50 | P&L: $-0.06 (-0.13%) | Peak: 0.05%
+   💼 BTC: $68,984.50 | P&L: $-0.08 (-0.17%) | Peak: 0.05%
+
+🚨 EXIT SIGNAL: STOP_LOSS
+   Position: -0.00068 BTC @ $68,866.00
+   Current: $69,053.50
+   P&L: $-0.13
+   ✅ Closed: {'status': 'ok', 'response': {'type': 'order', 'data': {'statuses': [{'filled': {'totalSz': '0.00068', 'avgPx': '69038.0', 'oid': 315142471012}}]}}}
+❌ Position check error: record_exit() got an unexpected keyword argument 'pnl_usd'
+Traceback (most recent call last):
+  File "/Users/erik/.openclaw/workspace/hyperliquid_bot_v2_optimized.py", line 1683, in check_open_positions
+    self.learning.record_trade_exit(
+  File "/Users/erik/.openclaw/workspace/hyperliquid_learning_layer.py", line 864, in record_trade_exit
+    result = self.tracker.record_exit(**kwargs)
+TypeError: record_exit() got an unexpected keyword argument 'pnl_usd'
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L
+
+📊 Stats: 1 trades | 0.0% win rate | $-0.13 daily P&L

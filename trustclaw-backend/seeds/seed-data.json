@@ -1,0 +1,174 @@
+{
+  "seeds": [
+    {
+      "name": "weather",
+      "description": "Get current weather and forecasts for any city using the free Open-Meteo API. No API key needed.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "utilities",
+      "version": "1.0.0",
+      "language": "bash",
+      "entry_point": "weather.sh",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "read-only (open-meteo.com)",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - read-only API calls to public weather service"
+      },
+      "tags": ["weather", "forecast", "api", "free"]
+    },
+    {
+      "name": "calculator",
+      "description": "Safe math calculator using Python AST parsing. Supports arithmetic, trig, logs, and constants. No eval().",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "utilities",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "calculator.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "none",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - pure computation using AST-based evaluation, no eval/exec"
+      },
+      "tags": ["math", "calculator", "safe"]
+    },
+    {
+      "name": "note-taker",
+      "description": "Simple note-taking to local files. Add, list, and search notes stored in ~/.notes/.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "productivity",
+      "version": "1.0.0",
+      "language": "bash",
+      "entry_point": "notes.sh",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "none",
+        "filesystem": "write (~/.notes/ only)",
+        "dangerous_patterns": [],
+        "verdict": "Safe - writes only to dedicated notes directory"
+      },
+      "tags": ["notes", "productivity", "local"]
+    },
+    {
+      "name": "timer",
+      "description": "Set countdown timers with natural duration parsing (5m, 1h30m, 30s). macOS notifications supported.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "utilities",
+      "version": "1.0.0",
+      "language": "bash",
+      "entry_point": "timer.sh",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "none",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - uses sleep and optional osascript notification"
+      },
+      "tags": ["timer", "reminder", "productivity"]
+    },
+    {
+      "name": "translator",
+      "description": "Translate text between languages using the free MyMemory translation API. No API key needed.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "utilities",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "translator.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "read-only (api.mymemory.translated.net)",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - read-only API calls to public translation service"
+      },
+      "tags": ["translation", "language", "api", "free"]
+    },
+    {
+      "name": "summarizer",
+      "description": "Extractive text summarizer. Summarize text or fetch and summarize URLs. No AI API needed.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "productivity",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "summarizer.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "read-only (URL fetching)",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - read-only URL fetching and local text processing"
+      },
+      "tags": ["summarize", "text", "nlp", "url"]
+    },
+    {
+      "name": "code-reviewer",
+      "description": "Static code analysis. Checks for security issues (eval, exec, injection), style problems, and common anti-patterns.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "development",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "reviewer.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "none",
+        "filesystem": "read-only",
+        "dangerous_patterns": [],
+        "verdict": "Safe - static analysis only, reads files but never executes them"
+      },
+      "tags": ["code-review", "security", "linting", "development"]
+    },
+    {
+      "name": "calendar-helper",
+      "description": "Parse natural-language dates ('next friday', '2 weeks from now') and calculate date differences.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "productivity",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "calendar_helper.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "none",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - pure date computation with no side effects"
+      },
+      "tags": ["calendar", "dates", "scheduling", "productivity"]
+    },
+    {
+      "name": "price-checker",
+      "description": "Check cryptocurrency prices using the free CoinGecko API. Supports multiple coins and currencies.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "crypto",
+      "version": "1.0.0",
+      "language": "bash",
+      "entry_point": "price.sh",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "read-only (api.coingecko.com)",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - read-only API calls to public crypto price service"
+      },
+      "tags": ["crypto", "prices", "bitcoin", "ethereum", "defi"]
+    },
+    {
+      "name": "web-searcher",
+      "description": "Search the web using DuckDuckGo HTML interface. No API key needed. Returns titles, URLs, and snippets.",
+      "author": "0x0000000000000000000000000000000000000SEED",
+      "category": "utilities",
+      "version": "1.0.0",
+      "language": "python",
+      "entry_point": "search.py",
+      "scan_result": "PASS",
+      "scan_details": {
+        "network": "read-only (html.duckduckgo.com)",
+        "filesystem": "none",
+        "dangerous_patterns": [],
+        "verdict": "Safe - read-only web search via DuckDuckGo HTML"
+      },
+      "tags": ["search", "web", "duckduckgo", "research"]
+    }
+  ]
+}

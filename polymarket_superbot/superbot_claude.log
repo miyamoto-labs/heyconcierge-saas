@@ -1,0 +1,133 @@
+/Users/erik/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+
+======================================================================
+🤖 POLYMARKET SUPERBOT - INITIALIZING
+======================================================================
+✅ LLM Forecaster initialized with Claude Sonnet 3.5
+
+💼 Capital: $100.00
+📊 Mode: 📝 PAPER TRADING
+
+🎯 Active Strategies (3):
+   • llm_forecast: 40% allocation
+   • whale_copy: 30% allocation
+   • low_risk_bond: 20% allocation
+
+✅ Superbot initialized successfully!
+======================================================================
+
+
+======================================================================
+🚀 STARTING CONTINUOUS MODE
+======================================================================
+Cycle interval: 180s (3.0 minutes)
+Press Ctrl+C to stop
+======================================================================
+
+
+======================================================================
+🔄 CYCLE #1
+======================================================================
+
+======================================================================
+🔄 STARTING TRADING CYCLE - 2026-02-08 16:55:50
+======================================================================
+
+======================================================================
+🤖 LLM_FORECAST - Scanning for opportunities...
+======================================================================
+✅ Scanned 49 active markets
+📊 Analyzing 49 markets with LLM...
+
+🤖 Forecasting: Will Trump deport less than 250,000?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: less
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgY5Vou4oasFro1asT'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 250,000-500,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 250,000-500,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgZV5zdnpdv5UZWnd4'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 500,000-750,000- people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 500,000-750,000-
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgaUNGxQqGAKKicabt'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 750,000-1,000,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 750,000-1,000,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgbdpLx7yRh4T8b1Bd'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 1,000,000-1,250,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,000,000-1,250,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgcvCqVyfraSJm28K5'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 1,250,000-1,500,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,250,000-1,500,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgdqmmYjfNbMEeqdri'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 1,500,000-1,750,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,500,000-1,750,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgek6XZhuycUnCECY4'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 1,750,000-2,000,000 people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 1,750,000-2,000,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsgffAGusQcpDJgupju'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 2,000,000 or more people?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 2,000,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsggpMz78aFCYgFngsQ'}. Using fallback.
+
+🤖 Forecasting: Will Trump deport 750,000 or more people in 2025?...
+🔍 Searching news for: trump
+🔍 Searching news for: deport
+🔍 Searching news for: 750,000
+⚠️  Claude API error: Error code: 404 - {'type': 'error', 'error': {'type': 'not_found_error', 'message': 'model: claude-sonnet-3-5-20241022'}, 'request_id': 'req_011CXvsghy4chabUzvhBVqBn'}. Using fallback.
+
+📈 Found 0 opportunities (LLM Forecast)
+======================================================================
+
+
+======================================================================
+🐋 WHALE_COPY - Monitoring whale wallets...
+======================================================================
+
+🐋 Found 0 whale copy opportunities
+======================================================================
+
+
+======================================================================
+💰 LOW_RISK_BOND - Scanning for bond opportunities...
+======================================================================
+✅ Scanned 99 active markets
+📊 Found 65 high-probability markets (>95%)
+   ⚠️ Skipping (low liquidity): Will Trump deport 750,000 or more people in 2025?...
+   ⚠️ Skipping (low liquidity): Will Elon and DOGE cut less than $50b in federal s...
+
+💰 Found 0 bond opportunities
+======================================================================
+
+
+⏸️  No trading opportunities found this cycle
+======================================================================
+
+
+⏰ Next cycle in 180s...
+======================================================================
+

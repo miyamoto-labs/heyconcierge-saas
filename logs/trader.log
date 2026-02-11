@@ -1,0 +1,167 @@
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+[forward-order] Using user wallet (key: f20609ad...)
+[forward-order] Input: tokenId=21742633143463906290... side=BUY amount=5 price=0.45 size=11.11111111111111
+[forward-order] BUY 11.11 shares @ 0.45 (negRisk=true, tickSize=0.001)
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+  User signer created: 0xC9077F2052024491FFC33443C71E37b0D57d1E38
+[forward-order] Using user wallet (key: f20609ad..., type: 1)
+[forward-order] Input: tokenId=21742633143463906290... side=BUY amount=5 price=0.45 size=11.11111111111111
+[forward-order] BUY 11.11 shares @ 0.45 (negRisk=true, tickSize=0.001)
+[forward-order] Result: {"error":"the orderbook 21742633143463906290569050155826241533067272736897614950488156847949938836455 does not exist","status":400}
+  User signer created: 0xC9077F2052024491FFC33443C71E37b0D57d1E38
+[forward-order] Using user wallet (key: f20609ad..., type: 1)
+[forward-order] Input: tokenId=45418522455402457435... side=BUY amount=5 price=0.9995 size=5.002501250625312
+  User signer created: 0xC9077F2052024491FFC33443C71E37b0D57d1E38
+[forward-order] Using user wallet (key: f20609ad..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+  User signer created: 0xC9077F2052024491FFC33443C71E37b0D57d1E38
+[forward-order] Using user wallet (key: f20609ad..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[create-wallet] Generating new wallet for user 1497955099
+[create-wallet] Created wallet: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[create-wallet] Derived API key: cc5905ad...
+[import-wallet] Importing wallet for user 1497955099
+[import-wallet] Wallet address: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[import-wallet] Derived API key: cc5905ad...
+  User signer created: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[forward-order] Using user wallet (key: cc5905ad..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+  User signer created: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[forward-order] Using user wallet (key: cc5905ad..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[create-wallet] Generating new wallet for user test123
+[create-wallet] Created wallet: 0x7c8c6b1BE421d984e89cFe092401c62993851271
+[create-wallet] Derived API key: 8b72db30...
+[create-wallet] Generating new wallet for user erik_test
+[create-wallet] Created wallet: 0x31c7D63232f4Be59168B7beC3775A1E13119b080
+[create-wallet] Derived API key: 16a78483...
+  User signer created: 0x31c7D63232f4Be59168B7beC3775A1E13119b080
+[forward-order] Using user wallet (key: 16a78483..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[forward-order] Using default wallet
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"errorMsg":"","orderID":"0xa046d11398341524549471e7419c50b0eb565ed2a3ea2bc998027e03c2a36538","takingAmount":"250","makingAmount":"3.75","status":"matched","transactionsHashes":["0xfdffec583c0c6304d3959e4d1b3a8466c922e8ab7ffdf8d2758344dbbc83699d"],"success":true}
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+  User signer created: 0x31c7D63232f4Be59168B7beC3775A1E13119b080
+[forward-order] Using user wallet (key: 16a78483..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+  User signer created: 0x31c7D63232f4Be59168B7beC3775A1E13119b080
+[forward-order] Using user wallet (key: 16a78483..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[import-wallet] Importing wallet for user erik_verify_test
+[import-wallet] Wallet address: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[import-wallet] Derived API key: cc5905ad...
+  User signer created: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[forward-order] Using user wallet (key: cc5905ad..., type: 1)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+  User signer created: 0x8c27BE6ff814E048CB1b64E0b897ea94E0808df8
+[forward-order] Using user wallet (key: cc5905ad..., type: 2)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+[create-wallet] Generating new wallet for user final_test
+[create-wallet] Created wallet: 0xDA50A9D18aC777F09a9C8C1DFc3342E0Db353A3b
+[create-wallet] Derived API key: 0ea603a6...
+  User signer created: 0xDA50A9D18aC777F09a9C8C1DFc3342E0Db353A3b
+[forward-order] Using user wallet (key: 0ea603a6..., type: 2)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[create-wallet] Generating new wallet for user erik_fixed
+[create-wallet] Created wallet: 0x2304F35c815069c68AbDdDF0a70d5b0478814c06
+[create-wallet] Derived API key: d7aad7ee...
+  User signer created: 0x2304F35c815069c68AbDdDF0a70d5b0478814c06
+[forward-order] Using user wallet (key: d7aad7ee..., type: 2)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+🚀 Polymarket Trader running on port 3001
+Initializing Polymarket CLOB client...
+  Funder: 0xE73f2BDa06ee3A913A344139a074D319e7e6a32F
+  Signature Type: 2
+  Signer: 0x114B7A51A4cF04897434408bd9003626705a2208
+  API Key (from env): 40cfb275...
+✅ Client initialized successfully
+  User signer created: 0x2304F35c815069c68AbDdDF0a70d5b0478814c06
+[forward-order] Using user wallet (key: d7aad7ee..., type: 2)
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"error":"invalid signature","status":400}
+[forward-order] Using default wallet
+[forward-order] Input: tokenId=61211199009850659437... side=BUY amount=5 price=0.02 size=250
+[forward-order] BUY 250 shares @ 0.02 (negRisk=false, tickSize=0.001)
+[forward-order] Result: {"errorMsg":"","orderID":"0x508c716530be28f9d78f75222d12379b6f5d2a3e883b885f2e608d55fe285076","takingAmount":"250","makingAmount":"3.75","status":"matched","transactionsHashes":["0xbf62965f4421b901df8eb7b3c93150fcbdf81cff93467f24648a777a125573f0"],"success":true}
+[create-wallet] Generating new wallet for user test-user-123
+[create-wallet] Created wallet: 0xEBB6D1fDC214C8734bd58cFD621b8eD455d928d5
+[create-wallet] Derived API key: 0351a405...
+[import-wallet] Importing wallet for user test-user-456
+[import-wallet] Wallet address: 0xEBB6D1fDC214C8734bd58cFD621b8eD455d928d5
+[import-wallet] Derived API key: 0351a405...
+📊 Placing order: BUY 20.00 shares @ 0.05
+   Token: 10167699736368719972...
+   Amount: $1
+   Tick: 0.001, negRisk: true, roundedPrice: 0.05, size: 20
+✅ Order placed: {"errorMsg":"","orderID":"0x3e64e9a0833b531813893e51ed5ae0454bca01c2ee69e27d3f603505dc4e7e5b","takingAmount":"","makingAmount":"","status":"live","success":true}
