@@ -6,11 +6,16 @@
 const express = require('express');
 const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
+const multer = require('multer');
+const pdfParse = require('pdf-parse');
 require('dotenv').config();
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Multer for PDF uploads (supports multiple files)
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Initialize Anthropic (Claude)
 const anthropic = new Anthropic({
@@ -219,6 +224,77 @@ app.get('/webhook/whatsapp', (req, res) => {
  */
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'heyconcierge-whatsapp' });
+});
+
+/**
+ * PDF Extraction Endpoint (supports single or multiple PDFs)
+ */
+app.post('/api/extract-pdf', upload.array('pdfs', 10), async (req, res) => {
+  try {
+    const files = req.files;
+    
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: 'No PDF files uploaded' });
+    }
+
+    console.log(`📄 Extracting ${files.length} PDF(s)...`);
+
+    // Extract text from all PDFs
+    const allTexts = [];
+    for (const file of files) {
+      const pdfData = await pdfParse(file.buffer);
+      allTexts.push(pdfData.text);
+      console.log(`📄 Extracted ${file.originalname} (${pdfData.text.length} characters)`);
+    }
+
+    // Combine all PDF texts
+    const combinedText = allTexts.join('\n\n--- NEXT DOCUMENT ---\n\n');
+
+    console.log(`📄 Combined text: ${combinedText.length} characters`);
+
+    // Use Claude to extract and merge structured data from all PDFs
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2048,
+      system: `You are extracting property information from one or more welcome PDFs. 
+
+Extract the following fields if present:
+- wifi_password: The WiFi network password
+- checkin_instructions: Instructions for checking in (key location, door codes, etc.)
+- local_tips: Local recommendations (restaurants, attractions, tips)
+- house_rules: Rules for the property (quiet hours, smoking, etc.)
+
+If multiple PDFs contain the same field, merge the information intelligently:
+- For wifi_password: use the most recent or most complete one
+- For text fields: combine all relevant information, removing duplicates
+
+Return ONLY a JSON object with these fields. If a field is not found, set it to null.
+Example:
+{
+  "wifi_password": "MyWiFi123",
+  "checkin_instructions": "Key under mat, door code 1234",
+  "local_tips": "Best coffee shop is 2 blocks away. Great pizza place on Main Street.",
+  "house_rules": "No smoking, quiet hours 10 PM - 8 AM"
+}`,
+      messages: [
+        {
+          role: 'user',
+          content: `Extract and merge property information from these PDF text(s):\n\n${combinedText}`
+        }
+      ]
+    });
+
+    const responseText = message.content[0].text;
+    console.log('🤖 Claude response:', responseText);
+
+    // Parse Claude's JSON response
+    const extracted = JSON.parse(responseText);
+
+    res.json(extracted);
+  } catch (error) {
+    console.error('PDF extraction error:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 /**
