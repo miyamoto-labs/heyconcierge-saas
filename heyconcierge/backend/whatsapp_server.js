@@ -34,6 +34,62 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = require('twilio')(accountSid, authToken);
 
 /**
+ * Extract property code from first message (e.g. "Hi SUNSET-42" → "SUNSET-42")
+ */
+function extractPropertyCode(message) {
+  if (!message) return null;
+  // Match codes like "SUNSET-42", "HC-1A2B", etc. (uppercase letters/numbers with dash)
+  const match = message.match(/\b(HC-[A-Z0-9]{4,}|[A-Z][A-Z0-9]+-[A-Z0-9]+)\b/i);
+  return match ? match[1].toUpperCase() : null;
+}
+
+/**
+ * Look up or create guest session — maps phone → property
+ */
+async function resolveGuestProperty(phone, messageBody) {
+  // 1. Check if guest has an active session
+  const { data: session } = await supabase
+    .from('guest_sessions')
+    .select('property_id')
+    .eq('phone', phone)
+    .order('last_message_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (session) {
+    // Update last_message_at
+    await supabase
+      .from('guest_sessions')
+      .update({ last_message_at: new Date().toISOString() })
+      .eq('phone', phone)
+      .eq('property_id', session.property_id);
+    return { propertyId: session.property_id, isNew: false };
+  }
+
+  // 2. No session — try to extract property code from message
+  const code = extractPropertyCode(messageBody);
+  if (code) {
+    const { data: property } = await supabase
+      .from('properties')
+      .select('id')
+      .eq('property_code', code)
+      .single();
+
+    if (property) {
+      // Create new session
+      await supabase.from('guest_sessions').insert({
+        phone,
+        property_id: property.id,
+        last_message_at: new Date().toISOString()
+      });
+      return { propertyId: property.id, isNew: true };
+    }
+  }
+
+  return { propertyId: null, isNew: true };
+}
+
+/**
  * Webhook endpoint - Twilio posts WhatsApp messages here
  */
 app.post('/webhook/whatsapp', async (req, res) => {
@@ -42,37 +98,50 @@ app.post('/webhook/whatsapp', async (req, res) => {
     
     console.log(`📩 Incoming message from ${From}: ${Body}`);
 
-    // Get property - for sandbox testing, get first property with config
-    // In production, you'd match by To (the property's WhatsApp number)
     let property, propError;
-    
-    if (To.includes('8886')) {
-      // Twilio sandbox - get first property
+
+    // Try multi-tenant routing first (property code in message or existing session)
+    const { propertyId, isNew } = await resolveGuestProperty(From, Body);
+
+    if (propertyId) {
+      // Found property via session or code
+      const result = await supabase
+        .from('properties')
+        .select('*, property_config_sheets(*)')
+        .eq('id', propertyId)
+        .single();
+      property = result.data;
+      propError = result.error;
+    } else if (To.includes('8886')) {
+      // Twilio sandbox fallback - get first property
       const result = await supabase
         .from('properties')
         .select('*, property_config_sheets(*)')
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
-      
       property = result.data;
       propError = result.error;
     } else {
-      // Production - match by WhatsApp number
+      // Production fallback - match by WhatsApp number
       const result = await supabase
         .from('properties')
         .select('*, property_config_sheets(*)')
         .eq('whatsapp_number', To)
         .single();
-      
       property = result.data;
       propError = result.error;
     }
 
     if (propError || !property) {
       console.error('Property not found:', propError);
-      await sendWhatsApp(From, "Sorry, I couldn't find property information. Please contact support.");
+      await sendWhatsApp(From, "👋 Welcome to HeyConcierge! I couldn't find your property. Please scan the QR code at your property to get started.");
       return res.status(200).send('OK');
+    }
+
+    // If new session via code, send welcome
+    if (isNew && propertyId) {
+      console.log(`🆕 New guest session: ${From} → ${property.name}`);
     }
     
     console.log(`📋 Found property: ${property.name}`)
@@ -390,6 +459,38 @@ app.post('/api/sync-calendar', async (req, res) => {
     }
   } catch (error) {
     console.error('Calendar sync error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Get property QR code data (returns WhatsApp link + property code)
+ */
+app.get('/api/property/:id/qr', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data: property, error } = await supabase
+      .from('properties')
+      .select('id, name, property_code')
+      .eq('id', id)
+      .single();
+
+    if (error || !property) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    const whatsappNumber = process.env.TWILIO_WHATSAPP_NUMBER || '+15715172626';
+    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+    const message = encodeURIComponent(`Hi ${property.property_code}`);
+    const whatsappLink = `https://wa.me/${cleanNumber}?text=${message}`;
+
+    res.json({
+      propertyCode: property.property_code,
+      propertyName: property.name,
+      whatsappLink,
+      qrContent: whatsappLink  // Frontend generates QR from this
+    });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
