@@ -279,6 +279,37 @@ export default function PropertySettingsPage() {
                   rows={4}
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
+                
+                {/* House Rules Document Upload */}
+                <div className="mt-4">
+                  <div
+                    className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
+                      dragActive 
+                        ? 'border-primary bg-[rgba(108,92,231,0.05)]' 
+                        : 'border-[rgba(108,92,231,0.15)] hover:border-primary'
+                    } ${extracting ? 'opacity-50 pointer-events-none' : ''}`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      multiple
+                      onChange={handleFileInput}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={extracting}
+                    />
+                    <div className="pointer-events-none">
+                      <svg className="w-8 h-8 mx-auto mb-2 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <p className="text-dark font-bold text-sm">Add your documents here</p>
+                      <p className="text-xs text-muted mt-1">(And we will handle the rest😉)</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div>

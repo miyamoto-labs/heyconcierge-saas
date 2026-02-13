@@ -97,6 +97,28 @@ export default function DashboardPage() {
     router.push('/login')
   }
 
+  const handleDeleteProperty = async (propertyId: string, propertyName: string) => {
+    if (!confirm(`Are you sure you want to delete "${propertyName}"?\n\nThis will permanently delete all bookings, messages, and configurations for this property.\n\nThis action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3004'}/api/properties/${propertyId}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to delete property')
+      }
+
+      await loadData()
+      alert('Property deleted successfully')
+    } catch (error) {
+      console.error('Delete error:', error)
+      alert('Failed to delete property. Please try again.')
+    }
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-bg flex items-center justify-center">
@@ -265,19 +287,27 @@ export default function DashboardPage() {
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-[rgba(108,92,231,0.08)] flex gap-2">
-                  <Link
-                    href={`/property/${property.id}`}
-                    className="flex-1 text-center bg-[rgba(108,92,231,0.1)] text-primary px-4 py-2 rounded-lg font-bold text-sm hover:bg-[rgba(108,92,231,0.2)] transition-all no-underline"
+                <div className="pt-4 border-t border-[rgba(108,92,231,0.08)] space-y-2">
+                  <div className="flex gap-2">
+                    <Link
+                      href={`/property/${property.id}`}
+                      className="flex-1 text-center bg-[rgba(108,92,231,0.1)] text-primary px-4 py-2 rounded-lg font-bold text-sm hover:bg-[rgba(108,92,231,0.2)] transition-all no-underline"
+                    >
+                      View
+                    </Link>
+                    <Link
+                      href={`/property/${property.id}/settings`}
+                      className="flex-1 text-center border-2 border-[rgba(108,92,231,0.1)] text-dark px-4 py-2 rounded-lg font-bold text-sm hover:border-primary transition-all no-underline"
+                    >
+                      Settings
+                    </Link>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteProperty(property.id, property.name)}
+                    className="w-full text-center border-2 border-red-200 text-red-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-50 hover:border-red-300 transition-all"
                   >
-                    View
-                  </Link>
-                  <Link
-                    href={`/property/${property.id}/settings`}
-                    className="flex-1 text-center border-2 border-[rgba(108,92,231,0.1)] text-dark px-4 py-2 rounded-lg font-bold text-sm hover:border-primary transition-all no-underline"
-                  >
-                    Settings
-                  </Link>
+                    🗑️ Delete Property
+                  </button>
                 </div>
               </div>
             ))}

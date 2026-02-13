@@ -495,6 +495,32 @@ app.get('/api/property/:id/qr', async (req, res) => {
   }
 });
 
+/**
+ * DELETE /api/properties/:id — Delete property and all related data
+ */
+app.delete('/api/properties/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Delete in correct order (foreign key constraints)
+    await supabase.from('messages').delete().eq('property_id', id);
+    await supabase.from('bookings').delete().eq('property_id', id);
+    await supabase.from('property_config_sheets').delete().eq('property_id', id);
+    await supabase.from('guest_sessions').delete().eq('property_id', id);
+    
+    const { error } = await supabase.from('properties').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting property:', error);
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ success: true, message: 'Property deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting property:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`🚀 HeyConcierge WhatsApp backend running on port ${PORT}`);
