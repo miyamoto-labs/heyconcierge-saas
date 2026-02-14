@@ -193,6 +193,35 @@ app.post('/webhook/whatsapp', async (req, res) => {
     
     console.log(`📩 Incoming message from ${From}: ${Body}`);
 
+    // Feature 12: Detect guest rating (thumbs up/down)
+    if (/^(👍|👎|thumbs up|thumbs down)$/i.test(Body.trim())) {
+      const rating = /^(👍|thumbs up)$/i.test(Body.trim()) ? 'positive' : 'negative';
+      const { propertyId } = await resolveGuestProperty(From, Body);
+      if (propertyId) {
+        // Get last message to this guest
+        const { data: lastMsg } = await supabase
+          .from('goconcierge_messages')
+          .select('id')
+          .eq('property_id', propertyId)
+          .eq('guest_phone', From)
+          .order('timestamp', { ascending: false })
+          .limit(1)
+          .single();
+
+        await supabase.from('guest_ratings').insert({
+          message_id: lastMsg?.id || null,
+          property_id: propertyId,
+          guest_phone: From,
+          rating
+        });
+
+        await sendWhatsApp(From, rating === 'positive' 
+          ? 'Thank you for your feedback! 😊' 
+          : 'Thanks for letting us know. We\'ll try to do better! 🙏');
+        return res.status(200).send('OK');
+      }
+    }
+
     // Rate limiting check
     if (!whatsappLimiter.check(From)) {
       console.log(`🚫 Rate limit exceeded for ${From}`);
@@ -279,8 +308,11 @@ app.post('/webhook/whatsapp', async (req, res) => {
     // Call Claude
     const response = await callClaude(Body, context, property.name, weather);
 
+    // Feature 12: Append rating prompt to AI responses
+    const responseWithRating = response + '\n\n_Was this helpful? 👍/👎_';
+
     // Send response via WhatsApp
-    await sendWhatsApp(From, response);
+    await sendWhatsApp(From, responseWithRating);
 
     // Check for image auto-attach opportunities
     await autoAttachImages(From, Body, response, property.id);
@@ -573,6 +605,11 @@ const { syncProperty, syncAllProperties } = require('./ical_sync');
  */
 const { sendCheckinReminders, sendTestReminder } = require('./reminder_service');
 
+/**
+ * Auto Messages Service (Feature 5)
+ */
+const { processAutoMessages, getTemplates, DEFAULT_TEMPLATES } = require('./auto_messages');
+
 // Sync specific property
 app.post('/sync/property/:id', async (req, res) => {
   try {
@@ -805,6 +842,279 @@ ${aiResponse}
     console.error('Error notifying property owner:', error);
   }
 }
+
+/**
+ * Feature 5: Auto-messages endpoints
+ */
+app.post('/api/auto-messages/run', async (req, res) => {
+  try {
+    const result = await processAutoMessages();
+    res.json({ success: true, ...result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/properties/:id/message-templates', async (req, res) => {
+  try {
+    const templates = await getTemplates(req.params.id);
+    res.json(templates);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.put('/api/properties/:id/message-templates/:type', async (req, res) => {
+  try {
+    const { message_template, enabled } = req.body;
+    const { data, error } = await supabase
+      .from('property_message_templates')
+      .upsert({
+        property_id: req.params.id,
+        template_type: req.params.type,
+        message_template: message_template || DEFAULT_TEMPLATES[req.params.type],
+        enabled: enabled !== undefined ? enabled : true,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'property_id,template_type' })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Feature 6: Conversations endpoint
+ */
+app.get('/api/conversations', async (req, res) => {
+  try {
+    const { orgId, propertyId, from, to, limit: queryLimit } = req.query;
+    
+    let query = supabase
+      .from('goconcierge_messages')
+      .select('*, properties!inner(name, org_id)')
+      .order('timestamp', { ascending: false })
+      .limit(parseInt(queryLimit) || 100);
+
+    if (propertyId) {
+      query = query.eq('property_id', propertyId);
+    }
+    if (orgId) {
+      query = query.eq('properties.org_id', orgId);
+    }
+    if (from) {
+      query = query.gte('timestamp', from);
+    }
+    if (to) {
+      query = query.lte('timestamp', to);
+    }
+
+    const { data, error } = await query;
+    if (error) throw error;
+    res.json(data || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/escalations', async (req, res) => {
+  try {
+    const { orgId, propertyId, status } = req.query;
+
+    let query = supabase
+      .from('escalations')
+      .select('*, properties!inner(name, org_id)')
+      .order('created_at', { ascending: false });
+
+    if (propertyId) query = query.eq('property_id', propertyId);
+    if (orgId) query = query.eq('properties.org_id', orgId);
+    if (status) query = query.eq('status', status);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    res.json(data || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.patch('/api/escalations/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const { data, error } = await supabase
+      .from('escalations')
+      .update({ status, resolved_at: status === 'resolved' ? new Date().toISOString() : null })
+      .eq('id', req.params.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Feature 8: Document parsing endpoint
+ */
+app.post('/api/parse-document', upload.array('files', 10), async (req, res) => {
+  try {
+    const files = req.files;
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    const allTexts = [];
+    for (const file of files) {
+      if (file.mimetype === 'application/pdf') {
+        const pdfData = await pdfParse(file.buffer);
+        allTexts.push(pdfData.text);
+      } else {
+        // Plain text files
+        allTexts.push(file.buffer.toString('utf-8'));
+      }
+    }
+
+    const combinedText = allTexts.join('\n\n--- NEXT DOCUMENT ---\n\n');
+
+    const message = await anthropic.messages.create({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 2048,
+      system: `Extract property information from these documents. Return a JSON object with these fields:
+- property_name: Name of the property
+- wifi_password: WiFi password
+- wifi_network: WiFi network name
+- checkin_instructions: Check-in instructions (door codes, key locations, etc.)
+- checkout_instructions: Check-out instructions
+- house_rules: House rules
+- local_tips: Local recommendations and tips
+- amenities: List of amenities (as array)
+- parking_info: Parking instructions
+- emergency_contacts: Emergency contacts
+- address: Property address
+
+Return ONLY valid JSON. Set fields to null if not found.`,
+      messages: [{ role: 'user', content: `Extract property info from:\n\n${combinedText}` }]
+    });
+
+    const responseText = message.content[0].text;
+    const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+    const extracted = JSON.parse(jsonMatch ? jsonMatch[0] : responseText);
+
+    res.json({ success: true, data: extracted });
+  } catch (error) {
+    console.error('Document parse error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Feature 9: Analytics endpoints
+ */
+app.get('/api/analytics', async (req, res) => {
+  try {
+    const { orgId, propertyId, from, to } = req.query;
+
+    // Build base filters
+    let msgQuery = supabase.from('goconcierge_messages').select('timestamp, message, response, guest_phone, property_id, properties!inner(name, org_id)');
+    if (propertyId) msgQuery = msgQuery.eq('property_id', propertyId);
+    if (orgId) msgQuery = msgQuery.eq('properties.org_id', orgId);
+    if (from) msgQuery = msgQuery.gte('timestamp', from);
+    if (to) msgQuery = msgQuery.lte('timestamp', to);
+
+    const { data: messages } = await msgQuery;
+    const msgs = messages || [];
+
+    // Conversations per week
+    const weekMap = {};
+    msgs.forEach(m => {
+      const d = new Date(m.timestamp);
+      const weekStart = new Date(d);
+      weekStart.setDate(d.getDate() - d.getDay());
+      const key = weekStart.toISOString().split('T')[0];
+      weekMap[key] = (weekMap[key] || 0) + 1;
+    });
+
+    // Language distribution (simple detection from messages)
+    const langPatterns = {
+      Norwegian: /[æøåÆØÅ]|hei |takk |hva |hvordan /i,
+      German: /[äöüßÄÖÜ]|danke|bitte|wie |wo |was /i,
+      French: /[àâéèêëîïôùûüç]|merci|bonjour|comment |où /i,
+      Spanish: /[áéíóúñ¿¡]|gracias|hola|cómo |dónde /i,
+    };
+    const langDist = { English: 0 };
+    msgs.forEach(m => {
+      let detected = 'English';
+      for (const [lang, pat] of Object.entries(langPatterns)) {
+        if (pat.test(m.message)) { detected = lang; break; }
+      }
+      langDist[detected] = (langDist[detected] || 0) + 1;
+    });
+
+    // Question categories (simple keyword matching)
+    const categories = {
+      'WiFi & Internet': /wifi|internet|password|network/i,
+      'Check-in/out': /check.?in|check.?out|key|door|code|arrival/i,
+      'Local Tips': /restaurant|eat|food|bar|cafe|attraction|visit|see|do/i,
+      'Transport': /parking|bus|taxi|uber|transport|airport|train/i,
+      'Amenities': /pool|gym|sauna|laundry|washing|towel|amenity/i,
+      'Rules': /rule|noise|quiet|smoking|pet|party/i,
+      'Weather': /weather|rain|temperature|cold|warm|sun/i,
+    };
+    const catDist = {};
+    msgs.forEach(m => {
+      for (const [cat, pat] of Object.entries(categories)) {
+        if (pat.test(m.message)) {
+          catDist[cat] = (catDist[cat] || 0) + 1;
+        }
+      }
+    });
+
+    // Guest ratings
+    let ratingsQuery = supabase.from('guest_ratings').select('rating, created_at, property_id');
+    if (propertyId) ratingsQuery = ratingsQuery.eq('property_id', propertyId);
+    const { data: ratings } = await ratingsQuery;
+    const ratingData = ratings || [];
+    const positive = ratingData.filter(r => r.rating === 'positive').length;
+    const negative = ratingData.filter(r => r.rating === 'negative').length;
+
+    res.json({
+      totalConversations: msgs.length,
+      conversationsPerWeek: weekMap,
+      questionCategories: catDist,
+      languageDistribution: langDist,
+      satisfaction: {
+        positive,
+        negative,
+        total: positive + negative,
+        score: positive + negative > 0 ? Math.round((positive / (positive + negative)) * 100) : null
+      },
+      uniqueGuests: new Set(msgs.map(m => m.guest_phone)).size
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * Feature 12: Guest ratings endpoint
+ */
+app.get('/api/ratings', async (req, res) => {
+  try {
+    const { propertyId } = req.query;
+    let query = supabase.from('guest_ratings').select('*').order('created_at', { ascending: false });
+    if (propertyId) query = query.eq('property_id', propertyId);
+    const { data, error } = await query;
+    if (error) throw error;
+    res.json(data || []);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

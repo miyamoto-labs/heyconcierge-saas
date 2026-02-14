@@ -25,6 +25,7 @@ export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
 
   useEffect(() => {
     // Check if logged in
@@ -38,6 +39,12 @@ export default function DashboardPage() {
     
     setUserEmail(email)
     setUserId(id)
+    
+    // Restore selected property from localStorage (Feature 11)
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('hc_selected_property')
+      if (saved) setSelectedPropertyId(saved)
+    }
   }, [router])
 
   const loadData = async () => {
@@ -168,6 +175,15 @@ export default function DashboardPage() {
             <span className="text-accent sm:hidden">heyc</span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
+            <Link href="/dashboard/conversations" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+              💬 <span className="hidden sm:inline">Conversations</span>
+            </Link>
+            <Link href="/dashboard/analytics" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+              📊 <span className="hidden sm:inline">Analytics</span>
+            </Link>
+            <Link href="/dashboard/onboarding" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+              📄 <span className="hidden sm:inline">Upload Docs</span>
+            </Link>
             <Link href="/calendar" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
               📅 <span className="hidden sm:inline">Calendar</span>
             </Link>
@@ -240,12 +256,34 @@ export default function DashboardPage() {
             <h1 className="font-nunito text-2xl sm:text-4xl font-black mb-2">Your Properties</h1>
             <p className="text-sm sm:text-base text-muted">Manage your AI concierges</p>
           </div>
-          <Link
-            href="/signup?step=2"
-            className="bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline text-center whitespace-nowrap self-start sm:self-auto"
-          >
-            + Add Property
-          </Link>
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Multi-Property Switcher (Feature 11) */}
+            {properties.length > 1 && (
+              <select
+                value={selectedPropertyId || 'all'}
+                onChange={(e) => {
+                  const val = e.target.value === 'all' ? null : e.target.value
+                  setSelectedPropertyId(val)
+                  if (typeof window !== 'undefined') {
+                    if (val) localStorage.setItem('hc_selected_property', val)
+                    else localStorage.removeItem('hc_selected_property')
+                  }
+                }}
+                className="px-4 py-2.5 rounded-full border-2 border-[rgba(108,92,231,0.15)] bg-white text-sm font-bold text-dark"
+              >
+                <option value="all">🏘️ All Properties ({properties.length})</option>
+                {properties.map(p => (
+                  <option key={p.id} value={p.id}>🏠 {p.name}</option>
+                ))}
+              </select>
+            )}
+            <Link
+              href="/signup?step=2"
+              className="bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline text-center whitespace-nowrap self-start sm:self-auto"
+            >
+              + Add Property
+            </Link>
+          </div>
         </div>
 
         {/* Properties Grid */}
@@ -263,7 +301,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {properties.map((property) => (
+            {(selectedPropertyId ? properties.filter(p => p.id === selectedPropertyId) : properties).map((property) => (
               <div key={property.id} className="bg-white rounded-2xl shadow-card p-4 sm:p-6 hover:-translate-y-1 transition-all">
                 {property.images?.[0] && (
                   <Link href={`/property/${property.id}`}>
