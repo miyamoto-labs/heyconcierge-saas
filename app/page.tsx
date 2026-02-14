@@ -19,6 +19,7 @@ function getCookie(name: string): string | null {
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const userId = getCookie('user_id')
@@ -98,10 +99,13 @@ export default function Home() {
             <span className="text-accent">Hey</span>
             <span className="text-dark">Concierge</span>
           </Link>
+          
+          {/* Desktop Navigation */}
           <ul className="hidden md:flex items-center gap-8 list-none">
             <li><a href="#features" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">Features</a></li>
             <li><a href="#how" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">How It Works</a></li>
             <li><a href="#pricing" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">Pricing</a></li>
+            <li><Link href="/faq" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">FAQ</Link></li>
             {isLoggedIn && userEmail && (
               <li className="text-muted font-semibold text-[0.95rem]">
                 {userEmail}
@@ -114,6 +118,43 @@ export default function Home() {
                 </Link>
               ) : (
                 <Link href="/login" className="no-underline bg-primary text-white px-6 py-2.5 rounded-full font-bold text-[0.95rem] transition-all hover:bg-dark hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] hover:shadow-[0_6px_20px_rgba(45,43,85,0.3)]">
+                  Start Here
+                </Link>
+              )}
+            </li>
+          </ul>
+
+          {/* Mobile Hamburger Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden flex flex-col gap-1.5 w-8 h-8 justify-center items-center transition-all hover:scale-110"
+            aria-label="Toggle menu"
+          >
+            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div className={`md:hidden fixed top-[72px] left-0 right-0 bg-[rgba(255,248,240,0.98)] backdrop-blur-[20px] border-b border-[rgba(108,92,231,0.08)] transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+          <ul className="flex flex-col gap-2 px-8 py-6 list-none">
+            <li><a href="#features" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">Features</a></li>
+            <li><a href="#how" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">How It Works</a></li>
+            <li><a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">Pricing</a></li>
+            <li><Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">FAQ</Link></li>
+            {isLoggedIn && userEmail && (
+              <li className="text-muted font-semibold text-base py-2 border-t border-[rgba(108,92,231,0.1)] mt-2 pt-4">
+                {userEmail}
+              </li>
+            )}
+            <li className="mt-4">
+              {isLoggedIn ? (
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-center no-underline bg-primary text-white px-6 py-3 rounded-full font-bold text-base transition-all hover:bg-dark shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
+                  Dashboard
+                </Link>
+              ) : (
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block text-center no-underline bg-primary text-white px-6 py-3 rounded-full font-bold text-base transition-all hover:bg-dark shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
                   Start Here
                 </Link>
               )}
