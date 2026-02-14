@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
 
   // Check if user has valid access cookie
   const accessCookie = request.cookies.get('heyconcierge_access')
-  const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyconcierge2026'
+  const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyc2026'
 
   if (accessCookie?.value === validPassword) {
     return NextResponse.next()

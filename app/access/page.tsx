@@ -12,7 +12,7 @@ export default function AccessPage() {
     e.preventDefault()
     
     // Check password
-    const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyconcierge2026'
+    const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyc2026'
     
     if (password === validPassword) {
       // Set cookie and redirect
