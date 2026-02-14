@@ -165,7 +165,7 @@ export default function DashboardPage() {
           <Link href="/" className="font-nunito text-lg sm:text-xl font-black no-underline flex items-center gap-2 flex-shrink-0">
             <LogoSVG className="w-6 h-6 sm:w-8 sm:h-8" />
             <span className="text-accent hidden sm:inline">Hey</span><span className="text-dark hidden sm:inline">Concierge</span>
-            <span className="text-accent sm:hidden">HC</span>
+            <span className="text-accent sm:hidden">heyc</span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
             <Link href="/calendar" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
