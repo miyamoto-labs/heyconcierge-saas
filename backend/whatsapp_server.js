@@ -4,6 +4,7 @@
  */
 
 const express = require('express');
+const cors = require('cors');
 const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 const multer = require('multer');
@@ -11,6 +12,18 @@ const pdfParse = require('pdf-parse');
 require('dotenv').config();
 
 const app = express();
+
+// CORS Configuration
+app.use(cors({
+  origin: [
+    'http://localhost:3002',
+    'https://heyconcierge.vercel.app',
+    'https://heyconcierge-saas.vercel.app',
+    'https://heyconcierge-git-main-miyamoto-labs.vercel.app'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,6 +45,88 @@ const supabase = createClient(
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const twilioClient = require('twilio')(accountSid, authToken);
+
+// Weather service with caching (Open-Meteo API - free, no key needed)
+const WEATHER_CACHE_TTL = 30 * 60 * 1000; // 30 min
+let weatherCache = new Map();
+
+async function getWeather(lat, lon) {
+  const cacheKey = `${lat},${lon}`;
+  const cached = weatherCache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.fetchedAt < WEATHER_CACHE_TTL) {
+    return cached.data;
+  }
+  
+  try {
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+    );
+    const json = await res.json();
+    const cw = json.current_weather;
+    
+    const WMO_CODES = {
+      0: "Clear sky", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
+      45: "Fog", 51: "Light drizzle", 61: "Slight rain", 63: "Moderate rain",
+      71: "Slight snowfall", 73: "Moderate snowfall", 75: "Heavy snowfall",
+      80: "Rain showers", 95: "Thunderstorm"
+    };
+    
+    const data = {
+      temperature: cw.temperature,
+      windspeed: cw.windspeed,
+      description: WMO_CODES[cw.weathercode] || "Unknown",
+      is_day: cw.is_day,
+      time: cw.time
+    };
+    
+    weatherCache.set(cacheKey, { data, fetchedAt: Date.now() });
+    return data;
+  } catch (err) {
+    console.error("Weather fetch failed:", err.message);
+    return null;
+  }
+}
+
+function addWeatherContext(prompt, weather) {
+  if (!weather) return prompt;
+  return prompt + `\n\nCURRENT WEATHER (as of ${weather.time}):
+- Temperature: ${weather.temperature}°C
+- Conditions: ${weather.description}
+- Wind: ${weather.windspeed} km/h
+- ${weather.is_day ? "Daytime" : "Nighttime"}
+
+Use this when guests ask about weather, clothing, or outdoor activities.`;
+}
+
+// Rate Limiter - prevents abuse
+function createRateLimiter(maxRequests, windowMs) {
+  const store = new Map();
+  return {
+    check(key) {
+      const now = Date.now();
+      const entry = store.get(key);
+      if (!entry || now > entry.resetAt) {
+        store.set(key, { count: 1, resetAt: now + windowMs });
+        return true;
+      }
+      entry.count++;
+      return entry.count <= maxRequests;
+    },
+    cleanup() {
+      const now = Date.now();
+      for (const [key, entry] of store) {
+        if (now > entry.resetAt) store.delete(key);
+      }
+    }
+  };
+}
+
+// 30 messages per minute per phone number
+const whatsappLimiter = createRateLimiter(30, 60 * 1000);
+
+// Cleanup every hour
+setInterval(() => whatsappLimiter.cleanup(), 60 * 60 * 1000);
 
 /**
  * Extract property code from first message (e.g. "Hi SUNSET-42" → "SUNSET-42")
@@ -97,6 +192,13 @@ app.post('/webhook/whatsapp', async (req, res) => {
     const { From, To, Body } = req.body;
     
     console.log(`📩 Incoming message from ${From}: ${Body}`);
+
+    // Rate limiting check
+    if (!whatsappLimiter.check(From)) {
+      console.log(`🚫 Rate limit exceeded for ${From}`);
+      await sendWhatsApp(From, "You're sending messages too quickly. Please wait a moment.");
+      return res.status(200).send('OK');
+    }
 
     let property, propError;
 
@@ -167,11 +269,24 @@ app.post('/webhook/whatsapp', async (req, res) => {
     
     const context = buildPropertyContext(property, config);
 
+    // Fetch weather if property has coordinates
+    let weather = null;
+    if (property.latitude && property.longitude) {
+      weather = await getWeather(property.latitude, property.longitude);
+      console.log(`🌤️ Weather fetched: ${weather?.temperature}°C, ${weather?.description}`);
+    }
+
     // Call Claude
-    const response = await callClaude(Body, context, property.name);
+    const response = await callClaude(Body, context, property.name, weather);
 
     // Send response via WhatsApp
     await sendWhatsApp(From, response);
+
+    // Check for image auto-attach opportunities
+    await autoAttachImages(From, Body, response, property.id);
+
+    // Escalation detection - notify owner if AI can't answer
+    await detectAndEscalate(property, From, Body, response);
 
     // Log conversation
     await logConversation(property.id, From, Body, response);
@@ -187,7 +302,7 @@ app.post('/webhook/whatsapp', async (req, res) => {
  * Build property context for Claude
  */
 function buildPropertyContext(property, config) {
-  return `
+  let context = `
 Property: ${property.name}
 Location: ${property.address || 'N/A'}
 Type: ${property.property_type || 'N/A'}
@@ -201,15 +316,22 @@ Local Tips:
 ${config.local_tips || 'Not provided'}
 
 House Rules:
-${config.house_rules || 'Not provided'}
-  `.trim();
+${config.house_rules || 'Not provided'}`;
+
+  // Add booking URL if available
+  if (config.booking_url) {
+    context += `\n\nBooking / Reservation URL: ${config.booking_url}
+(Use this when guests ask about booking additional nights, extending their stay, or making future reservations)`;
+  }
+
+  return context.trim();
 }
 
 /**
- * Call Claude API with guest message + property context
+ * Call Claude API with guest message + property context + weather
  */
-async function callClaude(guestMessage, propertyContext, propertyName) {
-  const systemPrompt = `You are a helpful, friendly AI concierge for ${propertyName}. 
+async function callClaude(guestMessage, propertyContext, propertyName, weather = null) {
+  let systemPrompt = `You are a helpful, friendly AI concierge for ${propertyName}. 
 
 Your job is to assist guests with:
 - Check-in/check-out procedures
@@ -218,13 +340,29 @@ Your job is to assist guests with:
 - House rules and amenities
 - General property questions
 
-Be warm, professional, and helpful. If you don't have information, politely say so and suggest they contact the property owner.
+LANGUAGE BEHAVIOR:
+- Detect the language of each guest message.
+- ALWAYS respond in the same language the guest used.
+- If the language is ambiguous, default to English.
+- You are fluent in all major languages including Norwegian, English, German, 
+  French, Spanish, Swedish, Dutch, Italian, Japanese, Chinese, and Korean.
+- Do NOT mention that you are detecting their language. Just respond naturally.
+
+RESPONSE GUIDELINES:
+- Keep responses concise and WhatsApp-friendly (under 1000 characters when possible).
+- Use line breaks for readability, but avoid excessive formatting.
+- Be warm and helpful.
+- Include Google Maps links when recommending places:
+  https://www.google.com/maps/search/?api=1&query=<place+city>
+- If you do not know an answer, say so honestly and suggest contacting the host.
+- Never invent information about the property that is not in the profile data.
 
 Here's the property information you have access to:
 
-${propertyContext}
+${propertyContext}`;
 
-Respond in the same language as the guest's message. Keep responses concise (2-3 sentences unless more detail is needed).`;
+  // Add weather context if available
+  systemPrompt = addWeatherContext(systemPrompt, weather);
 
   try {
     const message = await anthropic.messages.create({
@@ -243,6 +381,65 @@ Respond in the same language as the guest's message. Keep responses concise (2-3
   } catch (error) {
     console.error('Claude API error:', error);
     return "I'm having trouble processing your request right now. Please try again in a moment.";
+  }
+}
+
+/**
+ * Auto-attach property images based on message keywords
+ */
+async function autoAttachImages(to, guestMessage, aiReply, propertyId) {
+  try {
+    // Fetch property images
+    const { data: images, error } = await supabase
+      .from('property_images')
+      .select('url, tags')
+      .eq('property_id', propertyId);
+
+    if (error || !images || images.length === 0) {
+      return; // No images to attach
+    }
+
+    const combinedText = (guestMessage + ' ' + aiReply).toLowerCase();
+    let imagesToSend = [];
+
+    // Check-in / entry questions → attach entry-related images
+    if (/key\s*box|nøkkel|inngang|entry|check.?in|how to (get|enter)|hvordan komme|schlüssel|eingang|llave|entrada/i.test(combinedText)) {
+      const entryImages = images.filter(img => 
+        img.tags && (img.tags.includes('entry') || img.tags.includes('keybox') || img.tags.includes('checkin'))
+      );
+      imagesToSend.push(...entryImages.slice(0, 4)); // Max 4 images
+    }
+    
+    // Parking questions → attach parking images
+    else if (/parking|parkering|parken|aparcamiento|where (do i|can i) park/i.test(combinedText)) {
+      const parkingImages = images.filter(img => img.tags && img.tags.includes('parking'));
+      imagesToSend.push(...parkingImages.slice(0, 2));
+    }
+
+    // View questions → attach view images
+    else if (/view|utsikt|vista|aussicht|see|look|景色/i.test(combinedText)) {
+      const viewImages = images.filter(img => img.tags && img.tags.includes('view'));
+      imagesToSend.push(...viewImages.slice(0, 2));
+    }
+
+    // Amenity questions → attach amenity images
+    else if (/pool|gym|fitness|amenity|facilities|swimming|sauna/i.test(combinedText)) {
+      const amenityImages = images.filter(img => img.tags && img.tags.includes('amenity'));
+      imagesToSend.push(...amenityImages.slice(0, 2));
+    }
+
+    // Send images via Twilio
+    for (const img of imagesToSend) {
+      await twilioClient.messages.create({
+        from: `whatsapp:${process.env.TWILIO_WHATSAPP_NUMBER}`,
+        to: to,
+        mediaUrl: [img.url]
+      });
+      console.log(`📸 Sent image: ${img.url}`);
+    }
+  } catch (error) {
+    console.error('Image auto-attach error:', error);
+    // Don't fail the whole request if images fail
   }
 }
 
@@ -520,6 +717,94 @@ app.delete('/api/properties/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+/**
+ * Detect escalation scenarios and notify property owner
+ */
+async function detectAndEscalate(property, guestPhone, guestMessage, aiResponse) {
+  try {
+    // Escalation triggers (patterns that indicate AI can't fully help)
+    const escalationPatterns = [
+      /i (don't know|can't help|cannot help|don't have|unable to)/i,
+      /you should (contact|reach out to|ask)/i,
+      /please (contact|reach out to)/i,
+      /i('m| am) (not sure|unsure|uncertain)/i,
+      /(emergency|urgent|immediate)/i,
+    ];
+
+    const needsEscalation = escalationPatterns.some(pattern => pattern.test(aiResponse));
+
+    if (!needsEscalation) return;
+
+    // Determine reason
+    let reason = 'cant_answer';
+    if (/emergency|urgent|immediate/i.test(guestMessage) || /emergency|urgent/i.test(aiResponse)) {
+      reason = 'urgent';
+    } else if (/contact|reach out/i.test(aiResponse)) {
+      reason = 'needs_human';
+    }
+
+    // Create escalation record
+    const { data: escalation, error } = await supabase
+      .from('escalations')
+      .insert({
+        property_id: property.id,
+        guest_phone: guestPhone,
+        message: guestMessage,
+        ai_response: aiResponse,
+        reason: reason,
+        status: 'pending'
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Error creating escalation:', error);
+      return;
+    }
+
+    console.log(`🚨 Escalation created (${reason}): ${guestMessage.substring(0, 50)}...`);
+
+    // Notify property owner
+    await notifyPropertyOwner(property, guestPhone, guestMessage, aiResponse, reason);
+
+  } catch (error) {
+    console.error('Error in escalation detection:', error);
+  }
+}
+
+/**
+ * Notify property owner of escalation
+ */
+async function notifyPropertyOwner(property, guestPhone, guestMessage, aiResponse, reason) {
+  try {
+    // Get property owner contact (from properties table - add owner_phone field in future)
+    // For now, send to property's WhatsApp number with special prefix
+    const ownerMessage = `🚨 *Guest Needs Help*
+
+*Property:* ${property.name}
+*Guest:* ${guestPhone}
+*Reason:* ${reason === 'urgent' ? '⚠️ URGENT' : reason === 'needs_human' ? 'Needs Human' : 'AI Couldn\'t Answer'}
+
+*Guest asked:*
+${guestMessage}
+
+*AI responded:*
+${aiResponse}
+
+*Action needed:* Please contact this guest directly to assist.`;
+
+    // TODO: Send to property owner's contact instead of property number
+    // For now, log it (future: send email or SMS to owner)
+    console.log('📧 Escalation notification (would send to owner):', ownerMessage);
+
+    // Could implement email notification here
+    // await sendEmailToOwner(property.owner_email, ownerMessage);
+
+  } catch (error) {
+    console.error('Error notifying property owner:', error);
+  }
+}
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
