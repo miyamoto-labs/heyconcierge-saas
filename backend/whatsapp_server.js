@@ -19,7 +19,9 @@ app.use(cors({
     'http://localhost:3002',
     'https://heyconcierge.vercel.app',
     'https://heyconcierge-saas.vercel.app',
-    'https://heyconcierge-git-main-miyamoto-labs.vercel.app'
+    'https://heyconcierge-git-main-miyamoto-labs.vercel.app',
+    'https://www.heyconcierge.io',
+    'https://heyconcierge.io'
   ],
   credentials: true
 }));
@@ -146,18 +148,15 @@ async function resolveGuestProperty(phone, messageBody) {
   const { data: session } = await supabase
     .from('guest_sessions')
     .select('property_id')
-    .eq('phone', phone)
-    .order('last_message_at', { ascending: false })
-    .limit(1)
+    .eq('guest_phone', phone)
     .single();
 
   if (session) {
-    // Update last_message_at
+    // Update last activity
     await supabase
       .from('guest_sessions')
-      .update({ last_message_at: new Date().toISOString() })
-      .eq('phone', phone)
-      .eq('property_id', session.property_id);
+      .update({ updated_at: new Date().toISOString() })
+      .eq('guest_phone', phone);
     return { propertyId: session.property_id, isNew: false };
   }
 
@@ -173,15 +172,17 @@ async function resolveGuestProperty(phone, messageBody) {
     if (property) {
       // Create new session
       await supabase.from('guest_sessions').insert({
-        phone,
+        guest_phone: phone,
         property_id: property.id,
-        last_message_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
+      console.log(`✅ Created guest session: ${phone} → ${property.id}`);
       return { propertyId: property.id, isNew: true };
     }
   }
 
-  return { propertyId: null, isNew: true };
+  return { propertyId: null, isNew: false };
 }
 
 /**
@@ -193,10 +194,14 @@ app.post('/webhook/whatsapp', async (req, res) => {
     
     console.log(`📩 Incoming message from ${From}: ${Body}`);
 
+    // Detect channel (SMS vs WhatsApp)
+    const isWhatsApp = From.startsWith('whatsapp:');
+    const sendMessage = isWhatsApp ? sendWhatsApp : sendSMS;
+
     // Rate limiting check
     if (!whatsappLimiter.check(From)) {
       console.log(`🚫 Rate limit exceeded for ${From}`);
-      await sendWhatsApp(From, "You're sending messages too quickly. Please wait a moment.");
+      await sendMessage(From, "You're sending messages too quickly. Please wait a moment.");
       return res.status(200).send('OK');
     }
 
@@ -237,7 +242,7 @@ app.post('/webhook/whatsapp', async (req, res) => {
 
     if (propError || !property) {
       console.error('Property not found:', propError);
-      await sendWhatsApp(From, "👋 Welcome to HeyConcierge! I couldn't find your property. Please scan the QR code at your property to get started.");
+      await sendMessage(From, "👋 Welcome to HeyConcierge! I couldn't find your property. Please scan the QR code at your property to get started.");
       return res.status(200).send('OK');
     }
 
@@ -263,7 +268,7 @@ app.post('/webhook/whatsapp', async (req, res) => {
     
     // If no config, send helpful message
     if (!config.wifi_password && !config.checkin_instructions && !config.local_tips) {
-      await sendWhatsApp(From, `👋 Hi! I'm the AI concierge for ${property.name}. The property owner hasn't set up my knowledge base yet. Please ask them to add WiFi passwords, check-in instructions, and local tips in the dashboard at heyconcierge.com. In the meantime, feel free to ask me general questions!`);
+      await sendMessage(From, `👋 Hi! I'm the AI concierge for ${property.name}. The property owner hasn't set up my knowledge base yet. Please ask them to add WiFi passwords, check-in instructions, and local tips in the dashboard at heyconcierge.com. In the meantime, feel free to ask me general questions!`);
       return res.status(200).send('OK');
     }
     
@@ -279,8 +284,8 @@ app.post('/webhook/whatsapp', async (req, res) => {
     // Call Claude
     const response = await callClaude(Body, context, property.name, weather);
 
-    // Send response via WhatsApp
-    await sendWhatsApp(From, response);
+    // Send response
+    await sendMessage(From, response);
 
     // Check for image auto-attach opportunities
     await autoAttachImages(From, Body, response, property.id);
@@ -456,6 +461,22 @@ async function sendWhatsApp(to, message) {
     console.log(`✅ Sent response to ${to}`);
   } catch (error) {
     console.error('Failed to send WhatsApp:', error);
+  }
+}
+
+/**
+ * Send SMS message via Twilio
+ */
+async function sendSMS(to, message) {
+  try {
+    await twilioClient.messages.create({
+      from: process.env.TWILIO_PHONE_NUMBER || '+15715172626',
+      to: to,
+      body: message
+    });
+    console.log(`✅ Sent SMS response to ${to}`);
+  } catch (error) {
+    console.error('Failed to send SMS:', error);
   }
 }
 
