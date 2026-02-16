@@ -29,6 +29,8 @@ export default function PropertySettingsPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [dragActiveZone, setDragActiveZone] = useState<string | null>(null)
   const [extractingZone, setExtractingZone] = useState<string | null>(null)
+  const [extractedFiles, setExtractedFiles] = useState<Record<string, { name: string; timestamp: number }>>({})
+  const [extractError, setExtractError] = useState<Record<string, string>>({})
   const [images, setImages] = useState<any[]>([])
   const [uploadingImages, setUploadingImages] = useState(false)
 
@@ -177,6 +179,7 @@ export default function PropertySettingsPage() {
     }
 
     setExtractingZone(field)
+    setExtractError(prev => ({ ...prev, [field]: '' }))
     try {
       const formData = new FormData()
       pdfFiles.forEach(file => formData.append('pdfs', file))
@@ -200,10 +203,13 @@ export default function PropertySettingsPage() {
         })
       }
 
-      alert(`Extracted ${field.replace(/_/g, ' ')} from PDF!`)
+      const fileName = pdfFiles.length === 1
+        ? pdfFiles[0].name
+        : `${pdfFiles.length} PDFs`
+      setExtractedFiles(prev => ({ ...prev, [field]: { name: fileName, timestamp: Date.now() } }))
     } catch (err) {
       console.error('PDF extraction error:', err)
-      alert(`Failed to extract PDF: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      setExtractError(prev => ({ ...prev, [field]: err instanceof Error ? err.message : 'Extraction failed' }))
     }
     setExtractingZone(null)
   }
@@ -435,7 +441,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="wifi_password" dragActiveZone={dragActiveZone} extractingZone={extractingZone} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="wifi_password" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['wifi_password']} extractError={extractError['wifi_password']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
               </div>
 
               <div>
@@ -448,7 +454,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="checkin_instructions" dragActiveZone={dragActiveZone} extractingZone={extractingZone} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="checkin_instructions" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['checkin_instructions']} extractError={extractError['checkin_instructions']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
               </div>
 
               <div>
@@ -461,7 +467,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="local_tips" dragActiveZone={dragActiveZone} extractingZone={extractingZone} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="local_tips" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['local_tips']} extractError={extractError['local_tips']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
               </div>
 
               <div>
@@ -474,7 +480,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="house_rules" dragActiveZone={dragActiveZone} extractingZone={extractingZone} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} large />
+                <PDFDropZone field="house_rules" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['house_rules']} extractError={extractError['house_rules']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} large />
               </div>
 
               <div>
@@ -536,10 +542,12 @@ export default function PropertySettingsPage() {
 }
 
 // PDF Drop Zone Component
-function PDFDropZone({ field, dragActiveZone, extractingZone, onDrag, onDrop, onFileInput, large = false }: {
+function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, extractError, onDrag, onDrop, onFileInput, large = false }: {
   field: string
   dragActiveZone: string | null
   extractingZone: string | null
+  extractedFile?: { name: string; timestamp: number }
+  extractError?: string
   onDrag: (e: React.DragEvent, zone: string) => void
   onDrop: (e: React.DragEvent, field: any) => void
   onFileInput: (e: React.ChangeEvent<HTMLInputElement>, field: any) => void
@@ -547,12 +555,17 @@ function PDFDropZone({ field, dragActiveZone, extractingZone, onDrag, onDrop, on
 }) {
   const isActive = dragActiveZone === field
   const isExtracting = extractingZone === field
+  const hasExtracted = extractedFile && !extractError
+  const hasError = !!extractError
 
   return (
     <div className="mt-4">
       <div
         className={`relative border-2 border-dashed rounded-xl ${large ? 'p-6' : 'p-4'} text-center transition-all ${
-          isActive ? 'border-primary bg-[rgba(108,92,231,0.05)]' : 'border-[rgba(108,92,231,0.15)] hover:border-primary'
+          isActive ? 'border-primary bg-[rgba(108,92,231,0.05)]'
+          : hasError ? 'border-red-300 bg-red-50'
+          : hasExtracted ? 'border-green-300 bg-green-50'
+          : 'border-[rgba(108,92,231,0.15)] hover:border-primary'
         } ${isExtracting ? 'opacity-50 pointer-events-none' : ''}`}
         onDragEnter={(e) => onDrag(e, field)}
         onDragLeave={(e) => onDrag(e, field)}
@@ -572,6 +585,25 @@ function PDFDropZone({ field, dragActiveZone, extractingZone, onDrag, onDrop, on
             <>
               <div className={`animate-spin ${large ? 'w-8 h-8' : 'w-6 h-6'} mx-auto mb-1 border-2 border-primary border-t-transparent rounded-full`}></div>
               <p className={`text-dark font-bold ${large ? 'text-sm' : 'text-xs'}`}>Extracting...</p>
+            </>
+          ) : hasError ? (
+            <>
+              <svg className={`${large ? 'w-8 h-8' : 'w-6 h-6'} mx-auto ${large ? 'mb-2' : 'mb-1'} text-red-500`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className={`text-red-600 font-bold ${large ? 'text-sm' : 'text-xs'}`}>Extraction failed</p>
+              <p className="text-xs text-red-400 mt-1 truncate max-w-[280px] mx-auto">{extractError}</p>
+              <p className="text-xs text-muted mt-1">Drop another PDF to retry</p>
+            </>
+          ) : hasExtracted ? (
+            <>
+              <svg className={`${large ? 'w-8 h-8' : 'w-6 h-6'} mx-auto ${large ? 'mb-2' : 'mb-1'} text-green-500`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className={`text-green-700 font-bold ${large ? 'text-sm' : 'text-xs'}`}>
+                Extracted from {extractedFile.name}
+              </p>
+              <p className="text-xs text-muted mt-1">Drop another PDF to replace</p>
             </>
           ) : (
             <>
