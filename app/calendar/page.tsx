@@ -36,25 +36,22 @@ export default function CalendarPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [syncing, setSyncing] = useState(false)
-  const [sendingReminders, setSendingReminders] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
   const [bookings, setBookings] = useState<Booking[]>([])
   const [selectedProperty, setSelectedProperty] = useState<string>('all')
   const [currentDate, setCurrentDate] = useState(new Date())
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     const email = getCookie('user_email')
     const id = getCookie('user_id')
-    
+
     if (!email || !id) {
       router.push('/login')
       return
     }
-    
+
     setUserEmail(email)
-    setUserId(id)
     loadData()
   }, [])
 
@@ -100,41 +97,23 @@ export default function CalendarPage() {
   const syncCalendar = async () => {
     setSyncing(true)
     try {
-      const response = await fetch('http://localhost:3004/sync/all', {
+      const response = await fetch('/api/sync-calendar', {
         method: 'POST',
       })
-      
+
       if (response.ok) {
-        alert('✅ Calendar synced successfully!')
+        const data = await response.json()
+        alert(`Calendar synced! ${data.message}`)
         await loadData()
       } else {
-        alert('❌ Sync failed. Make sure your iCal URLs are configured in property settings.')
+        const err = await response.json().catch(() => ({}))
+        alert(`Sync failed: ${err.error || 'Unknown error'}. Make sure your iCal URLs are configured in property settings.`)
       }
     } catch (error) {
       console.error('Sync error:', error)
-      alert('❌ Sync failed. Make sure the backend is running.')
+      alert('Sync failed. Please try again.')
     }
     setSyncing(false)
-  }
-
-  const sendReminders = async () => {
-    setSendingReminders(true)
-    try {
-      const response = await fetch('http://localhost:3004/reminders/send', {
-        method: 'POST',
-      })
-      
-      if (response.ok) {
-        const data = await response.json()
-        alert(`✅ Check-in reminders sent!\n\n📤 Sent: ${data.sent}\n❌ Failed: ${data.failed}\n📋 Total: ${data.total}`)
-      } else {
-        alert('❌ Failed to send reminders.')
-      }
-    } catch (error) {
-      console.error('Reminder error:', error)
-      alert('❌ Failed to send reminders. Make sure the backend is running.')
-    }
-    setSendingReminders(false)
   }
 
   const handleLogout = () => {
@@ -242,14 +221,6 @@ export default function CalendarPage() {
                 <option key={prop.id} value={prop.id}>{prop.name}</option>
               ))}
             </select>
-            
-            <button
-              onClick={sendReminders}
-              disabled={sendingReminders}
-              className="bg-mint text-white px-6 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {sendingReminders ? '📤 Sending...' : '🔔 Send Reminders'}
-            </button>
             
             <button
               onClick={syncCalendar}
