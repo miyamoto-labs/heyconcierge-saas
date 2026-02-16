@@ -5,26 +5,24 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 })
 
-type ExtractField = 'wifi_password' | 'checkin_instructions' | 'local_tips' | 'house_rules'
+const EXTRACT_ALL_PROMPT = `You are a property information extractor. From the given document text, extract the following 4 categories. Return ONLY valid JSON with these exact keys:
 
-const FIELD_PROMPTS: Record<ExtractField, string> = {
-  wifi_password: `Extract ONLY the WiFi password from this document. Return just the password string, nothing else. If no WiFi password is found, return the word null.`,
-  checkin_instructions: `Extract ONLY check-in instructions from this document (key location, door codes, arrival steps, parking info). Return the instructions as plain text. If none found, return the word null.`,
-  local_tips: `Extract ONLY local tips and recommendations from this document (restaurants, attractions, transport, shops, things to do). Return as plain text. If none found, return the word null.`,
-  house_rules: `Extract ONLY house rules from this document (quiet hours, smoking policy, pet policy, trash, checkout procedures, dos and don'ts). Return as plain text. If none found, return the word null.`,
+{
+  "wifi_password": "the WiFi network name and password, or null if not found",
+  "checkin_instructions": "check-in instructions including key location, door codes, arrival steps, parking info, or null if not found",
+  "local_tips": "local tips and recommendations like restaurants, attractions, transport, shops, things to do, or null if not found",
+  "house_rules": "house rules like quiet hours, smoking policy, pet policy, trash, checkout procedures, dos and don'ts, or null if not found"
 }
+
+Rules:
+- Return raw JSON only, no markdown fences or extra text
+- Use null (not the string "null") for categories not found in the document
+- Keep extracted text concise but complete
+- Preserve important details like specific times, codes, addresses, and names`
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
-    const field = formData.get('field') as string
-
-    if (!field || !FIELD_PROMPTS[field as ExtractField]) {
-      return NextResponse.json(
-        { error: `Invalid field: ${field}. Must be one of: ${Object.keys(FIELD_PROMPTS).join(', ')}` },
-        { status: 400 }
-      )
-    }
 
     const files = formData.getAll('pdfs') as File[]
     if (!files || files.length === 0) {
@@ -46,17 +44,31 @@ export async function POST(request: NextRequest) {
 
     const message = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1024,
-      system: FIELD_PROMPTS[field as ExtractField],
+      max_tokens: 2048,
+      system: EXTRACT_ALL_PROMPT,
       messages: [
-        { role: 'user', content: `Extract from this PDF text:\n\n${combinedText}` }
+        { role: 'user', content: `Extract all property information from this document:\n\n${combinedText}` }
       ],
     })
 
-    const responseText = message.content[0].type === 'text' ? message.content[0].text : ''
-    const value = responseText.trim() === 'null' ? null : responseText.trim()
+    const responseText = message.content[0].type === 'text' ? message.content[0].text : '{}'
 
-    return NextResponse.json({ [field]: value })
+    let extracted
+    try {
+      extracted = JSON.parse(responseText.trim())
+    } catch {
+      return NextResponse.json(
+        { error: 'Failed to parse AI response as JSON' },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json({
+      wifi_password: extracted.wifi_password ?? null,
+      checkin_instructions: extracted.checkin_instructions ?? null,
+      local_tips: extracted.local_tips ?? null,
+      house_rules: extracted.house_rules ?? null,
+    })
   } catch (error) {
     console.error('PDF extraction error:', error)
     return NextResponse.json(

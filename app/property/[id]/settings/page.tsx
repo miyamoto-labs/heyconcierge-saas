@@ -27,10 +27,10 @@ export default function PropertySettingsPage() {
   const [property, setProperty] = useState<any>(null)
   const [config, setConfig] = useState<any>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [dragActiveZone, setDragActiveZone] = useState<string | null>(null)
-  const [extractingZone, setExtractingZone] = useState<string | null>(null)
-  const [extractedFiles, setExtractedFiles] = useState<Record<string, { name: string; timestamp: number }>>({})
-  const [extractError, setExtractError] = useState<Record<string, string>>({})
+  const [pdfDragActive, setPdfDragActive] = useState(false)
+  const [pdfExtracting, setPdfExtracting] = useState(false)
+  const [pdfExtractedFile, setPdfExtractedFile] = useState<{ name: string; fields: string[] } | null>(null)
+  const [pdfExtractError, setPdfExtractError] = useState<string | null>(null)
   const [images, setImages] = useState<any[]>([])
   const [uploadingImages, setUploadingImages] = useState(false)
 
@@ -137,35 +137,33 @@ export default function PropertySettingsPage() {
     router.push('/login')
   }
 
-  type ExtractField = 'wifi_password' | 'checkin_instructions' | 'local_tips' | 'house_rules'
-
-  const handleDrag = (e: React.DragEvent, zone: string) => {
+  const handlePdfDrag = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     if (e.type === 'dragenter' || e.type === 'dragover') {
-      setDragActiveZone(zone)
+      setPdfDragActive(true)
     } else if (e.type === 'dragleave') {
-      setDragActiveZone(null)
+      setPdfDragActive(false)
     }
   }
 
-  const handleDrop = async (e: React.DragEvent, field: ExtractField) => {
+  const handlePdfDrop = async (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setDragActiveZone(null)
+    setPdfDragActive(false)
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      await extractPDF(Array.from(e.dataTransfer.files), field)
+      await extractPDF(Array.from(e.dataTransfer.files))
     }
   }
 
-  const handleFileInput = async (e: React.ChangeEvent<HTMLInputElement>, field: ExtractField) => {
+  const handlePdfFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      await extractPDF(Array.from(e.target.files), field)
+      await extractPDF(Array.from(e.target.files))
     }
   }
 
-  const extractPDF = async (files: File[], field: ExtractField) => {
+  const extractPDF = async (files: File[]) => {
     const pdfFiles = files.filter(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
 
     if (pdfFiles.length === 0) {
@@ -173,12 +171,11 @@ export default function PropertySettingsPage() {
       return
     }
 
-    setExtractingZone(field)
-    setExtractError(prev => ({ ...prev, [field]: '' }))
+    setPdfExtracting(true)
+    setPdfExtractError(null)
     try {
       const formData = new FormData()
       pdfFiles.forEach(file => formData.append('pdfs', file))
-      formData.append('field', field)
 
       const response = await fetch('/api/extract-pdf', {
         method: 'POST',
@@ -191,36 +188,30 @@ export default function PropertySettingsPage() {
 
       const extracted = await response.json()
 
-      if (extracted[field] !== null && extracted[field] !== undefined) {
-        setConfig({
-          ...config,
-          [field]: extracted[field],
-        })
+      const filledFields: string[] = []
+      const updates: Record<string, string> = {}
+
+      if (extracted.wifi_password) { updates.wifi_password = extracted.wifi_password; filledFields.push('WiFi') }
+      if (extracted.checkin_instructions) { updates.checkin_instructions = extracted.checkin_instructions; filledFields.push('Check-in') }
+      if (extracted.local_tips) { updates.local_tips = extracted.local_tips; filledFields.push('Local tips') }
+      if (extracted.house_rules) { updates.house_rules = extracted.house_rules; filledFields.push('House rules') }
+
+      if (Object.keys(updates).length > 0) {
+        setConfig({ ...config, ...updates })
       }
 
-      const fileName = pdfFiles.length === 1
-        ? pdfFiles[0].name
-        : `${pdfFiles.length} PDFs`
-      setExtractedFiles(prev => ({ ...prev, [field]: { name: fileName, timestamp: Date.now() } }))
+      const fileName = pdfFiles.length === 1 ? pdfFiles[0].name : `${pdfFiles.length} PDFs`
+      setPdfExtractedFile({ name: fileName, fields: filledFields })
     } catch (err) {
       console.error('PDF extraction error:', err)
-      setExtractError(prev => ({ ...prev, [field]: err instanceof Error ? err.message : 'Extraction failed' }))
+      setPdfExtractError(err instanceof Error ? err.message : 'Extraction failed')
     }
-    setExtractingZone(null)
+    setPdfExtracting(false)
   }
 
-  const handleClearZone = (field: string) => {
-    setExtractedFiles(prev => {
-      const next = { ...prev }
-      delete next[field]
-      return next
-    })
-    setExtractError(prev => {
-      const next = { ...prev }
-      delete next[field]
-      return next
-    })
-    setConfig({ ...config, [field]: '' })
+  const handleClearPdf = () => {
+    setPdfExtractedFile(null)
+    setPdfExtractError(null)
   }
 
   const handleImageUpload = async (files: File[], selectedTags: string[]) => {
@@ -442,6 +433,73 @@ export default function PropertySettingsPage() {
             </div>
           </div>
           <div className="px-8 py-6 space-y-5">
+            {/* Single PDF drop zone for all fields */}
+            <div
+              className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
+                pdfDragActive ? 'border-primary bg-[rgba(108,92,231,0.05)]'
+                : pdfExtractError ? 'border-red-300 bg-red-50'
+                : pdfExtractedFile ? 'border-green-300 bg-green-50'
+                : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-[rgba(108,92,231,0.02)]'
+              } ${pdfExtracting ? 'opacity-60 pointer-events-none' : ''}`}
+              onDragEnter={handlePdfDrag}
+              onDragLeave={handlePdfDrag}
+              onDragOver={handlePdfDrag}
+              onDrop={handlePdfDrop}
+            >
+              <input
+                type="file"
+                accept=".pdf"
+                multiple
+                onChange={handlePdfFileInput}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                disabled={pdfExtracting}
+              />
+              {pdfExtracting ? (
+                <div className="flex items-center justify-center gap-3 py-2">
+                  <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
+                  <span className="text-dark font-bold text-sm">Reading your PDF and filling in the fields below...</span>
+                </div>
+              ) : pdfExtractError ? (
+                <div className="flex items-center gap-3 py-1">
+                  <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-red-600">Extraction failed</p>
+                    <p className="text-xs text-red-500 truncate">{pdfExtractError}</p>
+                  </div>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); handleClearPdf() }} className="shrink-0 text-red-400 hover:text-red-600 pointer-events-auto z-10">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              ) : pdfExtractedFile ? (
+                <div className="flex items-center gap-3 py-1">
+                  <svg className="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-green-700">Extracted from {pdfExtractedFile.name}</p>
+                    <p className="text-xs text-green-600">
+                      {pdfExtractedFile.fields.length > 0
+                        ? `Filled: ${pdfExtractedFile.fields.join(', ')}`
+                        : 'No matching info found — try a different PDF'}
+                    </p>
+                  </div>
+                  <button type="button" onClick={(e) => { e.stopPropagation(); handleClearPdf() }} className="shrink-0 text-gray-400 hover:text-gray-600 pointer-events-auto z-10">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center py-2">
+                  <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <p className="text-dark font-bold text-sm">Drop your property guide PDF here</p>
+                  <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from one document</p>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+              <span className="text-xs text-muted font-medium">or type manually</span>
+              <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+            </div>
+
             {/* WiFi */}
             <AIField
               label="WiFi Password"
@@ -449,7 +507,6 @@ export default function PropertySettingsPage() {
               color="primary"
             >
               <input type="text" value={config.wifi_password || ''} onChange={(e) => setConfig({ ...config, wifi_password: e.target.value })} placeholder="Network name & password" className={inputClass} />
-              <PDFDropZone field="wifi_password" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['wifi_password']} extractError={extractError['wifi_password']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
             </AIField>
 
             {/* Check-in */}
@@ -459,7 +516,6 @@ export default function PropertySettingsPage() {
               color="accent"
             >
               <textarea value={config.checkin_instructions || ''} onChange={(e) => setConfig({ ...config, checkin_instructions: e.target.value })} placeholder="Key location, door codes, arrival steps, parking..." rows={3} className={inputClass} />
-              <PDFDropZone field="checkin_instructions" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['checkin_instructions']} extractError={extractError['checkin_instructions']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
             </AIField>
 
             {/* Local Tips */}
@@ -469,7 +525,6 @@ export default function PropertySettingsPage() {
               color="yellow"
             >
               <textarea value={config.local_tips || ''} onChange={(e) => setConfig({ ...config, local_tips: e.target.value })} placeholder="Restaurants, attractions, transport, things to do..." rows={3} className={inputClass} />
-              <PDFDropZone field="local_tips" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['local_tips']} extractError={extractError['local_tips']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
             </AIField>
 
             {/* House Rules */}
@@ -479,7 +534,6 @@ export default function PropertySettingsPage() {
               color="pink"
             >
               <textarea value={config.house_rules || ''} onChange={(e) => setConfig({ ...config, house_rules: e.target.value })} placeholder="Quiet hours, smoking policy, checkout, dos & don'ts..." rows={3} className={inputClass} />
-              <PDFDropZone field="house_rules" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['house_rules']} extractError={extractError['house_rules']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
             </AIField>
           </div>
         </div>
@@ -576,75 +630,6 @@ function AIField({ label, icon, color, children }: {
       <div className="space-y-2">
         {children}
       </div>
-    </div>
-  )
-}
-
-// Compact PDF Drop Zone — single horizontal row
-function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, extractError, onDrag, onDrop, onFileInput, onClear }: {
-  field: string
-  dragActiveZone: string | null
-  extractingZone: string | null
-  extractedFile?: { name: string; timestamp: number }
-  extractError?: string
-  onDrag: (e: React.DragEvent, zone: string) => void
-  onDrop: (e: React.DragEvent, field: any) => void
-  onFileInput: (e: React.ChangeEvent<HTMLInputElement>, field: any) => void
-  onClear: (field: string) => void
-}) {
-  const isActive = dragActiveZone === field
-  const isExtracting = extractingZone === field
-  const hasExtracted = extractedFile && !extractError
-  const hasError = !!extractError
-
-  return (
-    <div
-      className={`relative flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed transition-all text-xs ${
-        isActive ? 'border-primary bg-[rgba(108,92,231,0.05)]'
-        : hasError ? 'border-red-300 bg-red-50'
-        : hasExtracted ? 'border-green-300 bg-green-50'
-        : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-white/60'
-      } ${isExtracting ? 'opacity-50 pointer-events-none' : ''}`}
-      onDragEnter={(e) => onDrag(e, field)}
-      onDragLeave={(e) => onDrag(e, field)}
-      onDragOver={(e) => onDrag(e, field)}
-      onDrop={(e) => onDrop(e, field)}
-    >
-      <input
-        type="file"
-        accept=".pdf"
-        multiple
-        onChange={(e) => onFileInput(e, field)}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        disabled={extractingZone !== null}
-      />
-      {isExtracting ? (
-        <>
-          <div className="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full shrink-0"></div>
-          <span className="text-dark font-bold">Extracting from PDF...</span>
-        </>
-      ) : hasError ? (
-        <>
-          <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span className="text-red-600 font-medium truncate">Failed — drop another PDF to retry</span>
-          <button type="button" onClick={(e) => { e.stopPropagation(); onClear(field) }} className="ml-auto shrink-0 text-red-400 hover:text-red-600 pointer-events-auto z-10">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-        </>
-      ) : hasExtracted ? (
-        <>
-          <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          <span className="text-green-700 font-medium truncate">Extracted from {extractedFile.name}</span>
-          <button type="button" onClick={(e) => { e.stopPropagation(); onClear(field) }} className="ml-auto shrink-0 text-gray-400 hover:text-gray-600 pointer-events-auto z-10">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-          </button>
-        </>
-      ) : (
-        <>
-          <svg className="w-4 h-4 text-primary/50 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-          <span className="text-muted">Drop a PDF here or click to upload</span>
-        </>
-      )}
     </div>
   )
 }
