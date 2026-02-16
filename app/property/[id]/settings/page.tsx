@@ -577,12 +577,6 @@ export default function PropertySettingsPage() {
               <input type="url" value={config.booking_url || ''} onChange={(e) => setConfig({ ...config, booking_url: e.target.value })} placeholder="https://airbnb.com/rooms/123456" className={inputClass} />
               <p className="text-xs text-muted mt-1.5">When guests ask about extending their stay, the AI shares this link</p>
             </div>
-
-            <div>
-              <label className="block text-sm font-bold mb-1.5 text-dark">Google Sheet URL <span className="font-normal text-muted">(optional)</span></label>
-              <input type="text" value={config.sheet_url || ''} onChange={(e) => setConfig({ ...config, sheet_url: e.target.value })} placeholder="https://docs.google.com/spreadsheets/d/..." className={inputClass} />
-              <p className="text-xs text-muted mt-1.5">Additional property details from your spreadsheet</p>
-            </div>
           </div>
         </div>
 
