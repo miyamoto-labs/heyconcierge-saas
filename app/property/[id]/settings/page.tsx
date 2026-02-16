@@ -214,6 +214,20 @@ export default function PropertySettingsPage() {
     setExtractingZone(null)
   }
 
+  const handleClearZone = (field: string) => {
+    setExtractedFiles(prev => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+    setExtractError(prev => {
+      const next = { ...prev }
+      delete next[field]
+      return next
+    })
+    setConfig({ ...config, [field]: '' })
+  }
+
   const handleImageUpload = async (files: File[], selectedTags: string[]) => {
     if (files.length === 0 || selectedTags.length === 0) {
       alert('❌ Please select at least one image and one tag')
@@ -441,7 +455,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="wifi_password" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['wifi_password']} extractError={extractError['wifi_password']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="wifi_password" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['wifi_password']} extractError={extractError['wifi_password']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
               </div>
 
               <div>
@@ -454,7 +468,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="checkin_instructions" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['checkin_instructions']} extractError={extractError['checkin_instructions']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="checkin_instructions" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['checkin_instructions']} extractError={extractError['checkin_instructions']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
               </div>
 
               <div>
@@ -467,7 +481,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="local_tips" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['local_tips']} extractError={extractError['local_tips']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} />
+                <PDFDropZone field="local_tips" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['local_tips']} extractError={extractError['local_tips']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} />
               </div>
 
               <div>
@@ -480,7 +494,7 @@ export default function PropertySettingsPage() {
                   className="w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all"
                 />
                 
-                <PDFDropZone field="house_rules" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['house_rules']} extractError={extractError['house_rules']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} large />
+                <PDFDropZone field="house_rules" dragActiveZone={dragActiveZone} extractingZone={extractingZone} extractedFile={extractedFiles['house_rules']} extractError={extractError['house_rules']} onDrag={handleDrag} onDrop={handleDrop} onFileInput={handleFileInput} onClear={handleClearZone} large />
               </div>
 
               <div>
@@ -542,7 +556,7 @@ export default function PropertySettingsPage() {
 }
 
 // PDF Drop Zone Component
-function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, extractError, onDrag, onDrop, onFileInput, large = false }: {
+function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, extractError, onDrag, onDrop, onFileInput, onClear, large = false }: {
   field: string
   dragActiveZone: string | null
   extractingZone: string | null
@@ -551,6 +565,7 @@ function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, ext
   onDrag: (e: React.DragEvent, zone: string) => void
   onDrop: (e: React.DragEvent, field: any) => void
   onFileInput: (e: React.ChangeEvent<HTMLInputElement>, field: any) => void
+  onClear: (field: string) => void
   large?: boolean
 }) {
   const isActive = dragActiveZone === field
@@ -580,6 +595,18 @@ function PDFDropZone({ field, dragActiveZone, extractingZone, extractedFile, ext
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           disabled={extractingZone !== null}
         />
+        {(hasExtracted || hasError) && (
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onClear(field) }}
+            className="absolute top-2 right-2 z-10 w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 hover:bg-gray-300 text-gray-500 hover:text-gray-700 transition-colors pointer-events-auto"
+            title="Remove"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
         <div className="pointer-events-none">
           {isExtracting ? (
             <>
