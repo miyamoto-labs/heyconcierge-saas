@@ -538,7 +538,29 @@ export default function PropertySettingsPage() {
           </div>
         </div>
 
-        {/* Section 3: Links & Integrations */}
+        {/* Section 3: Property Images */}
+        <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(253,121,168,0.08)] to-transparent flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-pink/15 flex items-center justify-center">
+              <svg className="w-5 h-5 text-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </div>
+            <div>
+              <h2 className="font-nunito text-lg font-black text-dark">Property Images</h2>
+              <p className="text-xs text-muted">Photos sent to guests when they ask relevant questions</p>
+            </div>
+          </div>
+          <div className="px-8 py-6">
+            <PropertyImagesUpload
+              propertyId={propertyId}
+              images={images}
+              onUpload={handleImageUpload}
+              onDelete={handleDeleteImage}
+              uploading={uploadingImages}
+            />
+          </div>
+        </div>
+
+        {/* Section 4: Links & Integrations */}
         <div className="bg-white rounded-3xl shadow-card overflow-hidden">
           <div className="px-8 py-5 bg-gradient-to-r from-[rgba(116,185,255,0.1)] to-transparent flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue/20 flex items-center justify-center">
@@ -561,28 +583,6 @@ export default function PropertySettingsPage() {
               <input type="text" value={config.sheet_url || ''} onChange={(e) => setConfig({ ...config, sheet_url: e.target.value })} placeholder="https://docs.google.com/spreadsheets/d/..." className={inputClass} />
               <p className="text-xs text-muted mt-1.5">Additional property details from your spreadsheet</p>
             </div>
-          </div>
-        </div>
-
-        {/* Section 4: Property Images */}
-        <div className="bg-white rounded-3xl shadow-card overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(253,121,168,0.08)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-pink/15 flex items-center justify-center">
-              <svg className="w-5 h-5 text-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-            </div>
-            <div>
-              <h2 className="font-nunito text-lg font-black text-dark">Property Images</h2>
-              <p className="text-xs text-muted">Photos sent to guests when they ask relevant questions</p>
-            </div>
-          </div>
-          <div className="px-8 py-6">
-            <PropertyImagesUpload
-              propertyId={propertyId}
-              images={images}
-              onUpload={handleImageUpload}
-              onDelete={handleDeleteImage}
-              uploading={uploadingImages}
-            />
           </div>
         </div>
 
