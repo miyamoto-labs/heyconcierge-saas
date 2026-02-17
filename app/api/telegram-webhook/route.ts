@@ -207,27 +207,28 @@ export async function POST(request: NextRequest) {
       .from('goconcierge_messages')
       .select('*', { count: 'exact', head: true })
       .eq('guest_phone', `tg:${chatId}`)
-      .gte('timestamp', new Date(Date.now() - 60000).toISOString())
+      .gte('created_at', new Date(Date.now() - 60000).toISOString())
 
     if ((count || 0) >= 30) {
       await sendMessage(chatId, "You're sending messages too quickly. Please wait a moment.")
       return NextResponse.json({ ok: true })
     }
 
-    // Fetch conversation history (last 5 exchanges)
+    // Fetch conversation history (last 5 user+assistant pairs = 10 rows)
     const { data: history } = await supabase
       .from('goconcierge_messages')
-      .select('message, response')
+      .select('role, content')
       .eq('property_id', property.id)
       .eq('guest_phone', `tg:${chatId}`)
-      .order('timestamp', { ascending: false })
-      .limit(5)
+      .order('created_at', { ascending: false })
+      .limit(10)
 
     // Build Claude messages with history
     const messages: { role: 'user' | 'assistant'; content: string }[] = []
     for (const h of (history || []).reverse()) {
-      messages.push({ role: 'user', content: h.message })
-      if (h.response) messages.push({ role: 'assistant', content: h.response })
+      if (h.role === 'user' || h.role === 'assistant') {
+        messages.push({ role: h.role, content: h.content })
+      }
     }
     messages.push({ role: 'user', content: text })
 
@@ -287,15 +288,25 @@ ${propertyContext}`
     // Auto-attach images
     await autoAttachImages(chatId, text, reply, property.id)
 
-    // Log conversation
-    await supabase.from('goconcierge_messages').insert({
-      property_id: property.id,
-      guest_phone: `tg:${chatId}`,
-      message: text,
-      response: reply,
-      channel: 'telegram',
-      timestamp: new Date().toISOString(),
-    })
+    // Log conversation (user message + assistant reply as separate rows)
+    await supabase.from('goconcierge_messages').insert([
+      {
+        property_id: property.id,
+        guest_phone: `tg:${chatId}`,
+        guest_name: firstName,
+        role: 'user',
+        content: text,
+        channel: 'telegram',
+      },
+      {
+        property_id: property.id,
+        guest_phone: `tg:${chatId}`,
+        guest_name: firstName,
+        role: 'assistant',
+        content: reply,
+        channel: 'telegram',
+      },
+    ])
 
     return NextResponse.json({ ok: true })
   } catch (error) {
