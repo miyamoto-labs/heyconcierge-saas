@@ -132,8 +132,14 @@ export async function POST(request: NextRequest) {
 
     for (const property of properties) {
       try {
-        // Fetch iCal text
-        const res = await fetch(property.ical_url, { signal: AbortSignal.timeout(10000) })
+        // Fetch iCal text (User-Agent needed — Airbnb blocks default serverless requests)
+        const res = await fetch(property.ical_url, {
+          signal: AbortSignal.timeout(15000),
+          headers: {
+            'User-Agent': 'HeyConcierge/1.0 Calendar Sync',
+            'Accept': 'text/calendar, text/plain, */*',
+          },
+        })
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         const icsText = await res.text()
 
