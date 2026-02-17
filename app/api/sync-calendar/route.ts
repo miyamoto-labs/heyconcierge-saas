@@ -162,10 +162,13 @@ export async function POST(request: NextRequest) {
           count: bookings.length,
         })
       } catch (err) {
+        const errMsg = err instanceof Error ? err.message : 'Sync failed'
+        console.error(`Sync failed for ${property.name} (URL: ${property.ical_url}):`, errMsg)
         results.push({
           property: property.name,
           success: false,
-          error: err instanceof Error ? err.message : 'Sync failed',
+          error: errMsg,
+          ical_url: property.ical_url?.substring(0, 60) + '...',
         })
       }
     }
