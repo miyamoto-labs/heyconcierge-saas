@@ -29,9 +29,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No PDF files uploaded' }, { status: 400 })
     }
 
-    // pdf-parse v1's index.js tries to read a test PDF on import.
-    // Import the inner lib directly to avoid that.
-    const pdfParse = (await import('pdf-parse/lib/pdf-parse.js')).default
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pdfParse = require('pdf-parse')
 
     const allTexts: string[] = []
     for (const file of files) {

@@ -82,19 +82,35 @@ export default function SignupPage() {
       try {
         const userEmail = getCookie('user_email')
         
-        // Create organization
-        const { data: org, error: orgErr } = await supabase
+        // Create organization — if one already exists for this email, reuse it
+        let org: any
+        const { data: existingOrg } = await supabase
           .from('organizations')
-          .insert({ 
-            name: form.company || form.name, 
-            email: userEmail || form.email, 
-            plan: form.plan,
-            user_id: userId
-          })
-          .select()
+          .select('*')
+          .eq('email', userEmail || form.email)
           .single()
 
-        if (orgErr) throw orgErr
+        if (existingOrg) {
+          // Org exists — update user_id to current user and reuse
+          await supabase
+            .from('organizations')
+            .update({ user_id: userId })
+            .eq('id', existingOrg.id)
+          org = existingOrg
+        } else {
+          const { data: newOrg, error: orgErr } = await supabase
+            .from('organizations')
+            .insert({ 
+              name: form.company || form.name, 
+              email: userEmail || form.email, 
+              plan: form.plan,
+              user_id: userId
+            })
+            .select()
+            .single()
+          if (orgErr) throw orgErr
+          org = newOrg
+        }
 
         // Create property
         const { data: prop, error: propErr } = await supabase
@@ -130,9 +146,10 @@ export default function SignupPage() {
         const qrUrl = `https://t.me/${botUsername}?start=${prop.id}`
         const dataUrl = await QRCode.toDataURL(qrUrl, { width: 300, margin: 2, color: { dark: '#2D2B55', light: '#FFFFFF' } })
         setQrDataUrl(dataUrl)
-      } catch (err) {
+      } catch (err: any) {
         console.error('Signup error:', err)
-        alert(`Signup failed: ${err instanceof Error ? err.message : String(err)}`)
+        const msg = err?.message || err?.error_description || JSON.stringify(err)
+        alert(`Signup failed: ${msg}`)
         setLoading(false)
         return
       }

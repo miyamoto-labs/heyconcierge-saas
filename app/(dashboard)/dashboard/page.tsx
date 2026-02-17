@@ -45,14 +45,34 @@ export default function DashboardPage() {
     
     setLoading(true)
     try {
-      // Get user's organizations
-      const { data: orgs } = await supabase
+      // Get user's organizations — try user_id first, fall back to email
+      let { data: orgs } = await supabase
         .from('organizations')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
-      
+
+      if (!orgs?.length) {
+        const email = getCookie('user_email')
+        if (email) {
+          const { data: orgsByEmail } = await supabase
+            .from('organizations')
+            .select('*')
+            .eq('email', email)
+            .order('created_at', { ascending: false })
+            .limit(1)
+          orgs = orgsByEmail
+          // Fix user_id for future lookups
+          if (orgs?.[0]) {
+            await supabase
+              .from('organizations')
+              .update({ user_id: userId })
+              .eq('id', orgs[0].id)
+          }
+        }
+      }
+
       const org = orgs?.[0]
       
       setOrganization(org)

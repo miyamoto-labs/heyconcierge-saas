@@ -159,7 +159,7 @@ function PropertySettingsPage() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      await supabase
+      const { error: propErr } = await supabase
         .from('properties')
         .update({
           name: property.name,
@@ -169,6 +169,8 @@ function PropertySettingsPage() {
           ical_url: property.ical_url,
         })
         .eq('id', propertyId)
+
+      if (propErr) throw propErr
 
       if (config.id) {
         const { error } = await supabase
@@ -188,6 +190,7 @@ function PropertySettingsPage() {
           .from('property_config_sheets')
           .insert({
             property_id: propertyId,
+            sheet_url: '',
             wifi_network: config.wifi_network || '',
             wifi_password: config.wifi_password || '',
             checkin_instructions: config.checkin_instructions || '',
@@ -203,9 +206,9 @@ function PropertySettingsPage() {
       savedConfigRef.current = { ...config }
       setHasUnsavedChanges(false)
       await loadProperty()
-    } catch (err) {
+    } catch (err: any) {
       console.error('Save error:', err)
-      toast('Failed to save: ' + (err instanceof Error ? err.message : 'Unknown error'), 'error')
+      toast('Failed to save: ' + (err?.message || err?.error_description || JSON.stringify(err)), 'error')
     }
     setSaving(false)
   }

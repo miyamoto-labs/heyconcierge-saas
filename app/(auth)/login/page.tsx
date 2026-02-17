@@ -1,7 +1,33 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
 
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 export default function LoginPage() {
+  const router = useRouter()
+  const [devEmail, setDevEmail] = useState('')
+  const [devLoading, setDevLoading] = useState(false)
+
+  const handleDevLogin = async () => {
+    if (!devEmail) return
+    setDevLoading(true)
+    const res = await fetch('/api/auth/dev-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: devEmail }),
+    })
+    if (res.ok) {
+      router.push('/dashboard')
+    } else {
+      alert('Dev login failed')
+      setDevLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-bg flex items-center justify-center px-4">
       <div className="bg-white rounded-3xl shadow-card p-12 max-w-[500px] w-full text-center">
@@ -26,6 +52,29 @@ export default function LoginPage() {
           </svg>
           Continue with Google
         </Link>
+
+        {IS_DEV && (
+          <div className="mt-8 pt-6 border-t border-[#E8E4FF]">
+            <p className="text-xs text-muted mb-3 font-bold uppercase tracking-wide">🛠 Dev Login</p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={devEmail}
+                onChange={e => setDevEmail(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleDevLogin()}
+                placeholder="your@email.com"
+                className="flex-1 px-4 py-2.5 rounded-xl border-2 border-[#E8E4FF] text-dark text-sm font-medium focus:border-primary focus:outline-none transition-colors"
+              />
+              <button
+                onClick={handleDevLogin}
+                disabled={devLoading || !devEmail}
+                className="px-5 py-2.5 bg-primary text-white rounded-xl font-bold text-sm disabled:opacity-50 hover:-translate-y-0.5 transition-all"
+              >
+                {devLoading ? '...' : 'Go'}
+              </button>
+            </div>
+          </div>
+        )}
 
         <p className="text-xs text-muted mt-6">
           By signing in, you agree to our Terms of Service and Privacy Policy
