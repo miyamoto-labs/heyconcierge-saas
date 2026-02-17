@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
+import LogoSVG from '@/components/LogoSVG';
 
 interface FAQItem {
   question: string;
@@ -108,6 +110,19 @@ export default function FAQ() {
     : faqData.filter(item => item.category === selectedCategory);
 
   return (
+    <div className="min-h-screen bg-bg">
+      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
+            <LogoSVG className="w-8 h-8" />
+            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="text-sm text-muted hover:text-dark font-bold">Dashboard</Link>
+            <Link href="/" className="text-sm text-muted hover:text-dark font-bold">Home</Link>
+          </div>
+        </div>
+      </header>
     <div className="max-w-4xl mx-auto px-4 py-16">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -201,6 +216,7 @@ export default function FAQ() {
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -25,6 +25,7 @@ Property: ${property.name || 'Unnamed'}
 Location: ${property.address || 'N/A'}
 Type: ${property.property_type || 'N/A'}
 
+WiFi Network: ${config?.wifi_network || 'Not provided'}
 WiFi Password: ${config?.wifi_password || 'Not provided'}
 
 Check-in Instructions:

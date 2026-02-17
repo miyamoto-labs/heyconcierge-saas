@@ -147,7 +147,7 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px]">
+      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
           <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
             <LogoSVG className="w-8 h-8" />

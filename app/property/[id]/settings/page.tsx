@@ -85,29 +85,25 @@ function PropertySettingsPage() {
       property_type: newProp?.property_type,
       whatsapp_number: newProp?.whatsapp_number,
       ical_url: newProp?.ical_url,
-      latitude: newProp?.latitude,
-      longitude: newProp?.longitude,
     }) !== JSON.stringify({
       name: savedPropertyRef.current.name,
       address: savedPropertyRef.current.address,
       property_type: savedPropertyRef.current.property_type,
       whatsapp_number: savedPropertyRef.current.whatsapp_number,
       ical_url: savedPropertyRef.current.ical_url,
-      latitude: savedPropertyRef.current.latitude,
-      longitude: savedPropertyRef.current.longitude,
     })
     const configChanged = JSON.stringify({
+      wifi_network: newConfig?.wifi_network || '',
       wifi_password: newConfig?.wifi_password || '',
       checkin_instructions: newConfig?.checkin_instructions || '',
       local_tips: newConfig?.local_tips || '',
       house_rules: newConfig?.house_rules || '',
-      booking_url: newConfig?.booking_url || '',
     }) !== JSON.stringify({
+      wifi_network: savedConfigRef.current.wifi_network || '',
       wifi_password: savedConfigRef.current.wifi_password || '',
       checkin_instructions: savedConfigRef.current.checkin_instructions || '',
       local_tips: savedConfigRef.current.local_tips || '',
       house_rules: savedConfigRef.current.house_rules || '',
-      booking_url: savedConfigRef.current.booking_url || '',
     })
     setHasUnsavedChanges(propChanged || configChanged)
   }, [])
@@ -171,8 +167,6 @@ function PropertySettingsPage() {
           property_type: property.property_type,
           whatsapp_number: property.whatsapp_number,
           ical_url: property.ical_url,
-          latitude: property.latitude ? parseFloat(property.latitude) : null,
-          longitude: property.longitude ? parseFloat(property.longitude) : null,
         })
         .eq('id', propertyId)
 
@@ -180,12 +174,11 @@ function PropertySettingsPage() {
         const { error } = await supabase
           .from('property_config_sheets')
           .update({
+            wifi_network: config.wifi_network || '',
             wifi_password: config.wifi_password || '',
             checkin_instructions: config.checkin_instructions || '',
             local_tips: config.local_tips || '',
             house_rules: config.house_rules || '',
-            sheet_url: config.sheet_url || '',
-            booking_url: config.booking_url || '',
           })
           .eq('id', config.id)
 
@@ -195,12 +188,11 @@ function PropertySettingsPage() {
           .from('property_config_sheets')
           .insert({
             property_id: propertyId,
+            wifi_network: config.wifi_network || '',
             wifi_password: config.wifi_password || '',
             checkin_instructions: config.checkin_instructions || '',
             local_tips: config.local_tips || '',
             house_rules: config.house_rules || '',
-            sheet_url: config.sheet_url || '',
-            booking_url: config.booking_url || '',
           })
 
         if (error) throw error
@@ -311,6 +303,12 @@ function PropertySettingsPage() {
       return
     }
 
+    const maxImages = 10
+    if (images.length + files.length > maxImages) {
+      toast(`Maximum ${maxImages} images allowed. You have ${images.length}, trying to add ${files.length}.`, 'error')
+      return
+    }
+
     setUploadingImages(true)
     try {
       for (const file of files) {
@@ -353,18 +351,16 @@ function PropertySettingsPage() {
     if (!confirm('Delete this image?')) return
 
     try {
-      const urlParts = imageUrl.split('/property-images/')
-      if (urlParts.length === 2) {
-        const filePath = urlParts[1]
-        await supabase.storage.from('property-images').remove([filePath])
+      const response = await fetch('/api/delete-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageId, imageUrl }),
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Delete failed')
       }
-
-      const { error } = await supabase
-        .from('property_images')
-        .delete()
-        .eq('id', imageId)
-
-      if (error) throw error
 
       toast('Image deleted', 'success')
       await loadProperty()
@@ -376,7 +372,7 @@ function PropertySettingsPage() {
 
   // Completion tracker
   const completionItems = config ? [
-    { label: 'WiFi', done: !!config.wifi_password },
+    { label: 'WiFi', done: !!(config.wifi_network || config.wifi_password) },
     { label: 'Check-in', done: !!config.checkin_instructions },
     { label: 'Local tips', done: !!config.local_tips },
     { label: 'House rules', done: !!config.house_rules },
@@ -511,7 +507,7 @@ function PropertySettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-1.5 text-dark">WhatsApp Number</label>
+              <label className="block text-sm font-bold mb-1.5 text-dark">Your WhatsApp Number</label>
               <input type="text" value={property.whatsapp_number || ''} onChange={(e) => updateProperty({ whatsapp_number: e.target.value })} placeholder="+1234567890" className={inputClass} />
               <p className="text-xs text-muted mt-1.5">Include country code (e.g., +47 for Norway)</p>
             </div>
@@ -519,19 +515,6 @@ function PropertySettingsPage() {
             <div>
               <label className="block text-sm font-bold mb-1.5 text-dark">iCal URL <span className="font-normal text-muted">(optional)</span></label>
               <input type="text" value={property.ical_url || ''} onChange={(e) => updateProperty({ ical_url: e.target.value })} placeholder="https://airbnb.com/calendar/ical/..." className={inputClass} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-bold mb-1.5 text-dark">Latitude <span className="font-normal text-muted">(optional)</span></label>
-                <input type="number" step="0.000001" value={property.latitude || ''} onChange={(e) => updateProperty({ latitude: e.target.value })} placeholder="59.9139" className={inputClass} />
-                <p className="text-xs text-muted mt-1.5">For weather-aware responses</p>
-              </div>
-              <div>
-                <label className="block text-sm font-bold mb-1.5 text-dark">Longitude <span className="font-normal text-muted">(optional)</span></label>
-                <input type="number" step="0.000001" value={property.longitude || ''} onChange={(e) => updateProperty({ longitude: e.target.value })} placeholder="10.7522" className={inputClass} />
-                <p className="text-xs text-muted mt-1.5">Find on Google Maps</p>
-              </div>
             </div>
           </div>
         </div>
@@ -617,11 +600,14 @@ function PropertySettingsPage() {
 
             {/* WiFi */}
             <AIField
-              label="WiFi Password"
+              label="WiFi"
               icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.858 15.355-5.858 21.213 0" /></svg>}
               color="primary"
             >
-              <input type="text" value={config.wifi_password || ''} onChange={(e) => updateConfig({ wifi_password: e.target.value })} placeholder="Network name & password" className={inputClass} />
+              <div className="grid grid-cols-2 gap-3">
+                <input type="text" value={config.wifi_network || ''} onChange={(e) => updateConfig({ wifi_network: e.target.value })} placeholder="Network name" className={inputClass} />
+                <input type="text" value={config.wifi_password || ''} onChange={(e) => updateConfig({ wifi_password: e.target.value })} placeholder="Password" className={inputClass} />
+              </div>
             </AIField>
 
             {/* Check-in */}
@@ -672,40 +658,6 @@ function PropertySettingsPage() {
               onDelete={handleDeleteImage}
               uploading={uploadingImages}
             />
-          </div>
-        </div>
-
-        {/* Section 4: Links & Integrations */}
-        <div className="bg-white rounded-3xl shadow-card overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(116,185,255,0.1)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue/20 flex items-center justify-center">
-              <svg className="w-5 h-5 text-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>
-            </div>
-            <div>
-              <h2 className="font-nunito text-lg font-black text-dark">Links & Integrations</h2>
-              <p className="text-xs text-muted">Connect your booking platform</p>
-            </div>
-          </div>
-          <div className="px-8 py-6 space-y-4">
-            <div className="rounded-2xl border-l-4 border-blue/30 bg-blue/5 p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-blue/10 text-blue">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                </div>
-                <label className="text-sm font-bold text-dark">Booking URL</label>
-                <span className="text-xs text-muted font-normal">(optional)</span>
-              </div>
-              <input type="url" value={config.booking_url || ''} onChange={(e) => updateConfig({ booking_url: e.target.value })} placeholder="https://airbnb.com/rooms/123456" className={inputClass} />
-              <p className="text-xs text-muted mt-2">When guests ask about extending their stay, the AI shares this link</p>
-            </div>
-
-            <div className="rounded-2xl border-2 border-dashed border-[rgba(116,185,255,0.2)] bg-[rgba(116,185,255,0.03)] p-5 text-center">
-              <div className="flex items-center justify-center gap-2 text-muted">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
-                <p className="text-sm font-bold">More integrations coming soon</p>
-              </div>
-              <p className="text-xs text-muted mt-1">Google Calendar, PMS systems, and more</p>
-            </div>
           </div>
         </div>
 
@@ -792,6 +744,7 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
     { id: 'interior', label: 'Interior', emoji: '🛋️' },
     { id: 'view', label: 'View', emoji: '🌄' },
     { id: 'amenity', label: 'Amenities', emoji: '🏊' },
+    { id: 'other', label: 'Other', emoji: '📎' },
   ]
 
   const handleDrag = (e: React.DragEvent) => {
