@@ -7,7 +7,7 @@ interface AdminUser {
   email: string
   role: string
   mfa_enabled: boolean
-  frozen: boolean
+  frozen?: boolean
   last_login_at?: string
   created_at: string
 }

@@ -18,7 +18,7 @@ export async function GET() {
     const supabase = getAdminSupabase()
     const { data, error } = await supabase
       .from('admin_users')
-      .select('id, name, email, role, mfa_enabled, frozen, last_login_at, created_at')
+      .select('*')
       .order('created_at', { ascending: false })
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
