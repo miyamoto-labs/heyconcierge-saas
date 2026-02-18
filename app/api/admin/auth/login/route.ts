@@ -25,6 +25,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
+    // Check if account is frozen
+    if (user.frozen) {
+      return NextResponse.json({ error: 'Your account has been suspended. Contact a super admin.' }, { status: 403 })
+    }
+
     // Verify password
     const valid = await bcrypt.compare(password, user.password_hash)
     if (!valid) {
