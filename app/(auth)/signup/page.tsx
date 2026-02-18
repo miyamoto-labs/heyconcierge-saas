@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
 import { supabase } from '@/lib/supabase'
 
@@ -39,22 +39,59 @@ const COUNTRY_CODES = [
   { code: '+64', country: 'NZ', flag: '🇳🇿' },
 ]
 
-export default function SignupPage() {
+export default function SignupPageWrapper() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg flex items-center justify-center"><div className="text-muted font-semibold">Loading...</div></div>}>
+      <SignupPage />
+    </Suspense>
+  )
+}
+
+function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
   const [userId, setUserId] = useState<string | null>(null)
+  const [existingOrg, setExistingOrg] = useState<any>(null)
+  const [isAddProperty, setIsAddProperty] = useState(false)
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated, detect existing org
   useEffect(() => {
     const id = getCookie('user_id')
     if (!id) {
       router.push('/login')
-    } else {
-      setUserId(id)
+      return
     }
-  }, [router])
+    setUserId(id)
+
+    // Check if user already has an org (= existing user adding property)
+    const checkExistingOrg = async () => {
+      const userEmail = getCookie('user_email')
+      if (!userEmail) return
+
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('email', userEmail)
+        .single()
+
+      if (org) {
+        setExistingOrg(org)
+        // Existing user — skip to property step (step 3)
+        const paramStep = searchParams?.get('step')
+        if (paramStep) {
+          // If step=2 from dashboard, go to step 3 (property) since they don't need plan selection
+          const targetStep = Math.max(3, parseInt(paramStep, 10))
+          setStep(targetStep)
+          setIsAddProperty(true)
+        }
+      }
+    }
+    checkExistingOrg()
+  }, [router, searchParams])
+
   const [form, setForm] = useState({
     name: '', email: '', phone: '', company: '',
     countryCode: '+47',
@@ -81,23 +118,27 @@ export default function SignupPage() {
       setLoading(true)
       try {
         const userEmail = getCookie('user_email')
-        
-        // Create organization — if one already exists for this email, reuse it
-        let org: any
-        const { data: existingOrg } = await supabase
-          .from('organizations')
-          .select('*')
-          .eq('email', userEmail || form.email)
-          .single()
 
-        if (existingOrg) {
-          // Org exists — update user_id to current user and reuse
-          await supabase
+        // Use existing org if we detected one, otherwise create/find
+        let org: any = existingOrg
+
+        if (!org) {
+          const { data: foundOrg } = await supabase
             .from('organizations')
-            .update({ user_id: userId })
-            .eq('id', existingOrg.id)
-          org = existingOrg
-        } else {
+            .select('*')
+            .eq('email', userEmail || form.email)
+            .single()
+
+          if (foundOrg) {
+            await supabase
+              .from('organizations')
+              .update({ user_id: userId })
+              .eq('id', foundOrg.id)
+            org = foundOrg
+          }
+        }
+
+        if (!org) {
           const { data: newOrg, error: orgErr } = await supabase
             .from('organizations')
             .insert({ 
@@ -160,18 +201,26 @@ export default function SignupPage() {
     }
   }
 
-  const steps = ['Account', 'Plan', 'Property', 'Config', 'Success']
+  const allSteps = ['Account', 'Plan', 'Property', 'Config', 'Success']
+  const addPropertySteps = ['Property', 'Config', 'Success']
+  const steps = isAddProperty ? addPropertySteps : allSteps
+
+  // For progress display, map the current step to the visible step index
+  const visibleStep = isAddProperty ? step - 2 : step // step 3→1, step 4→2, step 5→3
+  const totalSteps = steps.length
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       {/* Header */}
       <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
+          <Link href={isAddProperty ? "/dashboard" : "/"} className="font-nunito text-xl font-black no-underline flex items-center gap-2">
             <LogoSVG className="w-8 h-8" />
             <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
           </Link>
-          <span className="text-sm text-muted font-semibold">Step {Math.min(step, 5)} of 5</span>
+          <span className="text-sm text-muted font-semibold">
+            {isAddProperty ? `Step ${Math.min(visibleStep, totalSteps)} of ${totalSteps}` : `Step ${Math.min(step, 5)} of 5`}
+          </span>
         </div>
       </header>
 
@@ -180,13 +229,13 @@ export default function SignupPage() {
         <div className="flex items-center gap-2 mb-2">
           {steps.map((s, i) => (
             <div key={i} className="flex-1 flex items-center gap-2">
-              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-[#E8E4FF]'}`} />
+              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= visibleStep ? 'bg-primary' : 'bg-[#E8E4FF]'}`} />
             </div>
           ))}
         </div>
         <div className="flex justify-between text-xs text-muted font-semibold mb-8">
           {steps.map((s, i) => (
-            <span key={i} className={i + 1 <= step ? 'text-primary' : ''}>{s}</span>
+            <span key={i} className={i + 1 <= visibleStep ? 'text-primary' : ''}>{s}</span>
           ))}
         </div>
       </div>
@@ -258,8 +307,8 @@ export default function SignupPage() {
 
         {step === 3 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Your property 🏠</h2>
-            <p className="text-muted mb-8">Add your first property. You can add more later.</p>
+            <h2 className="font-nunito text-3xl font-black mb-2">{isAddProperty ? 'Add a property 🏠' : 'Your property 🏠'}</h2>
+            <p className="text-muted mb-8">{isAddProperty ? 'Tell us about your new property.' : 'Add your first property. You can add more later.'}</p>
             <div className="space-y-4">
               <Input label="Property Name *" value={form.propertyName} onChange={v => update('propertyName', v)} placeholder="Aurora Haven Beach Villa" />
               <Input label="Address" value={form.propertyAddress} onChange={v => update('propertyAddress', v)} placeholder="123 Sunset Blvd, Malibu" />
@@ -363,7 +412,9 @@ export default function SignupPage() {
         {/* Navigation Buttons */}
         {step < 5 && (
           <div className="flex justify-between mt-10">
-            {step > 1 ? (
+            {isAddProperty && step === 3 ? (
+              <Link href="/dashboard" className="text-muted font-bold no-underline hover:text-primary transition-colors">← Dashboard</Link>
+            ) : step > 1 ? (
               <button onClick={() => setStep(s => s - 1)} className="text-muted font-bold hover:text-primary transition-colors">
                 ← Back
               </button>
