@@ -123,12 +123,15 @@ export default function DashboardPage() {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3004'}/api/properties/${propertyId}`, {
-        method: 'DELETE'
+      const response = await fetch('/api/delete-property', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ propertyId })
       })
 
       if (!response.ok) {
-        throw new Error('Failed to delete property')
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to delete property')
       }
 
       await loadData()
