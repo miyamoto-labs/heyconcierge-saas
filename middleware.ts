@@ -18,8 +18,12 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Skip password check for API routes and all admin routes
-  if (pathname.startsWith('/api') || pathname.startsWith('/admin')) {
+  // Skip password check for API routes, admin routes, and public legal pages
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/legal')
+  ) {
     return NextResponse.next()
   }
 
