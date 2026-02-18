@@ -18,11 +18,12 @@ This Data Processing Agreement is entered into between:
 The Host entity or individual who has registered for and uses the HeyConcierge service, as identified in the HeyConcierge account registration (hereinafter "**Controller**" or "**Host**").
 
 **Data Processor ("Processor"):**
-HeyConcierge AS
-[REGISTRERT ADRESSE KOMMER]
+HeyConcierge
+[PLACEHOLDER: Full legal company name]
+[PLACEHOLDER: Street address]
 Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
-Email: hello@heyconcierge.io
+Organisation number: [PLACEHOLDER: Norwegian organisation number]
+Email: privacy@heyconcierge.io
 (hereinafter "**Processor**" or "**HeyConcierge**")
 
 Together referred to as the "**Parties**".
@@ -234,7 +235,7 @@ The Processor shall:
 
 ### 11.3 Changes to Sub-processors
 
-The Processor shall notify the Controller of any intended changes to the sub-processor list (additions or replacements) by updating the list at https://heyconcierge.io/legal/sub-processors and by providing notice at least **14 days** in advance. The Controller may object to a new sub-processor by notifying the Processor in writing within 14 days of receiving notice, setting out the legitimate grounds for objection. If the Parties cannot resolve the objection, either Party may terminate the service agreement with respect to the affected processing on reasonable notice.
+The Processor shall notify the Controller of any intended changes to the sub-processor list (additions or replacements) by updating the list at [PLACEHOLDER: URL to sub-processor list page] and by providing notice at least **14 days** in advance. The Controller may object to a new sub-processor by notifying the Processor in writing within 14 days of receiving notice, setting out the legitimate grounds for objection. If the Parties cannot resolve the objection, either Party may terminate the service agreement with respect to the affected processing on reasonable notice.
 
 ### 11.4 International Transfers
 
@@ -331,8 +332,8 @@ The Processor may amend this DPA from time to time to reflect changes in Applica
 For all data protection queries relating to this DPA, please contact:
 
 HeyConcierge — Data Protection Contact
-Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
+Email: **privacy@heyconcierge.io**
+[PLACEHOLDER: Postal address]
 Tromsø, Norway
 
 ---

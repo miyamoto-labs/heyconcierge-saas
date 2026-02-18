@@ -10,11 +10,12 @@ Welcome to HeyConcierge. This Privacy Policy explains how HeyConcierge ("we", "u
 
 HeyConcierge is operated by:
 
-**HeyConcierge AS**
-[REGISTRERT ADRESSE KOMMER]
+**HeyConcierge**
+[PLACEHOLDER: Full legal company name]
+[PLACEHOLDER: Street address]
 Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
-Email: hello@heyconcierge.io
+Organisation number: [PLACEHOLDER: Norwegian organisation number]
+Email: privacy@heyconcierge.io
 
 We are committed to protecting your privacy and processing your personal data in compliance with the EU General Data Protection Regulation (GDPR), the Norwegian Personal Data Act (*Personopplysningsloven*), and any other applicable data protection legislation.
 
@@ -211,7 +212,7 @@ In the event of a personal data breach that is likely to result in a risk to the
 
 ## 11. Cookies and Tracking
 
-Our website and platform use cookies and similar technologies. A separate Cookie Policy is available at [Cookie Policy](./COOKIE_POLICY.md). You may manage cookie preferences through your browser settings or our cookie consent tool.
+Our website and platform use cookies and similar technologies. A separate Cookie Policy is available at [PLACEHOLDER: URL to Cookie Policy]. You may manage cookie preferences through your browser settings or our cookie consent tool.
 
 ---
 
@@ -255,8 +256,8 @@ For any questions, concerns, or requests regarding this Privacy Policy or our da
 
 **Data Protection Contact**
 HeyConcierge
-Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
+Email: **privacy@heyconcierge.io**
+[PLACEHOLDER: Postal address]
 Tromsø, Norway
 
 We aim to respond to all enquiries within **5 business days**.
