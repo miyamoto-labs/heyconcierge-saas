@@ -33,7 +33,7 @@ export default function MfaSetupPage() {
       const res = await fetch('/api/admin/auth/mfa-setup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, secret }),
       })
 
       const data = await res.json()
