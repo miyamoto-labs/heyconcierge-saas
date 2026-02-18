@@ -54,10 +54,17 @@ export async function POST(request: NextRequest) {
 
     let extracted
     try {
-      extracted = JSON.parse(responseText.trim())
+      // Strip markdown fences if Claude wrapped the JSON anyway
+      const cleaned = responseText.trim()
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/```\s*$/i, '')
+        .trim()
+      extracted = JSON.parse(cleaned)
     } catch {
+      console.error('Claude raw response:', responseText)
       return NextResponse.json(
-        { error: 'Failed to parse AI response as JSON' },
+        { error: `Failed to parse AI response as JSON. Raw: ${responseText.substring(0, 200)}` },
         { status: 500 }
       )
     }
