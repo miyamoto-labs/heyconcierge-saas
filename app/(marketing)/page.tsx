@@ -407,6 +407,15 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-dark border-t border-[rgba(255,255,255,0.05)] py-8 px-8 text-center text-text-light text-[0.85rem] relative z-[1]">
         <p>Made with 💜 in the Arctic &nbsp;·&nbsp; Tromsø, Norway &nbsp;·&nbsp; <a href="mailto:hello@heyconcierge.io" className="text-primary-light no-underline">hello@heyconcierge.io</a></p>
+        <div className="mt-3 flex items-center justify-center gap-4 text-[0.8rem] opacity-60">
+          <a href="/legal/privacy" className="text-text-light hover:opacity-100 transition no-underline">Privacy Policy</a>
+          <span>·</span>
+          <a href="/legal/terms" className="text-text-light hover:opacity-100 transition no-underline">Terms of Service</a>
+          <span>·</span>
+          <a href="/legal/dpa" className="text-text-light hover:opacity-100 transition no-underline">DPA</a>
+          <span>·</span>
+          <a href="/legal/cookies" className="text-text-light hover:opacity-100 transition no-underline">Cookie Policy</a>
+        </div>
       </footer>
     </>
   )
