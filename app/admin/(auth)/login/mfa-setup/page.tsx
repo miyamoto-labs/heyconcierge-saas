@@ -36,7 +36,15 @@ export default function MfaSetupPage() {
         body: JSON.stringify({ code, secret }),
       })
 
-      const data = await res.json()
+      const text = await res.text()
+      let data: { error?: string; success?: boolean } = {}
+      try {
+        data = JSON.parse(text)
+      } catch {
+        console.error('Non-JSON response:', text)
+        setError('Server error. Check console for details.')
+        return
+      }
 
       if (!res.ok) {
         setError(data.error || 'Verification failed')
@@ -44,7 +52,8 @@ export default function MfaSetupPage() {
       }
 
       router.push('/admin')
-    } catch {
+    } catch (err) {
+      console.error('MFA setup error:', err)
       setError('Network error. Please try again.')
     } finally {
       setLoading(false)
