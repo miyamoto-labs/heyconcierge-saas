@@ -38,9 +38,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Code and secret are required' }, { status: 400 })
   }
 
-  // Verify the TOTP code using otplib v13 async API
-  const isValid = await verify({ token: code, secret })
-  if (!isValid) {
+  // Verify the TOTP code — verify() returns { valid: boolean }, not a plain boolean
+  const result = await verify({ token: code, secret })
+  if (!result.valid) {
     return NextResponse.json({ error: 'Invalid code. Please try again.' }, { status: 400 })
   }
 
