@@ -426,7 +426,7 @@ function SignupPage() {
               disabled={!canNext() || loading}
               className={`px-8 py-3 rounded-full font-nunito font-extrabold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-[#C4BFFF] cursor-not-allowed'}`}
             >
-              {loading ? 'Setting up...' : step === 4 ? 'Create My Concierge ✨' : 'Next →'}
+              {loading ? 'Setting up...' : step === 4 ? (isAddProperty ? 'Save Property' : 'Create My Concierge ✨') : 'Next →'}
             </button>
           </div>
         )}
