@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 const STORAGE_KEY = 'hc_cookie_consent'
+const RESET_EVENT = 'hc:cookie-reset'
 
 export type CookieConsent = 'all' | 'necessary' | null
 
@@ -11,13 +12,20 @@ export function getCookieConsent(): CookieConsent {
   return (localStorage.getItem(STORAGE_KEY) as CookieConsent) || null
 }
 
+export function openCookieSettings() {
+  localStorage.removeItem(STORAGE_KEY)
+  window.dispatchEvent(new Event(RESET_EVENT))
+}
+
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (!localStorage.getItem(STORAGE_KEY)) {
-      setVisible(true)
-    }
+    if (!localStorage.getItem(STORAGE_KEY)) setVisible(true)
+
+    const handler = () => setVisible(true)
+    window.addEventListener(RESET_EVENT, handler)
+    return () => window.removeEventListener(RESET_EVENT, handler)
   }, [])
 
   function accept(choice: 'all' | 'necessary') {

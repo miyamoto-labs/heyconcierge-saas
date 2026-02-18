@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import MascotSVG from '@/components/brand/MascotSVG'
+import CookieSettingsLink from '@/components/ui/CookieSettingsLink'
 import LogoSVG from '@/components/brand/LogoSVG'
 
 function getCookie(name: string): string | null {
@@ -415,6 +416,8 @@ export default function Home() {
           <a href="/legal/dpa" className="text-text-light hover:opacity-100 transition no-underline">DPA</a>
           <span>·</span>
           <a href="/legal/cookies" className="text-text-light hover:opacity-100 transition no-underline">Cookie Policy</a>
+          <span>·</span>
+          <CookieSettingsLink className="text-text-light hover:opacity-100 transition cursor-pointer bg-transparent border-0 p-0 font-[inherit] text-[inherit]" />
         </div>
       </footer>
     </>
