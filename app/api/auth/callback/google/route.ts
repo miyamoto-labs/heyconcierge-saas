@@ -93,6 +93,7 @@ export async function GET(request: NextRequest) {
       console.log('🔵 Check error (might be normal):', checkError.message)
     }
 
+    let isNewUser = false
     if (!existingUser) {
       console.log('🔵 Creating new user...')
       const { error: insertError } = await supabase.from('users').insert({
@@ -107,14 +108,26 @@ export async function GET(request: NextRequest) {
         throw insertError
       }
       console.log('✅ User created!')
+      isNewUser = true
     } else {
       console.log('✅ User exists!')
     }
 
+    // Check if user has completed onboarding (has organization)
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('id')
+      .eq('email', userInfo.email)
+      .single()
+
+    // Redirect to signup if new user or no organization
+    const redirectUrl = isNewUser || !org ? '/signup?step=2' : '/dashboard'
+    console.log(`🔵 Redirecting to: ${redirectUrl}`)
+
     // Create session cookie
     console.log('🔵 Setting cookies...')
     
-    const response = NextResponse.redirect(new URL('/dashboard', request.url))
+    const response = NextResponse.redirect(new URL(redirectUrl, request.url))
     
     // Set cookies on the response
     response.cookies.set('user_id', userInfo.sub, {

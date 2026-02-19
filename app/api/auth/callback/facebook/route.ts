@@ -84,6 +84,7 @@ export async function GET(request: NextRequest) {
       .eq('email', userInfo.email)
       .single()
 
+    let isNewUser = false
     if (!existingUser) {
       await supabase.from('users').insert({
         id: userInfo.id,
@@ -91,10 +92,19 @@ export async function GET(request: NextRequest) {
         name: userInfo.name,
         image: userInfo.picture?.data?.url || null,
       })
+      isNewUser = true
     }
 
-    // Create session cookies
-    const response = NextResponse.redirect(new URL('/dashboard', request.url))
+    // Check if user has completed onboarding (has organization)
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('id')
+      .eq('email', userInfo.email)
+      .single()
+
+    // Redirect to signup if new user or no organization
+    const redirectUrl = isNewUser || !org ? '/signup?step=2' : '/dashboard'
+    const response = NextResponse.redirect(new URL(redirectUrl, request.url))
     
     response.cookies.set('user_id', userInfo.id, {
       httpOnly: false,
