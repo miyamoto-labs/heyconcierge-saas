@@ -58,70 +58,7 @@ function SignupPage() {
   const [existingOrg, setExistingOrg] = useState<any>(null)
   const [isAddProperty, setIsAddProperty] = useState(false)
 
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    const id = getCookie('user_id')
-    if (!id) {
-      router.push('/login')
-      return
-    }
-    setUserId(id)
-
-    // Check if user already has an org
-    const checkExistingOrg = async () => {
-      const userEmail = getCookie('user_email')
-      if (!userEmail) return
-
-      const { data: org } = await supabase
-        .from('organizations')
-        .select('*')
-        .eq('email', userEmail)
-        .single()
-
-      if (org) {
-        setExistingOrg(org)
-        // Existing user — skip to property step
-        const paramStep = searchParams?.get('step')
-        if (paramStep) {
-          const targetStep = Math.max(2, parseInt(paramStep, 10))
-          setStep(targetStep)
-          setIsAddProperty(true)
-        }
-      }
-    }
-    checkExistingOrg()
-
-    // Handle return from Stripe
-    const sessionId = searchParams?.get('session_id')
-    const paramStep = searchParams?.get('step')
-    if (sessionId && paramStep === '5') {
-      // User returned from successful Stripe payment
-      // Restore form data from localStorage
-      const savedForm = localStorage.getItem('heyconcierge_signup_form')
-      if (savedForm) {
-        try {
-          const parsedForm = JSON.parse(savedForm)
-          setForm(parsedForm)
-          localStorage.removeItem('heyconcierge_signup_form') // Clean up
-        } catch (e) {
-          console.error('Failed to restore form data:', e)
-        }
-      }
-      
-      setIsAddProperty(false) // Make sure we show the correct steps
-      setShouldCompleteSignup(true) // Trigger completion after form is restored
-    }
-  }, [router, searchParams])
-
-  // Complete signup after returning from Stripe (when form is restored)
-  useEffect(() => {
-    if (shouldCompleteSignup && form.propertyName) {
-      setShouldCompleteSignup(false)
-      completeSignupAfterPayment()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldCompleteSignup, form.propertyName])
-
+  // Complete signup after Stripe payment
   const completeSignupAfterPayment = async () => {
     setLoading(true)
     try {
@@ -211,6 +148,70 @@ function SignupPage() {
       router.push('/signup?step=1') // Go back to start
     }
   }
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    const id = getCookie('user_id')
+    if (!id) {
+      router.push('/login')
+      return
+    }
+    setUserId(id)
+
+    // Check if user already has an org
+    const checkExistingOrg = async () => {
+      const userEmail = getCookie('user_email')
+      if (!userEmail) return
+
+      const { data: org } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('email', userEmail)
+        .single()
+
+      if (org) {
+        setExistingOrg(org)
+        // Existing user — skip to property step
+        const paramStep = searchParams?.get('step')
+        if (paramStep) {
+          const targetStep = Math.max(2, parseInt(paramStep, 10))
+          setStep(targetStep)
+          setIsAddProperty(true)
+        }
+      }
+    }
+    checkExistingOrg()
+
+    // Handle return from Stripe
+    const sessionId = searchParams?.get('session_id')
+    const paramStep = searchParams?.get('step')
+    if (sessionId && paramStep === '5') {
+      // User returned from successful Stripe payment
+      // Restore form data from localStorage
+      const savedForm = localStorage.getItem('heyconcierge_signup_form')
+      if (savedForm) {
+        try {
+          const parsedForm = JSON.parse(savedForm)
+          setForm(parsedForm)
+          localStorage.removeItem('heyconcierge_signup_form') // Clean up
+        } catch (e) {
+          console.error('Failed to restore form data:', e)
+        }
+      }
+      
+      setIsAddProperty(false) // Make sure we show the correct steps
+      setShouldCompleteSignup(true) // Trigger completion after form is restored
+    }
+  }, [router, searchParams])
+
+  // Complete signup after returning from Stripe (when form is restored)
+  useEffect(() => {
+    if (shouldCompleteSignup && form.propertyName) {
+      setShouldCompleteSignup(false)
+      completeSignupAfterPayment()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldCompleteSignup, form.propertyName])
 
   const [form, setForm] = useState({
     name: '', email: '', phone: '', 
