@@ -4,7 +4,6 @@ import { createClient } from '@supabase/supabase-js'
 
 const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID!
 const FACEBOOK_CLIENT_SECRET = process.env.FACEBOOK_CLIENT_SECRET!
-const REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/callback/facebook`
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,6 +30,10 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const state = searchParams.get('state')
   
+  // Get redirect URI from request origin
+  const origin = request.headers.get('origin') || request.nextUrl.origin
+  const redirectUri = `${origin}/api/auth/callback/facebook`
+  
   // Verify state to prevent CSRF
   const storedState = cookies().get('oauth_state')?.value
   
@@ -51,7 +54,7 @@ export async function GET(request: NextRequest) {
       const url = `https://graph.facebook.com/v18.0/oauth/access_token?${new URLSearchParams({
         client_id: FACEBOOK_CLIENT_ID,
         client_secret: FACEBOOK_CLIENT_SECRET,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: redirectUri,
         code,
       })}`
       return fetch(url)

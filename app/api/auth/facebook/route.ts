@@ -3,11 +3,14 @@ import { cookies } from 'next/headers'
 
 const FACEBOOK_CLIENT_ID = process.env.FACEBOOK_CLIENT_ID!
 const FACEBOOK_CLIENT_SECRET = process.env.FACEBOOK_CLIENT_SECRET!
-const REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/callback/facebook`
 
 // Initiate Facebook OAuth
-export async function GET() {
+export async function GET(request: NextRequest) {
   const state = Math.random().toString(36).substring(7)
+  
+  // Get redirect URI from request origin
+  const origin = request.headers.get('origin') || request.nextUrl.origin
+  const redirectUri = `${origin}/api/auth/callback/facebook`
   
   // Store state in cookie for CSRF protection
   cookies().set('oauth_state', state, {
@@ -19,7 +22,7 @@ export async function GET() {
 
   const params = new URLSearchParams({
     client_id: FACEBOOK_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectUri,
     response_type: 'code',
     scope: 'email,public_profile',
     state,

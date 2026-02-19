@@ -4,7 +4,6 @@ import { createClient } from '@supabase/supabase-js'
 
 const MICROSOFT_CLIENT_ID = process.env.MICROSOFT_CLIENT_ID!
 const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET!
-const REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/callback/microsoft`
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -28,6 +27,10 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const state = searchParams.get('state')
   
+  // Get redirect URI from request origin
+  const origin = request.headers.get('origin') || request.nextUrl.origin
+  const redirectUri = `${origin}/api/auth/callback/microsoft`
+  
   // Verify state to prevent CSRF
   const storedState = cookies().get('oauth_state')?.value
   
@@ -48,7 +51,7 @@ export async function GET(request: NextRequest) {
         client_id: MICROSOFT_CLIENT_ID,
         client_secret: MICROSOFT_CLIENT_SECRET,
         code,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     })
