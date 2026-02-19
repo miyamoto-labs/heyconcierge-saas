@@ -44,6 +44,9 @@ export async function GET(request: NextRequest) {
 
   try {
     // Exchange code for tokens
+    console.log('[Microsoft OAuth] Exchanging code for token...')
+    console.log('[Microsoft OAuth] Redirect URI:', redirectUri)
+    
     const tokenResponse = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -57,7 +60,14 @@ export async function GET(request: NextRequest) {
     })
 
     if (!tokenResponse.ok) {
-      throw new Error('Failed to exchange code for token')
+      const errorText = await tokenResponse.text()
+      console.error('[Microsoft OAuth] Token exchange failed:', {
+        status: tokenResponse.status,
+        statusText: tokenResponse.statusText,
+        error: errorText,
+        redirectUri
+      })
+      throw new Error(`Failed to exchange code for token: ${errorText}`)
     }
 
     const tokens: MicrosoftTokenResponse = await tokenResponse.json()
