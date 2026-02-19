@@ -4,7 +4,11 @@ import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
+import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import { supabase } from '@/lib/supabase'
+import dynamic from 'next/dynamic'
+
+const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
 
 function getCookie(name: string): string | null {
   if (typeof document === 'undefined') return null
@@ -109,6 +113,8 @@ function SignupPage() {
     pdfExtractError: null as string | null,
     showManualFields: false,
   })
+  
+  const [showTestChat, setShowTestChat] = useState(false)
 
   const update = (field: string, value: string | boolean | any) => setForm(f => ({ ...f, [field]: value }))
 
@@ -192,6 +198,45 @@ function SignupPage() {
     if (step === 4) return form.plan
     return true
   }
+
+  // Progress tracking for current step
+  const getStepCompletion = () => {
+    if (step === 1) {
+      const items = [
+        { label: 'Name', done: !!form.name },
+        { label: 'Email', done: !!form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) },
+        { label: 'Account type', done: !form.isCompany || !!form.company },
+      ]
+      return { items, completed: items.filter(i => i.done).length, total: items.length }
+    }
+    if (step === 2) {
+      const items = [
+        { label: 'Name', done: !!form.propertyName },
+        { label: 'Address', done: !!form.propertyAddress },
+        { label: 'Location', done: !!form.propertyPostalCode && !!form.propertyCity },
+      ]
+      return { items, completed: items.filter(i => i.done).length, total: items.length }
+    }
+    if (step === 3) {
+      const items = [
+        { label: 'WiFi', done: !!form.wifi },
+        { label: 'Check-in', done: !!form.checkin },
+        { label: 'Local tips', done: !!form.localTips },
+        { label: 'House rules', done: !!form.houseRules },
+      ]
+      return { items, completed: items.filter(i => i.done).length, total: items.length }
+    }
+    if (step === 4) {
+      const items = [
+        { label: 'Plan', done: !!form.plan },
+      ]
+      return { items, completed: items.filter(i => i.done).length, total: items.length }
+    }
+    return { items: [], completed: 0, total: 0 }
+  }
+
+  const stepProgress = getStepCompletion()
+  const hasGuestKnowledge = !!(form.wifi || form.checkin || form.localTips || form.houseRules)
 
   const handleNext = async () => {
     if (!canNext()) return
@@ -306,9 +351,25 @@ function SignupPage() {
             <LogoSVG className="w-8 h-8" />
             <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
           </Link>
-          <span className="text-sm text-muted font-semibold">
-            Step {Math.min(visibleStep, totalSteps)} of {totalSteps}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-muted font-semibold">
+              Step {Math.min(visibleStep, totalSteps)} of {totalSteps}
+            </span>
+            {/* Progress circle for current step */}
+            <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-4 py-2">
+              <div className="relative w-9 h-9">
+                <svg className="w-9 h-9 -rotate-90" viewBox="0 0 36 36">
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={stepProgress.completed === stepProgress.total ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(stepProgress.completed / (stepProgress.total || 1)) * 100}, 100`} strokeLinecap="round" />
+                </svg>
+                <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{stepProgress.completed}/{stepProgress.total}</span>
+              </div>
+              <div className="text-xs">
+                <p className="font-bold text-dark">{stepProgress.completed === stepProgress.total ? 'Complete!' : steps[visibleStep - 1]}</p>
+                <p className="text-muted truncate max-w-[120px]">{stepProgress.items.filter(i => !i.done).map(i => i.label).join(', ') || 'All done'}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -486,8 +547,23 @@ function SignupPage() {
 
         {step === 3 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Guest Knowledge ⚙️</h2>
-            <p className="text-muted mb-8">What should HeyConcierge know about your property?</p>
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="font-nunito text-3xl font-black mb-2">Guest Knowledge ⚙️</h2>
+                <p className="text-muted">What should HeyConcierge know about your property?</p>
+              </div>
+              {/* Test Concierge button - only show if at least one field is filled */}
+              {hasGuestKnowledge && (
+                <button
+                  onClick={() => setShowTestChat(true)}
+                  className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
+                >
+                  <AnimatedMascot mood="happy" size={24} />
+                  <span>Test Concierge</span>
+                  <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                </button>
+              )}
+            </div>
             <div className="space-y-5">
               {/* Calendar Sync - Always visible */}
               <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
@@ -719,6 +795,41 @@ function SignupPage() {
           </div>
         )}
       </div>
+
+      {/* Test Concierge modal */}
+      {showTestChat && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-[500px] w-full max-h-[600px] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between p-5 border-b border-[rgba(108,92,231,0.08)]">
+              <div className="flex items-center gap-3">
+                <AnimatedMascot mood="happy" size={32} />
+                <div>
+                  <h3 className="font-nunito font-black text-lg text-dark">Test Your Concierge</h3>
+                  <p className="text-xs text-muted">Ask anything about your property</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowTestChat(false)}
+                className="text-muted hover:text-dark transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <TestConcierge
+                propertyId="onboarding-preview"
+                testConfig={{
+                  wifi_network: 'Preview Network',
+                  wifi_password: form.wifi || 'Not set',
+                  checkin_instructions: form.checkin || 'Not set',
+                  local_tips: form.localTips || 'Not set',
+                  house_rules: form.houseRules || 'Not set',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
