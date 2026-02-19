@@ -98,12 +98,80 @@ function SignupPage() {
     propertyCountry: 'NO',
     propertyType: 'Apartment',
     propertyImages: [] as string[],
-    hasConfigPDF: false,
     icalUrl: '',
     wifi: '', checkin: '', localTips: '', houseRules: '',
+    // PDF extraction state
+    pdfDragActive: false,
+    pdfExtracting: false,
+    pdfExtractedFile: null as { name: string; fields: string[] } | null,
+    pdfExtractError: null as string | null,
+    showManualFields: false,
   })
 
-  const update = (field: string, value: string | boolean) => setForm(f => ({ ...f, [field]: value }))
+  const update = (field: string, value: string | boolean | any) => setForm(f => ({ ...f, [field]: value }))
+
+  const handlePdfUpload = async (files: File[]) => {
+    const pdfFiles = files.filter(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
+
+    if (pdfFiles.length === 0) {
+      alert('Please upload PDF files only')
+      return
+    }
+
+    update('pdfExtracting', true)
+    update('pdfExtractError', null)
+    
+    try {
+      const formData = new FormData()
+      pdfFiles.forEach(file => formData.append('pdfs', file))
+
+      const response = await fetch('/api/extract-pdf', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${await response.text()}`)
+      }
+
+      const extracted = await response.json()
+
+      const filledFields: string[] = []
+      const updates: Record<string, any> = {}
+
+      if (extracted.wifi_password) { 
+        updates.wifi = extracted.wifi_password
+        filledFields.push('WiFi') 
+      }
+      if (extracted.checkin_instructions) { 
+        updates.checkin = extracted.checkin_instructions
+        filledFields.push('Check-in') 
+      }
+      if (extracted.local_tips) { 
+        updates.localTips = extracted.local_tips
+        filledFields.push('Local tips') 
+      }
+      if (extracted.house_rules) { 
+        updates.houseRules = extracted.house_rules
+        filledFields.push('House rules') 
+      }
+
+      if (Object.keys(updates).length > 0) {
+        setForm(f => ({ ...f, ...updates }))
+      }
+
+      const fileName = pdfFiles.length === 1 ? pdfFiles[0].name : `${pdfFiles.length} PDFs`
+      update('pdfExtractedFile', { name: fileName, fields: filledFields })
+      
+      // Auto-expand manual fields so user can see what was filled
+      update('showManualFields', true)
+    } catch (err) {
+      console.error('PDF extraction error:', err)
+      update('pdfExtractError', err instanceof Error ? err.message : 'Extraction failed')
+    }
+    
+    update('pdfExtracting', false)
+  }
 
   const canNext = () => {
     if (step === 1) return form.name && form.email
@@ -346,53 +414,148 @@ function SignupPage() {
           <div className="animate-slide-up">
             <h2 className="font-nunito text-3xl font-black mb-2">Property config ⚙️</h2>
             <p className="text-muted mb-8">What should HeyConcierge know about your property?</p>
-            <div className="space-y-4">
-              {/* Toggle: PDF vs Manual */}
-              <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
-                <p className="text-sm font-bold text-dark mb-3">📄 How would you like to add property information?</p>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => update('hasConfigPDF', false)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${!form.hasConfigPDF ? 'bg-primary text-white shadow-md' : 'bg-white text-muted border-2 border-[#E8E4FF]'}`}
-                  >
-                    ✍️ Enter Manually
-                  </button>
-                  <button
-                    onClick={() => update('hasConfigPDF', true)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${form.hasConfigPDF ? 'bg-primary text-white shadow-md' : 'bg-white text-muted border-2 border-[#E8E4FF]'}`}
-                  >
-                    📤 Upload PDF
-                  </button>
-                </div>
+            <div className="space-y-5">
+              {/* PDF Upload Zone */}
+              <div
+                className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
+                  form.pdfDragActive ? 'border-primary bg-[rgba(108,92,231,0.05)]'
+                  : form.pdfExtractError ? 'border-red-300 bg-red-50'
+                  : form.pdfExtractedFile ? 'border-green-300 bg-green-50'
+                  : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-[rgba(108,92,231,0.02)]'
+                } ${form.pdfExtracting ? 'opacity-60 pointer-events-none' : ''}`}
+                onDragEnter={(e) => { e.preventDefault(); update('pdfDragActive', true); }}
+                onDragLeave={(e) => { e.preventDefault(); update('pdfDragActive', false); }}
+                onDragOver={(e) => { e.preventDefault(); update('pdfDragActive', true); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  update('pdfDragActive', false);
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    handlePdfUpload(Array.from(e.dataTransfer.files));
+                  }
+                }}
+              >
+                <input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handlePdfUpload(Array.from(e.target.files));
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={form.pdfExtracting}
+                />
+                {form.pdfExtracting ? (
+                  <div className="flex items-center justify-center gap-3 py-2">
+                    <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
+                    <span className="text-dark font-bold text-sm">Reading your PDF and filling in the fields below...</span>
+                  </div>
+                ) : form.pdfExtractError ? (
+                  <div className="flex items-center gap-3 py-1">
+                    <svg className="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-red-600">Extraction failed</p>
+                      <p className="text-xs text-red-500 truncate">{form.pdfExtractError}</p>
+                    </div>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); update('pdfExtractedFile', null); update('pdfExtractError', null); }} className="shrink-0 text-red-400 hover:text-red-600 pointer-events-auto z-10">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                ) : form.pdfExtractedFile ? (
+                  <div className="flex items-center gap-3 py-1">
+                    <svg className="w-5 h-5 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-green-700">Extracted from {form.pdfExtractedFile.name}</p>
+                      <p className="text-xs text-green-600">
+                        {form.pdfExtractedFile.fields.length > 0
+                          ? `Filled: ${form.pdfExtractedFile.fields.join(', ')}`
+                          : 'No matching info found — try a different PDF or type manually below'}
+                      </p>
+                    </div>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); update('pdfExtractedFile', null); update('pdfExtractError', null); }} className="shrink-0 text-gray-400 hover:text-gray-600 pointer-events-auto z-10">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center py-2">
+                    <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <p className="text-dark font-bold text-sm">Drop your property guide PDF here</p>
+                    <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from one document</p>
+                  </div>
+                )}
               </div>
 
-              {/* Conditional: Show PDF upload or manual fields */}
-              {form.hasConfigPDF ? (
-                <div>
-                  <label className="block text-sm font-bold text-dark mb-1.5">Upload Property Info PDF</label>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-[#5847D9]"
-                  />
-                  <p className="text-xs text-muted mt-2">
-                    We&apos;ll extract WiFi, check-in instructions, and house rules using AI
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4 mb-4">
-                    <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync</p>
-                    <Input label="iCal URL (Airbnb/Booking.com)" value={form.icalUrl} onChange={v => update('icalUrl', v)} placeholder="https://www.airbnb.com/calendar/ical/..." />
+              {/* Toggle for manual fields */}
+              <button
+                type="button"
+                onClick={() => update('showManualFields', !form.showManualFields)}
+                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-muted hover:text-dark transition-colors"
+              >
+                <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+                <span className="flex items-center gap-2">
+                  {form.showManualFields ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                      Hide manual entry
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      Or type manually
+                    </>
+                  )}
+                </span>
+                <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+              </button>
+
+              {/* Manual fields (collapsible) */}
+              {form.showManualFields && (
+                <div className="space-y-4 animate-slide-up">
+                  {/* Calendar Sync */}
+                  <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
+                    <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync (Optional)</p>
+                    <Input label="iCal URL" value={form.icalUrl} onChange={v => update('icalUrl', v)} placeholder="https://www.airbnb.com/calendar/ical/..." />
                     <p className="text-xs text-muted mt-2">
-                      Get this from: Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
+                      Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
                     </p>
                   </div>
-                  <Input label="WiFi Password" value={form.wifi} onChange={v => update('wifi', v)} placeholder="MyWiFi_2024" />
-                  <TextArea label="Check-in Instructions" value={form.checkin} onChange={v => update('checkin', v)} placeholder="The lockbox code is 1234. Enter through the side gate..." />
-                  <TextArea label="Local Tips" value={form.localTips} onChange={v => update('localTips', v)} placeholder="Best pizza: Mario's on 5th street. Sunset spot: the pier at 7pm..." />
-                  <TextArea label="House Rules" value={form.houseRules} onChange={v => update('houseRules', v)} placeholder="No smoking indoors. Quiet hours after 10pm..." />
-                </>
+
+                  {/* WiFi */}
+                  <AIField
+                    label="WiFi"
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.14 0M1.394 9.393c5.857-5.858 15.355-5.858 21.213 0" /></svg>}
+                    color="primary"
+                  >
+                    <Input label="WiFi Password" value={form.wifi} onChange={v => update('wifi', v)} placeholder="MyWiFi_2024" />
+                  </AIField>
+
+                  {/* Check-in */}
+                  <AIField
+                    label="Check-in Instructions"
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>}
+                    color="accent"
+                  >
+                    <TextArea value={form.checkin} onChange={v => update('checkin', v)} placeholder="Key location, door codes, arrival steps, parking..." />
+                  </AIField>
+
+                  {/* Local Tips */}
+                  <AIField
+                    label="Local Tips & Recommendations"
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>}
+                    color="yellow"
+                  >
+                    <TextArea value={form.localTips} onChange={v => update('localTips', v)} placeholder="Restaurants, attractions, transport, things to do..." />
+                  </AIField>
+
+                  {/* House Rules */}
+                  <AIField
+                    label="House Rules"
+                    icon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>}
+                    color="pink"
+                  >
+                    <TextArea value={form.houseRules} onChange={v => update('houseRules', v)} placeholder="Quiet hours, smoking policy, checkout, dos & don'ts..." />
+                  </AIField>
+                </div>
               )}
             </div>
           </div>
@@ -497,10 +660,10 @@ function Input({ label, value, onChange, placeholder, type = 'text' }: { label: 
   )
 }
 
-function TextArea({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v: string) => void; placeholder: string }) {
+function TextArea({ label, value, onChange, placeholder }: { label?: string; value: string; onChange: (v: string) => void; placeholder: string }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-dark mb-1.5">{label}</label>
+      {label && <label className="block text-sm font-bold text-dark mb-1.5">{label}</label>}
       <textarea
         value={value}
         onChange={e => onChange(e.target.value)}
@@ -508,6 +671,41 @@ function TextArea({ label, value, onChange, placeholder }: { label: string; valu
         rows={3}
         className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium placeholder:text-[#C4BFFF] focus:border-primary focus:outline-none transition-colors resize-none"
       />
+    </div>
+  )
+}
+
+// AI Field wrapper — adds a colored left accent + icon to each knowledge field
+function AIField({ label, icon, color, children }: {
+  label: string
+  icon: React.ReactNode
+  color: string
+  children: React.ReactNode
+}) {
+  const colorMap: Record<string, string> = {
+    primary: 'border-primary/30 bg-primary/5',
+    accent: 'border-accent/30 bg-accent-soft/30',
+    yellow: 'border-yellow/40 bg-yellow/5',
+    pink: 'border-pink/30 bg-pink-soft/30',
+  }
+  const iconBg: Record<string, string> = {
+    primary: 'bg-primary/10 text-primary',
+    accent: 'bg-accent/10 text-accent',
+    yellow: 'bg-yellow/20 text-orange',
+    pink: 'bg-pink/10 text-pink',
+  }
+
+  return (
+    <div className={`rounded-2xl border-l-4 ${colorMap[color] || colorMap.primary} p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${iconBg[color] || iconBg.primary}`}>
+          {icon}
+        </div>
+        <label className="text-sm font-bold text-dark">{label}</label>
+      </div>
+      <div className="space-y-2">
+        {children}
+      </div>
     </div>
   )
 }
