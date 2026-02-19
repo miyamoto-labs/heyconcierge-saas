@@ -190,15 +190,15 @@ function SignupPage() {
     console.log('[Signup Page] User authenticated:', id)
     setUserId(id)
     
-    // Pre-fill form with OAuth data
-    if (email && !form.email) {
+    // Pre-fill form with OAuth data (only if cookies exist and form is empty)
+    if (email && email !== 'undefined' && !form.email) {
       console.log('[Signup Page] Pre-filling email from OAuth:', email)
-      update('email', email)
+      setForm(f => ({ ...f, email }))
     }
-    if (name && !form.name) {
+    if (name && name !== 'undefined' && !form.name) {
       const decodedName = decodeURIComponent(name)
       console.log('[Signup Page] Pre-filling name from OAuth:', decodedName)
-      update('name', decodedName)
+      setForm(f => ({ ...f, name: decodedName }))
     }
 
     // Check if user already has an org
@@ -245,6 +245,7 @@ function SignupPage() {
       setIsAddProperty(false) // Make sure we show the correct steps
       setShouldCompleteSignup(true) // Trigger completion after form is restored
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, searchParams])
 
   // Complete signup after returning from Stripe (when form is restored)
