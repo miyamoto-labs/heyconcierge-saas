@@ -4,7 +4,6 @@ import { createClient } from '@supabase/supabase-js'
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID!
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET!
-const REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/auth/callback/google`
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -29,8 +28,13 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   const state = searchParams.get('state')
   
+  // Get redirect URI from request origin
+  const origin = request.headers.get('origin') || request.nextUrl.origin
+  const redirectUri = `${origin}/api/auth/callback/google`
+  
   console.log('🔵 Code:', code?.substring(0, 10) + '...')
   console.log('🔵 State:', state)
+  console.log('🔵 Redirect URI:', redirectUri)
   
   // Verify state to prevent CSRF
   const storedState = cookies().get('oauth_state')?.value
@@ -56,7 +60,7 @@ export async function GET(request: NextRequest) {
         code,
         client_id: GOOGLE_CLIENT_ID,
         client_secret: GOOGLE_CLIENT_SECRET,
-        redirect_uri: REDIRECT_URI,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     })
