@@ -199,43 +199,7 @@ function SignupPage() {
     return true
   }
 
-  // Progress tracking for current step
-  const getStepCompletion = () => {
-    if (step === 1) {
-      const items = [
-        { label: 'Name', done: !!form.name },
-        { label: 'Email', done: !!form.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) },
-        { label: 'Account type', done: !form.isCompany || !!form.company },
-      ]
-      return { items, completed: items.filter(i => i.done).length, total: items.length }
-    }
-    if (step === 2) {
-      const items = [
-        { label: 'Name', done: !!form.propertyName },
-        { label: 'Address', done: !!form.propertyAddress },
-        { label: 'Location', done: !!form.propertyPostalCode && !!form.propertyCity },
-      ]
-      return { items, completed: items.filter(i => i.done).length, total: items.length }
-    }
-    if (step === 3) {
-      const items = [
-        { label: 'WiFi', done: !!form.wifi },
-        { label: 'Check-in', done: !!form.checkin },
-        { label: 'Local tips', done: !!form.localTips },
-        { label: 'House rules', done: !!form.houseRules },
-      ]
-      return { items, completed: items.filter(i => i.done).length, total: items.length }
-    }
-    if (step === 4) {
-      const items = [
-        { label: 'Plan', done: !!form.plan },
-      ]
-      return { items, completed: items.filter(i => i.done).length, total: items.length }
-    }
-    return { items: [], completed: 0, total: 0 }
-  }
-
-  const stepProgress = getStepCompletion()
+  // Check if guest knowledge has any data for Test Concierge button
   const hasGuestKnowledge = !!(form.wifi || form.checkin || form.localTips || form.houseRules)
 
   const handleNext = async () => {
@@ -351,25 +315,9 @@ function SignupPage() {
             <LogoSVG className="w-8 h-8" />
             <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
           </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted font-semibold">
-              Step {Math.min(visibleStep, totalSteps)} of {totalSteps}
-            </span>
-            {/* Progress circle for current step */}
-            <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-4 py-2">
-              <div className="relative w-9 h-9">
-                <svg className="w-9 h-9 -rotate-90" viewBox="0 0 36 36">
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
-                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={stepProgress.completed === stepProgress.total ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(stepProgress.completed / (stepProgress.total || 1)) * 100}, 100`} strokeLinecap="round" />
-                </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{stepProgress.completed}/{stepProgress.total}</span>
-              </div>
-              <div className="text-xs">
-                <p className="font-bold text-dark">{stepProgress.completed === stepProgress.total ? 'Complete!' : steps[visibleStep - 1]}</p>
-                <p className="text-muted truncate max-w-[120px]">{stepProgress.items.filter(i => !i.done).map(i => i.label).join(', ') || 'All done'}</p>
-              </div>
-            </div>
-          </div>
+          <span className="text-sm text-muted font-semibold">
+            Step {Math.min(visibleStep, totalSteps)} of {totalSteps}
+          </span>
         </div>
       </header>
 
@@ -393,8 +341,26 @@ function SignupPage() {
       <div className="max-w-[600px] mx-auto w-full px-8 flex-1 pb-12">
         {step === 1 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Let&apos;s get started! 👋</h2>
-            <p className="text-muted mb-8">Tell us about yourself.</p>
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="font-nunito text-3xl font-black mb-2">Let&apos;s get started! 👋</h2>
+                <p className="text-muted">Tell us about yourself.</p>
+              </div>
+              {/* Progress circle */}
+              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+                <div className="relative w-11 h-11">
+                  <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                </div>
+                <div className="text-xs">
+                  <p className="font-bold text-dark">Step {step}: Account</p>
+                  <p className="text-muted">{steps.slice(step).join(' → ')}</p>
+                </div>
+              </div>
+            </div>
             <div className="space-y-4">
               <Input 
                 label="Full Name *" 
@@ -468,8 +434,26 @@ function SignupPage() {
 
         {step === 2 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">{isAddProperty ? 'Add a property 🏠' : 'Your property 🏠'}</h2>
-            <p className="text-muted mb-8">{isAddProperty ? 'Tell us about your new property.' : 'Add your first property. You can add more later.'}</p>
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="font-nunito text-3xl font-black mb-2">{isAddProperty ? 'Add a property 🏠' : 'Your property 🏠'}</h2>
+                <p className="text-muted">{isAddProperty ? 'Tell us about your new property.' : 'Add your first property. You can add more later.'}</p>
+              </div>
+              {/* Progress circle */}
+              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+                <div className="relative w-11 h-11">
+                  <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                </div>
+                <div className="text-xs">
+                  <p className="font-bold text-dark">Step {step}: Property</p>
+                  <p className="text-muted">{steps.slice(step).join(' → ')}</p>
+                </div>
+              </div>
+            </div>
             <div className="space-y-4">
               <Input label="Property Name *" value={form.propertyName} onChange={v => update('propertyName', v)} placeholder="Aurora Haven Beach Villa" />
               <Input label="Street Address" value={form.propertyAddress} onChange={v => update('propertyAddress', v)} placeholder="123 Sunset Blvd" />
@@ -552,17 +536,33 @@ function SignupPage() {
                 <h2 className="font-nunito text-3xl font-black mb-2">Guest Knowledge ⚙️</h2>
                 <p className="text-muted">What should HeyConcierge know about your property?</p>
               </div>
-              {/* Test Concierge button - only show if at least one field is filled */}
-              {hasGuestKnowledge && (
-                <button
-                  onClick={() => setShowTestChat(true)}
-                  className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
-                >
-                  <AnimatedMascot mood="happy" size={24} />
-                  <span>Test Concierge</span>
-                  <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                </button>
-              )}
+              <div className="flex items-center gap-3">
+                {/* Progress circle */}
+                <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+                  <div className="relative w-11 h-11">
+                    <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
+                      <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
+                    </svg>
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                  </div>
+                  <div className="text-xs">
+                    <p className="font-bold text-dark">Step {step}: Config</p>
+                    <p className="text-muted">{steps.slice(step).join(' → ')}</p>
+                  </div>
+                </div>
+                {/* Test Concierge button - only show if at least one field is filled */}
+                {hasGuestKnowledge && (
+                  <button
+                    onClick={() => setShowTestChat(true)}
+                    className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
+                  >
+                    <AnimatedMascot mood="happy" size={24} />
+                    <span>Test Concierge</span>
+                    <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                  </button>
+                )}
+              </div>
             </div>
             <div className="space-y-5">
               {/* Calendar Sync - Always visible */}
@@ -717,8 +717,26 @@ function SignupPage() {
 
         {step === 4 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Choose your plan ⚡</h2>
-            <p className="text-muted mb-8">All plans include a 14-day free trial. Payment starts after trial.</p>
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h2 className="font-nunito text-3xl font-black mb-2">Choose your plan ⚡</h2>
+                <p className="text-muted">All plans include a 14-day free trial. Payment starts after trial.</p>
+              </div>
+              {/* Progress circle */}
+              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+                <div className="relative w-11 h-11">
+                  <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
+                  </svg>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                </div>
+                <div className="text-xs">
+                  <p className="font-bold text-dark">Step {step}: Plan & Pay</p>
+                  <p className="text-muted">{steps.slice(step).join(' → ')}</p>
+                </div>
+              </div>
+            </div>
             <div className="space-y-4">
               {PLANS.map(p => (
                 <button
