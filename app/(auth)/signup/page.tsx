@@ -90,6 +90,15 @@ function SignupPage() {
       }
     }
     checkExistingOrg()
+
+    // Handle return from Stripe
+    const sessionId = searchParams?.get('session_id')
+    const paramStep = searchParams?.get('step')
+    if (sessionId && paramStep === '5') {
+      // User returned from successful Stripe payment
+      // We're already on step 5, just need to complete the setup
+      setStep(5)
+    }
   }, [router, searchParams])
 
   const [form, setForm] = useState({
@@ -115,6 +124,7 @@ function SignupPage() {
   })
   
   const [showTestChat, setShowTestChat] = useState(false)
+  const [creatingCheckout, setCreatingCheckout] = useState(false)
 
   const update = (field: string, value: string | boolean | any) => setForm(f => ({ ...f, [field]: value }))
 
@@ -201,6 +211,36 @@ function SignupPage() {
 
   // Check if guest knowledge has any data for Test Concierge button
   const hasGuestKnowledge = !!(form.wifi || form.checkin || form.localTips || form.houseRules)
+
+  const handleStripeCheckout = async () => {
+    setCreatingCheckout(true)
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: form.plan,
+          email: form.email,
+          propertyId: null, // Will be set after property creation
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session')
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (err) {
+      console.error('Checkout error:', err)
+      alert(err instanceof Error ? err.message : 'Failed to start checkout')
+      setCreatingCheckout(false)
+    }
+  }
 
   const handleNext = async () => {
     if (!canNext()) return
@@ -742,7 +782,12 @@ function SignupPage() {
                 <button
                   key={p.id}
                   onClick={() => update('plan', p.id)}
-                  className={`w-full text-left rounded-2xl p-6 border-2 transition-all ${form.plan === p.id ? `${p.border} shadow-card-hover` : 'border-transparent shadow-card'} bg-white hover:-translate-y-0.5`}
+                  disabled={creatingCheckout}
+                  className={`w-full text-left rounded-2xl p-6 border-2 transition-all ${
+                    form.plan === p.id 
+                      ? `${p.border} shadow-card-hover` 
+                      : 'border-transparent shadow-card'
+                  } bg-white hover:-translate-y-0.5 ${creatingCheckout ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
@@ -750,7 +795,14 @@ function SignupPage() {
                       <span className={`font-nunito font-extrabold text-lg ${p.color}`}>{p.name}</span>
                       {p.popular && <span className="bg-primary text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
                     </div>
-                    <div className="font-nunito font-black text-2xl text-dark">{p.price}<span className="text-sm text-muted font-normal">{p.period}</span></div>
+                    <div className="flex items-center gap-3">
+                      <div className="font-nunito font-black text-2xl text-dark">{p.price}<span className="text-sm text-muted font-normal">{p.period}</span></div>
+                      {form.plan === p.id && (
+                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {p.features.map((f, i) => (
@@ -760,9 +812,40 @@ function SignupPage() {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-center text-muted mt-6">
-              💳 Payment details will be collected after you complete setup. No charge during trial.
-            </p>
+
+            {form.plan && (
+              <div className="mt-6 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent rounded-2xl p-5 border-2 border-[#E8E4FF]">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-bold text-dark text-sm mb-1">✨ 14-day free trial included</p>
+                    <p className="text-xs text-muted">You won't be charged until your trial ends. Cancel anytime.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleStripeCheckout}
+                  disabled={creatingCheckout}
+                  className="w-full mt-4 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-8 py-4 rounded-full font-nunito font-extrabold text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  {creatingCheckout ? (
+                    <>
+                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                      <span>Loading Stripe...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Continue to Payment</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </>
+                  )}
+                </button>
+                <p className="text-xs text-center text-muted mt-3">
+                  🔒 Secure payment powered by Stripe
+                </p>
+              </div>
+            )}
           </div>
         )}
 
@@ -792,7 +875,7 @@ function SignupPage() {
         )}
 
         {/* Navigation Buttons */}
-        {step < 5 && (
+        {step < 5 && step !== 4 && (
           <div className="flex justify-between mt-10">
             {isAddProperty && step === 2 ? (
               <Link href="/dashboard" className="text-muted font-bold no-underline hover:text-primary transition-colors">← Dashboard</Link>
@@ -808,7 +891,16 @@ function SignupPage() {
               disabled={!canNext() || loading}
               className={`px-8 py-3 rounded-full font-nunito font-extrabold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-[#C4BFFF] cursor-not-allowed'}`}
             >
-              {loading ? 'Setting up...' : step === 4 ? (isAddProperty ? 'Save Property' : 'Complete Setup ✨') : 'Next →'}
+              {loading ? 'Setting up...' : 'Next →'}
+            </button>
+          </div>
+        )}
+        
+        {/* Back button for step 4 (Plan selection) */}
+        {step === 4 && (
+          <div className="flex justify-start mt-10">
+            <button onClick={() => setStep(s => s - 1)} className="text-muted font-bold hover:text-primary transition-colors">
+              ← Back
             </button>
           </div>
         )}
