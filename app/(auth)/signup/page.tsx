@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense, memo } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
@@ -177,13 +177,17 @@ function SignupPage() {
 
   const canNext = () => {
     if (step === 1) {
-      // Validate email format
-      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
-      // Validate phone (optional, but if provided must be valid)
-      const phoneValid = !form.phone || /^\+?[0-9\s\-()]+$/.test(form.phone)
-      return form.name && emailValid && phoneValid && (!form.isCompany || form.company)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      const phoneRegex = /^\+?[0-9\s\-()]+$/
+      const emailValid = form.email && emailRegex.test(form.email)
+      const phoneValid = !form.phone || phoneRegex.test(form.phone)
+      const nameValid = form.name && form.name.length > 0
+      const companyValid = !form.isCompany || (form.company && form.company.length > 0)
+      return nameValid && emailValid && phoneValid && companyValid
     }
-    if (step === 2) return form.propertyName && form.propertyCity && form.propertyPostalCode && form.propertyCountry
+    if (step === 2) {
+      return form.propertyName && form.propertyCity && form.propertyPostalCode && form.propertyCountry
+    }
     if (step === 3) return true
     if (step === 4) return form.plan
     return true
@@ -344,7 +348,7 @@ function SignupPage() {
                 placeholder="john@example.com" 
                 type="email"
               />
-              {!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) && form.email && (
+              {form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) && (
                 <p className="text-xs text-red-500 -mt-2">Please enter a valid email address</p>
               )}
               <Input 
@@ -571,10 +575,7 @@ function SignupPage() {
               {/* Toggle for manual fields */}
               <button
                 type="button"
-                onClick={() => {
-                  const newValue = !form.showManualFields
-                  setForm(f => ({ ...f, showManualFields: newValue }))
-                }}
+                onClick={() => update('showManualFields', !form.showManualFields)}
                 className="w-full flex items-center justify-center gap-2 text-sm font-bold text-muted hover:text-dark transition-colors"
               >
                 <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
@@ -753,7 +754,7 @@ function TextArea({ label, value, onChange, placeholder }: { label?: string; val
 }
 
 // AI Field wrapper — adds a colored left accent + icon to each knowledge field
-const AIField = memo(function AIField({ label, icon, color, children }: {
+function AIField({ label, icon, color, children }: {
   label: string
   icon: React.ReactNode
   color: string
@@ -785,4 +786,4 @@ const AIField = memo(function AIField({ label, icon, color, children }: {
       </div>
     </div>
   )
-})
+}
