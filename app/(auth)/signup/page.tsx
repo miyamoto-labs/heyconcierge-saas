@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, memo } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
@@ -89,7 +89,9 @@ function SignupPage() {
   }, [router, searchParams])
 
   const [form, setForm] = useState({
-    name: '', email: '', phone: '', company: '',
+    name: '', email: '', phone: '', 
+    isCompany: false,
+    company: '',
     plan: 'professional',
     propertyName: '', 
     propertyAddress: '', 
@@ -174,8 +176,14 @@ function SignupPage() {
   }
 
   const canNext = () => {
-    if (step === 1) return form.name && form.email
-    if (step === 2) return form.propertyName && form.propertyCity && form.propertyCountry
+    if (step === 1) {
+      // Validate email format
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+      // Validate phone (optional, but if provided must be valid)
+      const phoneValid = !form.phone || /^\+?[0-9\s\-()]+$/.test(form.phone)
+      return form.name && emailValid && phoneValid && (!form.isCompany || form.company)
+    }
+    if (step === 2) return form.propertyName && form.propertyCity && form.propertyPostalCode && form.propertyCountry
     if (step === 3) return true
     if (step === 4) return form.plan
     return true
@@ -323,10 +331,72 @@ function SignupPage() {
             <h2 className="font-nunito text-3xl font-black mb-2">Let&apos;s get started! 👋</h2>
             <p className="text-muted mb-8">Tell us about yourself.</p>
             <div className="space-y-4">
-              <Input label="Full Name *" value={form.name} onChange={v => update('name', v)} placeholder="John Smith" />
-              <Input label="Email *" value={form.email} onChange={v => update('email', v)} placeholder="john@example.com" type="email" />
-              <Input label="Phone" value={form.phone} onChange={v => update('phone', v)} placeholder="+47 555 123 456" />
-              <Input label="Company Name" value={form.company} onChange={v => update('company', v)} placeholder="Sunshine Rentals" />
+              <Input 
+                label="Full Name *" 
+                value={form.name} 
+                onChange={v => update('name', v)} 
+                placeholder="John Smith" 
+              />
+              <Input 
+                label="Email *" 
+                value={form.email} 
+                onChange={v => update('email', v)} 
+                placeholder="john@example.com" 
+                type="email"
+              />
+              {!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) && form.email && (
+                <p className="text-xs text-red-500 -mt-2">Please enter a valid email address</p>
+              )}
+              <Input 
+                label="Phone (optional)" 
+                value={form.phone} 
+                onChange={v => update('phone', v)} 
+                placeholder="+47 555 123 456" 
+                type="tel"
+              />
+              {form.phone && !(/^\+?[0-9\s\-()]+$/.test(form.phone)) && (
+                <p className="text-xs text-red-500 -mt-2">Please enter a valid phone number</p>
+              )}
+              
+              {/* Company or Private toggle */}
+              <div>
+                <label className="block text-sm font-bold text-dark mb-2">Account Type</label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => update('isCompany', false)}
+                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                      !form.isCompany 
+                        ? 'bg-primary text-white shadow-md' 
+                        : 'bg-white text-muted border-2 border-[#E8E4FF]'
+                    }`}
+                  >
+                    👤 Private
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => update('isCompany', true)}
+                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
+                      form.isCompany 
+                        ? 'bg-primary text-white shadow-md' 
+                        : 'bg-white text-muted border-2 border-[#E8E4FF]'
+                    }`}
+                  >
+                    🏢 Company
+                  </button>
+                </div>
+              </div>
+
+              {form.isCompany && (
+                <div className="animate-slide-up">
+                  <Input 
+                    label="Company Name *" 
+                    value={form.company} 
+                    onChange={v => update('company', v)} 
+                    placeholder="Sunshine Rentals AS" 
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -340,7 +410,7 @@ function SignupPage() {
               <Input label="Street Address" value={form.propertyAddress} onChange={v => update('propertyAddress', v)} placeholder="123 Sunset Blvd" />
               
               <div className="grid grid-cols-2 gap-4">
-                <Input label="Postal Code" value={form.propertyPostalCode} onChange={v => update('propertyPostalCode', v)} placeholder="0150" />
+                <Input label="Postal Code *" value={form.propertyPostalCode} onChange={v => update('propertyPostalCode', v)} placeholder="0150" />
                 <Input label="City/Town *" value={form.propertyCity} onChange={v => update('propertyCity', v)} placeholder="Oslo" />
               </div>
 
@@ -412,9 +482,22 @@ function SignupPage() {
 
         {step === 3 && (
           <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Property config ⚙️</h2>
+            <h2 className="font-nunito text-3xl font-black mb-2">Guest Knowledge ⚙️</h2>
             <p className="text-muted mb-8">What should HeyConcierge know about your property?</p>
             <div className="space-y-5">
+              {/* Calendar Sync - Always visible */}
+              <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
+                <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync (Optional)</p>
+                <Input 
+                  label="iCal URL" 
+                  value={form.icalUrl} 
+                  onChange={v => update('icalUrl', v)} 
+                  placeholder="https://www.airbnb.com/calendar/ical/..." 
+                />
+                <p className="text-xs text-muted mt-2">
+                  Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
+                </p>
+              </div>
               {/* PDF Upload Zone */}
               <div
                 className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
@@ -488,7 +571,10 @@ function SignupPage() {
               {/* Toggle for manual fields */}
               <button
                 type="button"
-                onClick={() => update('showManualFields', !form.showManualFields)}
+                onClick={() => {
+                  const newValue = !form.showManualFields
+                  setForm(f => ({ ...f, showManualFields: newValue }))
+                }}
                 className="w-full flex items-center justify-center gap-2 text-sm font-bold text-muted hover:text-dark transition-colors"
               >
                 <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
@@ -511,15 +597,6 @@ function SignupPage() {
               {/* Manual fields (collapsible) */}
               {form.showManualFields && (
                 <div className="space-y-4 animate-slide-up">
-                  {/* Calendar Sync */}
-                  <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
-                    <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync (Optional)</p>
-                    <Input label="iCal URL" value={form.icalUrl} onChange={v => update('icalUrl', v)} placeholder="https://www.airbnb.com/calendar/ical/..." />
-                    <p className="text-xs text-muted mt-2">
-                      Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
-                    </p>
-                  </div>
-
                   {/* WiFi */}
                   <AIField
                     label="WiFi"
@@ -676,7 +753,7 @@ function TextArea({ label, value, onChange, placeholder }: { label?: string; val
 }
 
 // AI Field wrapper — adds a colored left accent + icon to each knowledge field
-function AIField({ label, icon, color, children }: {
+const AIField = memo(function AIField({ label, icon, color, children }: {
   label: string
   icon: React.ReactNode
   color: string
@@ -708,4 +785,4 @@ function AIField({ label, icon, color, children }: {
       </div>
     </div>
   )
-}
+})
