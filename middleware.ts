@@ -27,6 +27,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Check if user is authenticated via OAuth (has user_id cookie)
+  const userId = request.cookies.get('user_id')
+  if (userId?.value) {
+    // User is authenticated, allow through regardless of access code
+    return NextResponse.next()
+  }
+
   // Existing host access cookie check
   const accessCookie = request.cookies.get('heyconcierge_access')
   const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyc2026'

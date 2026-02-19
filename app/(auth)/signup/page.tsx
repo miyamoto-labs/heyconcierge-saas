@@ -178,10 +178,15 @@ function SignupPage() {
   // Redirect to login if not authenticated
   useEffect(() => {
     const id = getCookie('user_id')
+    const email = getCookie('user_email')
+    console.log('[Signup Page] Auth check:', { user_id: id, user_email: email })
+    
     if (!id) {
+      console.log('[Signup Page] No user_id cookie, redirecting to login')
       router.push('/login')
       return
     }
+    console.log('[Signup Page] User authenticated:', id)
     setUserId(id)
 
     // Check if user already has an org
