@@ -798,37 +798,22 @@ function SignupPage() {
 
       {/* Test Concierge modal */}
       {showTestChat && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-[500px] w-full max-h-[600px] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between p-5 border-b border-[rgba(108,92,231,0.08)]">
-              <div className="flex items-center gap-3">
-                <AnimatedMascot mood="happy" size={32} />
-                <div>
-                  <h3 className="font-nunito font-black text-lg text-dark">Test Your Concierge</h3>
-                  <p className="text-xs text-muted">Ask anything about your property</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setShowTestChat(false)}
-                className="text-muted hover:text-dark transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            </div>
-            <div className="flex-1 overflow-hidden">
-              <TestConcierge
-                propertyId="onboarding-preview"
-                testConfig={{
-                  wifi_network: 'Preview Network',
-                  wifi_password: form.wifi || 'Not set',
-                  checkin_instructions: form.checkin || 'Not set',
-                  local_tips: form.localTips || 'Not set',
-                  house_rules: form.houseRules || 'Not set',
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <TestConcierge
+          property={{
+            id: 'onboarding-preview',
+            name: form.propertyName || 'Your Property',
+            address: form.propertyAddress || 'Preview Address',
+            property_type: form.propertyType || 'Property',
+          }}
+          config={{
+            wifi_network: 'Preview Network',
+            wifi_password: form.wifi || null,
+            checkin_instructions: form.checkin || null,
+            local_tips: form.localTips || null,
+            house_rules: form.houseRules || null,
+          }}
+          onClose={() => setShowTestChat(false)}
+        />
       )}
     </div>
   )
