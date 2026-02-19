@@ -21,8 +21,8 @@ interface Booking {
   id: string
   property_id: string
   guest_name: string
-  check_in_date: string
-  check_out_date: string
+  check_in: string
+  check_out: string
   platform: string
   status: string
 }
@@ -83,7 +83,7 @@ export default function CalendarPage() {
             .from('bookings')
             .select('*')
             .in('property_id', propertyIds)
-            .order('check_in_date', { ascending: true })
+            .order('check_in', { ascending: true })
           
           setBookings(bkgs || [])
         }
@@ -161,7 +161,7 @@ export default function CalendarPage() {
         return false
       }
       
-      return dateStr >= booking.check_in_date && dateStr <= booking.check_out_date
+      return dateStr >= booking.check_in && dateStr <= booking.check_out
     })
   }
 

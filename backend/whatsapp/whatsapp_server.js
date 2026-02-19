@@ -1,6 +1,7 @@
 /**
- * HeyConcierge WhatsApp + Claude AI Backend
- * Receives WhatsApp messages → Fetches property config → Generates AI response
+ * HeyConcierge WhatsApp + Telegram + Claude AI Backend
+ * Receives messages → Fetches property config → Generates AI response
+ * Includes upselling engine for late checkout, early check-in, gap nights, etc.
  */
 
 const express = require('express');
@@ -9,7 +10,12 @@ const Anthropic = require('@anthropic-ai/sdk');
 const { createClient } = require('@supabase/supabase-js');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: true });
+
+// Telegram + Upselling services
+const { sendTelegram, resolveTelegramGuestProperty, setWebhook, getWebhookInfo } = require('./telegram_service');
+const { scanAndScheduleOffers, sendDueOffers, handleUpsellResponse, expireStaleOffers, getUpsellDashboard } = require('./upsell_service');
 
 const app = express();
 
@@ -272,6 +278,14 @@ app.post('/webhook/whatsapp', async (req, res) => {
       return res.status(200).send('OK');
     }
     
+    // Check if this is an upsell response (YES/NO)
+    const upsellReply = await handleUpsellResponse(From, Body);
+    if (upsellReply) {
+      await sendMessage(From, upsellReply);
+      await logConversation(property.id, From, Body, upsellReply);
+      return res.status(200).send('OK');
+    }
+
     const context = buildPropertyContext(property, config);
 
     // Fetch weather if property has coordinates
@@ -587,12 +601,12 @@ Example:
 /**
  * iCal Sync Endpoints
  */
-const { syncProperty, syncAllProperties } = require('./ical_sync');
+const { syncProperty, syncAllProperties } = require('../ical/ical_sync');
 
 /**
  * Reminder Service
  */
-const { sendCheckinReminders, sendTestReminder } = require('./reminder_service');
+const { sendCheckinReminders, sendTestReminder } = require('../reminders/reminder_service');
 
 // Sync specific property
 app.post('/sync/property/:id', async (req, res) => {
@@ -682,7 +696,7 @@ app.post('/api/sync-calendar', async (req, res) => {
 });
 
 /**
- * Get property QR code data (returns WhatsApp link + property code)
+ * Get property QR code data (returns WhatsApp + Telegram links)
  */
 app.get('/api/property/:id/qr', async (req, res) => {
   try {
@@ -702,11 +716,16 @@ app.get('/api/property/:id/qr', async (req, res) => {
     const message = encodeURIComponent(`Hi ${property.property_code}`);
     const whatsappLink = `https://wa.me/${cleanNumber}?text=${message}`;
 
+    // Telegram deep link — guest taps Start → auto-connected to property
+    const telegramBotUsername = 'HeyConciergeBot';
+    const telegramLink = `https://t.me/${telegramBotUsername}?start=${property.property_code}`;
+
     res.json({
       propertyCode: property.property_code,
       propertyName: property.name,
       whatsappLink,
-      qrContent: whatsappLink  // Frontend generates QR from this
+      telegramLink,
+      qrContent: telegramLink  // V1: Telegram deep link as primary QR
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -721,6 +740,8 @@ app.delete('/api/properties/:id', async (req, res) => {
     const { id } = req.params;
 
     // Delete in correct order (foreign key constraints)
+    await supabase.from('upsell_offers').delete().eq('property_id', id);
+    await supabase.from('upsell_configs').delete().eq('property_id', id);
     await supabase.from('messages').delete().eq('property_id', id);
     await supabase.from('bookings').delete().eq('property_id', id);
     await supabase.from('property_config_sheets').delete().eq('property_id', id);
@@ -827,8 +848,176 @@ ${aiResponse}
   }
 }
 
+// ==========================================
+// Telegram Webhook
+// ==========================================
+
+app.post('/webhook/telegram', async (req, res) => {
+  try {
+    const msg = req.body?.message;
+    if (!msg || !msg.text) return res.status(200).send('OK');
+
+    const chatId = msg.chat.id;
+    const text = msg.text;
+    const firstName = msg.from?.first_name || 'Guest';
+
+    console.log(`📩 Telegram from ${chatId} (${firstName}): ${text}`);
+
+    // Resolve guest to property
+    const { propertyId, isNew, guestPhone } = await resolveTelegramGuestProperty(chatId, text);
+
+    // Handle /start without property code
+    if (text === '/start' && !propertyId) {
+      await sendTelegram(chatId,
+        `👋 Welcome to HeyConcierge, ${firstName}!\n\n` +
+        `To connect to your property, send your property code (e.g. HC-ABCD).\n` +
+        `You can find this code on the QR card at your accommodation.`
+      );
+      return res.status(200).send('OK');
+    }
+
+    if (!propertyId) {
+      await sendTelegram(chatId,
+        `I couldn't find that property code. Please check and try again, ` +
+        `or scan the QR code at your property.`
+      );
+      return res.status(200).send('OK');
+    }
+
+    // Get property + config
+    const { data: property, error: propError } = await supabase
+      .from('properties')
+      .select('*, property_config_sheets(*)')
+      .eq('id', propertyId)
+      .single();
+
+    if (propError || !property) {
+      await sendTelegram(chatId, 'Sorry, there was a problem finding your property.');
+      return res.status(200).send('OK');
+    }
+
+    if (isNew) {
+      await sendTelegram(chatId,
+        `✅ Connected to *${property.name}*!\n\nI'm your AI concierge. Ask me anything about your stay.`
+      );
+      return res.status(200).send('OK');
+    }
+
+    // Check upsell response
+    const upsellReply = await handleUpsellResponse(guestPhone, text);
+    if (upsellReply) {
+      await sendTelegram(chatId, upsellReply);
+      await logConversation(property.id, guestPhone, text, upsellReply);
+      return res.status(200).send('OK');
+    }
+
+    // Build context and call Claude
+    let config = property.property_config_sheets;
+    if (Array.isArray(config) && config.length > 0) config = config[0];
+    if (!config) config = {};
+
+    const context = buildPropertyContext(property, config);
+    let weather = null;
+    if (property.latitude && property.longitude) {
+      weather = await getWeather(property.latitude, property.longitude);
+    }
+
+    const response = await callClaude(text, context, property.name, weather);
+    await sendTelegram(chatId, response);
+    await logConversation(property.id, guestPhone, text, response);
+
+    res.status(200).send('OK');
+  } catch (error) {
+    console.error('Telegram webhook error:', error);
+    res.status(200).send('OK');
+  }
+});
+
+// ==========================================
+// Telegram Management Endpoints
+// ==========================================
+
+app.post('/telegram/set-webhook', async (req, res) => {
+  try {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ error: 'url required' });
+    const result = await setWebhook(url);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/telegram/webhook-info', async (req, res) => {
+  try {
+    const result = await getWebhookInfo();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==========================================
+// Upselling API Endpoints
+// ==========================================
+
+// Scan and schedule new offers
+app.post('/upsell/scan', async (req, res) => {
+  try {
+    const result = await scanAndScheduleOffers();
+    res.json({ success: true, ...result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Send all due offers
+app.post('/upsell/send', async (req, res) => {
+  try {
+    const result = await sendDueOffers();
+    res.json({ success: true, ...result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Expire stale offers
+app.post('/upsell/expire', async (req, res) => {
+  try {
+    const result = await expireStaleOffers();
+    res.json({ success: true, ...result });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Dashboard data for a property
+app.get('/upsell/dashboard/:propertyId', async (req, res) => {
+  try {
+    const result = await getUpsellDashboard(req.params.propertyId);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==========================================
+// Upsell cron — scan + send + expire every 15 minutes
+// ==========================================
+setInterval(async () => {
+  try {
+    await scanAndScheduleOffers();
+    await sendDueOffers();
+    await expireStaleOffers();
+  } catch (err) {
+    console.error('Upsell cron error:', err.message);
+  }
+}, 15 * 60 * 1000);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`🚀 HeyConcierge WhatsApp backend running on port ${PORT}`);
-  console.log(`📡 Webhook URL: http://localhost:${PORT}/webhook/whatsapp`);
+  console.log(`🚀 HeyConcierge backend running on port ${PORT}`);
+  console.log(`📡 WhatsApp webhook: http://localhost:${PORT}/webhook/whatsapp`);
+  console.log(`📡 Telegram webhook: http://localhost:${PORT}/webhook/telegram`);
+  console.log(`📊 Upsell engine: active (15-min interval)`);
 });

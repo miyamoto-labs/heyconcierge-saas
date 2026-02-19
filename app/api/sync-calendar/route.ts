@@ -100,8 +100,8 @@ function extractBookings(events: ParsedEvent[], propertyId: string) {
     return {
       property_id: propertyId,
       guest_name: guestName || 'Guest',
-      check_in_date: checkIn,
-      check_out_date: checkOut,
+      check_in: checkIn,
+      check_out: checkOut,
       platform,
       status: new Date(checkIn) > new Date() ? 'confirmed' : 'completed',
     }

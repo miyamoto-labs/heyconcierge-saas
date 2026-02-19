@@ -65,7 +65,7 @@ export default function PropertyViewPage() {
           .from('bookings')
           .select('*')
           .eq('property_id', propertyId)
-          .order('check_in_date', { ascending: false })
+          .order('check_in', { ascending: false })
           .limit(10)
         
         setBookings(bkgs || [])
@@ -213,7 +213,7 @@ export default function PropertyViewPage() {
                   <div>
                     <div className="font-bold">{booking.guest_name}</div>
                     <div className="text-sm text-muted">
-                      {new Date(booking.check_in_date).toLocaleDateString()} - {new Date(booking.check_out_date).toLocaleDateString()}
+                      {new Date(booking.check_in).toLocaleDateString()} - {new Date(booking.check_out).toLocaleDateString()}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
