@@ -57,6 +57,32 @@ function SignupPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [existingOrg, setExistingOrg] = useState<any>(null)
   const [isAddProperty, setIsAddProperty] = useState(false)
+  const [shouldCompleteSignup, setShouldCompleteSignup] = useState(false)
+  
+  const [form, setForm] = useState({
+    name: '', email: '', phone: '', 
+    isCompany: false,
+    company: '',
+    plan: 'professional',
+    propertyName: '', 
+    propertyAddress: '', 
+    propertyPostalCode: '',
+    propertyCity: '',
+    propertyCountry: 'NO',
+    propertyType: 'Apartment',
+    propertyImages: [] as string[],
+    icalUrl: '',
+    wifi: '', checkin: '', localTips: '', houseRules: '',
+    // PDF extraction state
+    pdfDragActive: false,
+    pdfExtracting: false,
+    pdfExtractedFile: null as { name: string; fields: string[] } | null,
+    pdfExtractError: null as string | null,
+    showManualFields: false,
+  })
+  
+  const [showTestChat, setShowTestChat] = useState(false)
+  const [creatingCheckout, setCreatingCheckout] = useState(false)
 
   // Complete signup after Stripe payment
   const completeSignupAfterPayment = async () => {
@@ -212,32 +238,6 @@ function SignupPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldCompleteSignup, form.propertyName])
-
-  const [form, setForm] = useState({
-    name: '', email: '', phone: '', 
-    isCompany: false,
-    company: '',
-    plan: 'professional',
-    propertyName: '', 
-    propertyAddress: '', 
-    propertyPostalCode: '',
-    propertyCity: '',
-    propertyCountry: 'NO',
-    propertyType: 'Apartment',
-    propertyImages: [] as string[],
-    icalUrl: '',
-    wifi: '', checkin: '', localTips: '', houseRules: '',
-    // PDF extraction state
-    pdfDragActive: false,
-    pdfExtracting: false,
-    pdfExtractedFile: null as { name: string; fields: string[] } | null,
-    pdfExtractError: null as string | null,
-    showManualFields: false,
-  })
-  
-  const [showTestChat, setShowTestChat] = useState(false)
-  const [creatingCheckout, setCreatingCheckout] = useState(false)
-  const [shouldCompleteSignup, setShouldCompleteSignup] = useState(false)
 
   const update = (field: string, value: string | boolean | any) => setForm(f => ({ ...f, [field]: value }))
 
