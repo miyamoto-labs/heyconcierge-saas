@@ -22,18 +22,21 @@ const PLANS = [
 
 const PROPERTY_TYPES = ['Apartment', 'House', 'Villa', 'Hotel', 'Hostel', 'B&B', 'Cabin', 'Other']
 
-const COUNTRIES = [
-  { code: 'NO', name: 'Norway', flag: '🇳🇴' },
-  { code: 'SE', name: 'Sweden', flag: '🇸🇪' },
-  { code: 'DK', name: 'Denmark', flag: '🇩🇰' },
-  { code: 'FI', name: 'Finland', flag: '🇫🇮' },
-  { code: 'DE', name: 'Germany', flag: '🇩🇪' },
-  { code: 'GB', name: 'United Kingdom', flag: '🇬🇧' },
-  { code: 'FR', name: 'France', flag: '🇫🇷' },
-  { code: 'ES', name: 'Spain', flag: '🇪🇸' },
-  { code: 'IT', name: 'Italy', flag: '🇮🇹' },
-  { code: 'US', name: 'United States', flag: '🇺🇸' },
-  { code: 'CA', name: 'Canada', flag: '🇨🇦' },
+const COUNTRY_CODES = [
+  { code: '+1', country: 'US/CA', flag: '🇺🇸' },
+  { code: '+44', country: 'UK', flag: '🇬🇧' },
+  { code: '+47', country: 'NO', flag: '🇳🇴' },
+  { code: '+46', country: 'SE', flag: '🇸🇪' },
+  { code: '+45', country: 'DK', flag: '🇩🇰' },
+  { code: '+49', country: 'DE', flag: '🇩🇪' },
+  { code: '+33', country: 'FR', flag: '🇫🇷' },
+  { code: '+34', country: 'ES', flag: '🇪🇸' },
+  { code: '+39', country: 'IT', flag: '🇮🇹' },
+  { code: '+31', country: 'NL', flag: '🇳🇱' },
+  { code: '+41', country: 'CH', flag: '🇨🇭' },
+  { code: '+43', country: 'AT', flag: '🇦🇹' },
+  { code: '+61', country: 'AU', flag: '🇦🇺' },
+  { code: '+64', country: 'NZ', flag: '🇳🇿' },
 ]
 
 export default function SignupPageWrapper() {
@@ -54,7 +57,7 @@ function SignupPage() {
   const [existingOrg, setExistingOrg] = useState<any>(null)
   const [isAddProperty, setIsAddProperty] = useState(false)
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated, detect existing org
   useEffect(() => {
     const id = getCookie('user_id')
     if (!id) {
@@ -63,7 +66,7 @@ function SignupPage() {
     }
     setUserId(id)
 
-    // Check if user already has an org
+    // Check if user already has an org (= existing user adding property)
     const checkExistingOrg = async () => {
       const userEmail = getCookie('user_email')
       if (!userEmail) return
@@ -76,10 +79,11 @@ function SignupPage() {
 
       if (org) {
         setExistingOrg(org)
-        // Existing user — skip to property step
+        // Existing user — skip to property step (step 3)
         const paramStep = searchParams?.get('step')
         if (paramStep) {
-          const targetStep = Math.max(2, parseInt(paramStep, 10))
+          // If step=2 from dashboard, go to step 3 (property) since they don't need plan selection
+          const targetStep = Math.max(3, parseInt(paramStep, 10))
           setStep(targetStep)
           setIsAddProperty(true)
         }
@@ -90,39 +94,32 @@ function SignupPage() {
 
   const [form, setForm] = useState({
     name: '', email: '', phone: '', company: '',
+    countryCode: '+47',
     plan: 'professional',
-    propertyName: '', 
-    propertyAddress: '', 
-    propertyPostalCode: '',
-    propertyCity: '',
-    propertyCountry: 'NO',
-    propertyType: 'Apartment',
+    propertyName: '', propertyAddress: '', propertyType: 'Apartment',
     propertyImages: [] as string[],
-    hasConfigPDF: false,
     icalUrl: '',
     wifi: '', checkin: '', localTips: '', houseRules: '',
   })
 
-  const update = (field: string, value: string | boolean) => setForm(f => ({ ...f, [field]: value }))
+  const update = (field: string, value: string) => setForm(f => ({ ...f, [field]: value }))
 
   const canNext = () => {
     if (step === 1) return form.name && form.email
-    if (step === 2) return form.propertyName && form.propertyCity && form.propertyCountry
-    if (step === 3) return true
-    if (step === 4) return form.plan
+    if (step === 2) return form.plan
+    if (step === 3) return form.propertyName
+    if (step === 4) return true
     return true
   }
 
   const handleNext = async () => {
     if (!canNext()) return
-    
-    // If on step 4 (payment), finalize onboarding
     if (step === 4) {
       setLoading(true)
       try {
         const userEmail = getCookie('user_email')
 
-        // Use existing org or create new
+        // Use existing org if we detected one, otherwise create/find
         let org: any = existingOrg
 
         if (!org) {
@@ -135,10 +132,7 @@ function SignupPage() {
           if (foundOrg) {
             await supabase
               .from('organizations')
-              .update({ 
-                user_id: userId,
-                plan: form.plan,
-              })
+              .update({ user_id: userId })
               .eq('id', foundOrg.id)
             org = foundOrg
           }
@@ -165,14 +159,11 @@ function SignupPage() {
           .insert({ 
             org_id: org.id, 
             name: form.propertyName, 
-            address: form.propertyAddress,
-            postal_code: form.propertyPostalCode,
-            city: form.propertyCity,
-            country: form.propertyCountry,
+            address: form.propertyAddress, 
             property_type: form.propertyType,
             images: form.propertyImages,
             ical_url: form.icalUrl || null,
-            whatsapp_number: ''
+            whatsapp_number: '' // Configured later in settings
           })
           .select()
           .single()
@@ -190,7 +181,7 @@ function SignupPage() {
             house_rules: form.houseRules,
           })
 
-        // Generate QR code
+        // Generate QR code — Telegram deep link with property ID
         const QRCode = (await import('qrcode')).default
         const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'HeyConciergeBot'
         const qrUrl = `https://t.me/${botUsername}?start=${prop.id}`
@@ -210,11 +201,12 @@ function SignupPage() {
     }
   }
 
-  const allSteps = ['Account', 'Property', 'Config', 'Plan & Pay', 'Success']
+  const allSteps = ['Account', 'Plan', 'Property', 'Config', 'Success']
   const addPropertySteps = ['Property', 'Config', 'Success']
   const steps = isAddProperty ? addPropertySteps : allSteps
 
-  const visibleStep = isAddProperty ? step - 1 : step
+  // For progress display, map the current step to the visible step index
+  const visibleStep = isAddProperty ? step - 2 : step // step 3→1, step 4→2, step 5→3
   const totalSteps = steps.length
 
   return (
@@ -227,7 +219,7 @@ function SignupPage() {
             <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
           </Link>
           <span className="text-sm text-muted font-semibold">
-            Step {Math.min(visibleStep, totalSteps)} of {totalSteps}
+            {isAddProperty ? `Step ${Math.min(visibleStep, totalSteps)} of ${totalSteps}` : `Step ${Math.min(step, 5)} of 5`}
           </span>
         </div>
       </header>
@@ -257,7 +249,27 @@ function SignupPage() {
             <div className="space-y-4">
               <Input label="Full Name *" value={form.name} onChange={v => update('name', v)} placeholder="John Smith" />
               <Input label="Email *" value={form.email} onChange={v => update('email', v)} placeholder="john@example.com" type="email" />
-              <Input label="Phone" value={form.phone} onChange={v => update('phone', v)} placeholder="+47 555 123 456" />
+              <div>
+                <label className="block text-sm font-bold text-dark mb-2">Phone</label>
+                <div className="flex gap-2">
+                  <select
+                    value={form.countryCode}
+                    onChange={e => update('countryCode', e.target.value)}
+                    className="w-[140px] px-3 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors"
+                  >
+                    {COUNTRY_CODES.map(c => (
+                      <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    value={form.phone}
+                    onChange={e => update('phone', e.target.value)}
+                    placeholder="555 123 4567"
+                    className="flex-1 px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
               <Input label="Company Name" value={form.company} onChange={v => update('company', v)} placeholder="Sunshine Rentals" />
             </div>
           </div>
@@ -265,30 +277,41 @@ function SignupPage() {
 
         {step === 2 && (
           <div className="animate-slide-up">
+            <h2 className="font-nunito text-3xl font-black mb-2">Choose your plan ⚡</h2>
+            <p className="text-muted mb-8">All plans include a 14-day free trial.</p>
+            <div className="space-y-4">
+              {PLANS.map(p => (
+                <button
+                  key={p.id}
+                  onClick={() => update('plan', p.id)}
+                  className={`w-full text-left rounded-2xl p-6 border-2 transition-all ${form.plan === p.id ? `${p.border} shadow-card-hover` : 'border-transparent shadow-card'} bg-white hover:-translate-y-0.5`}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{p.emoji}</span>
+                      <span className={`font-nunito font-extrabold text-lg ${p.color}`}>{p.name}</span>
+                      {p.popular && <span className="bg-primary text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
+                    </div>
+                    <div className="font-nunito font-black text-2xl text-dark">{p.price}<span className="text-sm text-muted font-normal">{p.period}</span></div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {p.features.map((f, i) => (
+                      <span key={i} className="text-xs text-muted bg-[#F5F3FF] px-2.5 py-1 rounded-full">✓ {f}</span>
+                    ))}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div className="animate-slide-up">
             <h2 className="font-nunito text-3xl font-black mb-2">{isAddProperty ? 'Add a property 🏠' : 'Your property 🏠'}</h2>
             <p className="text-muted mb-8">{isAddProperty ? 'Tell us about your new property.' : 'Add your first property. You can add more later.'}</p>
             <div className="space-y-4">
               <Input label="Property Name *" value={form.propertyName} onChange={v => update('propertyName', v)} placeholder="Aurora Haven Beach Villa" />
-              <Input label="Street Address" value={form.propertyAddress} onChange={v => update('propertyAddress', v)} placeholder="123 Sunset Blvd" />
-              
-              <div className="grid grid-cols-2 gap-4">
-                <Input label="Postal Code" value={form.propertyPostalCode} onChange={v => update('propertyPostalCode', v)} placeholder="0150" />
-                <Input label="City/Town *" value={form.propertyCity} onChange={v => update('propertyCity', v)} placeholder="Oslo" />
-              </div>
-
-              <div>
-                <label className="block text-sm font-bold text-dark mb-1.5">Country *</label>
-                <select
-                  value={form.propertyCountry}
-                  onChange={e => update('propertyCountry', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors"
-                >
-                  {COUNTRIES.map(c => (
-                    <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
-                  ))}
-                </select>
-              </div>
-
+              <Input label="Address" value={form.propertyAddress} onChange={v => update('propertyAddress', v)} placeholder="123 Sunset Blvd, Malibu" />
               <div>
                 <label className="block text-sm font-bold text-dark mb-1.5">Property Type</label>
                 <select
@@ -299,7 +322,6 @@ function SignupPage() {
                   {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
-
               <div>
                 <label className="block text-sm font-bold text-dark mb-1.5">Property Photos</label>
                 <input
@@ -342,92 +364,23 @@ function SignupPage() {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div className="animate-slide-up">
             <h2 className="font-nunito text-3xl font-black mb-2">Property config ⚙️</h2>
             <p className="text-muted mb-8">What should HeyConcierge know about your property?</p>
             <div className="space-y-4">
-              {/* Toggle: PDF vs Manual */}
-              <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
-                <p className="text-sm font-bold text-dark mb-3">📄 How would you like to add property information?</p>
-                <div className="flex gap-3">
-                  <button
-                    onClick={() => update('hasConfigPDF', false)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${!form.hasConfigPDF ? 'bg-primary text-white shadow-md' : 'bg-white text-muted border-2 border-[#E8E4FF]'}`}
-                  >
-                    ✍️ Enter Manually
-                  </button>
-                  <button
-                    onClick={() => update('hasConfigPDF', true)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${form.hasConfigPDF ? 'bg-primary text-white shadow-md' : 'bg-white text-muted border-2 border-[#E8E4FF]'}`}
-                  >
-                    📤 Upload PDF
-                  </button>
-                </div>
+              <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4 mb-4">
+                <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync</p>
+                <Input label="iCal URL (Airbnb/Booking.com)" value={form.icalUrl} onChange={v => update('icalUrl', v)} placeholder="https://www.airbnb.com/calendar/ical/..." />
+                <p className="text-xs text-muted mt-2">
+                  Get this from: Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
+                </p>
               </div>
-
-              {/* Conditional: Show PDF upload or manual fields */}
-              {form.hasConfigPDF ? (
-                <div>
-                  <label className="block text-sm font-bold text-dark mb-1.5">Upload Property Info PDF</label>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-[#5847D9]"
-                  />
-                  <p className="text-xs text-muted mt-2">
-                    We&apos;ll extract WiFi, check-in instructions, and house rules using AI
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4 mb-4">
-                    <p className="text-sm font-bold text-dark mb-2">📅 Calendar Sync</p>
-                    <Input label="iCal URL (Airbnb/Booking.com)" value={form.icalUrl} onChange={v => update('icalUrl', v)} placeholder="https://www.airbnb.com/calendar/ical/..." />
-                    <p className="text-xs text-muted mt-2">
-                      Get this from: Airbnb → Calendar → Export | Booking.com → Extranet → Calendar → Export
-                    </p>
-                  </div>
-                  <Input label="WiFi Password" value={form.wifi} onChange={v => update('wifi', v)} placeholder="MyWiFi_2024" />
-                  <TextArea label="Check-in Instructions" value={form.checkin} onChange={v => update('checkin', v)} placeholder="The lockbox code is 1234. Enter through the side gate..." />
-                  <TextArea label="Local Tips" value={form.localTips} onChange={v => update('localTips', v)} placeholder="Best pizza: Mario's on 5th street. Sunset spot: the pier at 7pm..." />
-                  <TextArea label="House Rules" value={form.houseRules} onChange={v => update('houseRules', v)} placeholder="No smoking indoors. Quiet hours after 10pm..." />
-                </>
-              )}
+              <Input label="WiFi Password" value={form.wifi} onChange={v => update('wifi', v)} placeholder="MyWiFi_2024" />
+              <TextArea label="Check-in Instructions" value={form.checkin} onChange={v => update('checkin', v)} placeholder="The lockbox code is 1234. Enter through the side gate..." />
+              <TextArea label="Local Tips" value={form.localTips} onChange={v => update('localTips', v)} placeholder="Best pizza: Mario's on 5th street. Sunset spot: the pier at 7pm..." />
+              <TextArea label="House Rules" value={form.houseRules} onChange={v => update('houseRules', v)} placeholder="No smoking indoors. Quiet hours after 10pm..." />
             </div>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div className="animate-slide-up">
-            <h2 className="font-nunito text-3xl font-black mb-2">Choose your plan ⚡</h2>
-            <p className="text-muted mb-8">All plans include a 14-day free trial. Payment starts after trial.</p>
-            <div className="space-y-4">
-              {PLANS.map(p => (
-                <button
-                  key={p.id}
-                  onClick={() => update('plan', p.id)}
-                  className={`w-full text-left rounded-2xl p-6 border-2 transition-all ${form.plan === p.id ? `${p.border} shadow-card-hover` : 'border-transparent shadow-card'} bg-white hover:-translate-y-0.5`}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{p.emoji}</span>
-                      <span className={`font-nunito font-extrabold text-lg ${p.color}`}>{p.name}</span>
-                      {p.popular && <span className="bg-primary text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
-                    </div>
-                    <div className="font-nunito font-black text-2xl text-dark">{p.price}<span className="text-sm text-muted font-normal">{p.period}</span></div>
-                  </div>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {p.features.map((f, i) => (
-                      <span key={i} className="text-xs text-muted bg-[#F5F3FF] px-2.5 py-1 rounded-full">✓ {f}</span>
-                    ))}
-                  </div>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-center text-muted mt-6">
-              💳 Payment details will be collected after you complete setup. No charge during trial.
-            </p>
           </div>
         )}
 
@@ -459,7 +412,7 @@ function SignupPage() {
         {/* Navigation Buttons */}
         {step < 5 && (
           <div className="flex justify-between mt-10">
-            {isAddProperty && step === 2 ? (
+            {isAddProperty && step === 3 ? (
               <Link href="/dashboard" className="text-muted font-bold no-underline hover:text-primary transition-colors">← Dashboard</Link>
             ) : step > 1 ? (
               <button onClick={() => setStep(s => s - 1)} className="text-muted font-bold hover:text-primary transition-colors">
@@ -473,7 +426,7 @@ function SignupPage() {
               disabled={!canNext() || loading}
               className={`px-8 py-3 rounded-full font-nunito font-extrabold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-[#C4BFFF] cursor-not-allowed'}`}
             >
-              {loading ? 'Setting up...' : step === 4 ? (isAddProperty ? 'Save Property' : 'Complete Setup ✨') : 'Next →'}
+              {loading ? 'Setting up...' : step === 4 ? (isAddProperty ? 'Save Property' : 'Create My Concierge ✨') : 'Next →'}
             </button>
           </div>
         )}
