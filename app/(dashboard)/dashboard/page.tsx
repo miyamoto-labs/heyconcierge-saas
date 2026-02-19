@@ -215,29 +215,14 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  {/* Upgrade/Downgrade */}
-                  <button
-                    onClick={() => {
-                      setDropdownOpen(false)
-                      alert('Upgrade/downgrade coming soon!')
-                    }}
-                    className="w-full text-left px-4 py-3 text-sm hover:bg-[rgba(108,92,231,0.05)] transition-colors"
+                  {/* Billing & Subscription */}
+                  <Link
+                    href="/billing"
+                    onClick={() => setDropdownOpen(false)}
+                    className="block w-full text-left px-4 py-3 text-sm hover:bg-[rgba(108,92,231,0.05)] transition-colors no-underline text-dark"
                   >
-                    💎 Upgrade Plan
-                  </button>
-                  
-                  {/* Terminate Subscription */}
-                  <button
-                    onClick={() => {
-                      setDropdownOpen(false)
-                      if (confirm('Are you sure you want to cancel your subscription?')) {
-                        alert('Subscription cancellation coming soon!')
-                      }
-                    }}
-                    className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-[rgba(108,92,231,0.08)]"
-                  >
-                    ❌ Cancel Subscription
-                  </button>
+                    💳 Billing & Subscription
+                  </Link>
                   
                   {/* Logout */}
                   <button
