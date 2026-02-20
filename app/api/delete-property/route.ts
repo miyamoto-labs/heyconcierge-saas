@@ -1,22 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { requireAuth } from '@/lib/auth/require-auth'
+import { createAdminClient } from '@/lib/supabase/admin'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
+    const { user, org } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (!org) {
+      return NextResponse.json({ error: 'No organization found' }, { status: 403 })
+    }
+
     const { propertyId } = await request.json()
 
     if (!propertyId) {
       return NextResponse.json({ error: 'propertyId is required' }, { status: 400 })
     }
 
-    // Delete related data first (in case CASCADE isn't set on all tables)
+    const supabase = createAdminClient()
 
-    // Delete property images from storage
+    // Verify the property belongs to the user's organization
+    const { data: property } = await supabase
+      .from('properties')
+      .select('id, org_id')
+      .eq('id', propertyId)
+      .single()
+
+    if (!property || property.org_id !== org.id) {
+      return NextResponse.json({ error: 'Property not found or access denied' }, { status: 403 })
+    }
+
+    // Delete related data first
     const { data: images } = await supabase
       .from('property_images')
       .select('id, url')
@@ -34,41 +51,15 @@ export async function POST(request: NextRequest) {
         await supabase.storage.from('property-images').remove(filePaths)
       }
 
-      await supabase
-        .from('property_images')
-        .delete()
-        .eq('property_id', propertyId)
+      await supabase.from('property_images').delete().eq('property_id', propertyId)
     }
 
-    // Delete config sheets
-    await supabase
-      .from('property_config_sheets')
-      .delete()
-      .eq('property_id', propertyId)
+    await supabase.from('property_config_sheets').delete().eq('property_id', propertyId)
+    await supabase.from('bookings').delete().eq('property_id', propertyId)
+    await supabase.from('guest_sessions').delete().eq('property_id', propertyId)
+    await supabase.from('goconcierge_messages').delete().eq('property_id', propertyId)
 
-    // Delete bookings
-    await supabase
-      .from('bookings')
-      .delete()
-      .eq('property_id', propertyId)
-
-    // Delete guest sessions
-    await supabase
-      .from('guest_sessions')
-      .delete()
-      .eq('property_id', propertyId)
-
-    // Delete messages
-    await supabase
-      .from('goconcierge_messages')
-      .delete()
-      .eq('property_id', propertyId)
-
-    // Delete the property itself
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', propertyId)
+    const { error } = await supabase.from('properties').delete().eq('id', propertyId)
 
     if (error) throw error
 

@@ -4,18 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
-import { supabase } from '@/lib/supabase'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 export default function PropertyViewPage() {
   const router = useRouter()
@@ -28,14 +17,19 @@ export default function PropertyViewPage() {
   const [bookings, setBookings] = useState<any[]>([])
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
+  const supabase = createClient()
+
   useEffect(() => {
-    const email = getCookie('user_email')
-    if (!email) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserEmail(user.email || null)
+      loadProperty()
     }
-    setUserEmail(email)
-    loadProperty()
+    checkAuth()
   }, [])
 
   const loadProperty = async () => {

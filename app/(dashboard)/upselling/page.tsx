@@ -5,18 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
 import { ToastProvider, useToast } from '@/components/ui/Toast'
-import { supabase } from '@/lib/supabase'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 export default function UpsellPageWrapper() {
   return (
@@ -121,15 +110,19 @@ function UpsellPage() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
   const savedConfigRef = useRef<string | null>(null)
 
+  const supabase = createClient()
+
   useEffect(() => {
-    const email = getCookie('user_email')
-    const id = getCookie('user_id')
-    if (!email || !id) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserEmail(user.email || null)
+      setUserId(user.id)
     }
-    setUserEmail(email)
-    setUserId(id)
+    checkAuth()
   }, [router])
 
   useEffect(() => {
@@ -170,21 +163,18 @@ function UpsellPage() {
       let { data: orgs } = await supabase
         .from('organizations')
         .select('*')
-        .eq('user_id', userId!)
+        .eq('auth_user_id', userId!)
         .order('created_at', { ascending: false })
         .limit(1)
 
-      if (!orgs?.length) {
-        const email = getCookie('user_email')
-        if (email) {
-          const { data: orgsByEmail } = await supabase
-            .from('organizations')
-            .select('*')
-            .eq('email', email)
-            .order('created_at', { ascending: false })
-            .limit(1)
-          orgs = orgsByEmail
-        }
+      if (!orgs?.length && userEmail) {
+        const { data: orgsByEmail } = await supabase
+          .from('organizations')
+          .select('*')
+          .eq('email', userEmail)
+          .order('created_at', { ascending: false })
+          .limit(1)
+        orgs = orgsByEmail
       }
 
       const org = orgs?.[0]
@@ -345,9 +335,8 @@ function UpsellPage() {
     setSaving(false)
   }
 
-  const handleLogout = () => {
-    document.cookie = 'user_id=; Max-Age=0; path=/'
-    document.cookie = 'user_email=; Max-Age=0; path=/'
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     router.push('/login')
   }
 

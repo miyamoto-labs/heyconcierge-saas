@@ -5,21 +5,10 @@ import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
 import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import { ToastProvider, useToast } from '@/components/ui/Toast'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
 
 const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
 
 // Wrap the page in a ToastProvider
 export default function PropertySettingsPageWrapper() {
@@ -54,14 +43,19 @@ function PropertySettingsPage() {
   const savedPropertyRef = useRef<any>(null)
   const savedConfigRef = useRef<any>(null)
 
+  const supabase = createClient()
+
   useEffect(() => {
-    const email = getCookie('user_email')
-    if (!email) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserEmail(user.email || null)
+      loadProperty()
     }
-    setUserEmail(email)
-    loadProperty()
+    checkAuth()
   }, [])
 
   // Warn on tab close with unsaved changes

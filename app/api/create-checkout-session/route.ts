@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { requireAuth } from '@/lib/auth/require-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,7 +25,12 @@ const PLAN_NAMES = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { plan, email, propertyId } = await request.json()
+    const { user } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { plan, propertyId } = await request.json()
 
     if (!plan || !PLAN_PRICES[plan as keyof typeof PLAN_PRICES]) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 })
@@ -35,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe Checkout Session
     const session = await getStripe().checkout.sessions.create({
-      customer_email: email || undefined,
+      customer_email: user.email || undefined,
       payment_method_types: ['card'],
       line_items: [
         {

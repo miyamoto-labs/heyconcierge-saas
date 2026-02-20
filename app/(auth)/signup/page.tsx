@@ -5,18 +5,10 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
 import AnimatedMascot from '@/components/brand/AnimatedMascot'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
 
 const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || null
-  return null
-}
 
 const PLANS = [
   { id: 'starter', name: 'Starter', emoji: '🌱', price: '$49', period: '/mo', color: 'text-blue', border: 'border-blue', features: ['5 properties', '500 messages/mo', 'Basic analytics', 'Email support'] },
@@ -51,6 +43,7 @@ export default function SignupPageWrapper() {
 function SignupPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const supabase = createClient()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [qrDataUrl, setQrDataUrl] = useState('')
@@ -88,7 +81,8 @@ function SignupPage() {
   const completeSignupAfterPayment = async () => {
     setLoading(true)
     try {
-      const userEmail = getCookie('user_email')
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      const userEmail = authUser?.email || form.email
       const urlParams = new URLSearchParams(window.location.search)
       const sessionId = urlParams.get('session_id')
 
@@ -124,7 +118,7 @@ function SignupPage() {
           await supabase
             .from('organizations')
             .update({ 
-              user_id: userId,
+              user_id: userId, auth_user_id: userId,
               plan: form.plan,
               stripe_customer_id: stripeData.customerId || foundOrg.stripe_customer_id,
               subscription_status: 'trialing',
@@ -143,7 +137,7 @@ function SignupPage() {
             name: form.company || form.name, 
             email: userEmail || form.email, 
             plan: form.plan,
-            user_id: userId,
+            user_id: userId, auth_user_id: userId,
             stripe_customer_id: stripeData.customerId || null,
             subscription_status: 'trialing',
             trial_started_at: new Date().toISOString(),
@@ -205,39 +199,29 @@ function SignupPage() {
 
   // Redirect to login if not authenticated
   useEffect(() => {
-    const id = getCookie('user_id')
-    const email = getCookie('user_email')
-    const name = getCookie('user_name')
-    console.log('[Signup Page] Auth check:', { user_id: id, user_email: email, user_name: name })
-    
-    if (!id) {
-      console.log('[Signup Page] No user_id cookie, redirecting to login')
-      router.push('/login')
-      return
-    }
-    console.log('[Signup Page] User authenticated:', id)
-    setUserId(id)
-    
-    // Pre-fill form with OAuth data (only if cookies exist and form is empty)
-    if (email && email !== 'undefined' && !form.email) {
-      console.log('[Signup Page] Pre-filling email from OAuth:', email)
-      setForm(f => ({ ...f, email }))
-    }
-    if (name && name !== 'undefined' && !form.name) {
-      const decodedName = decodeURIComponent(name)
-      console.log('[Signup Page] Pre-filling name from OAuth:', decodedName)
-      setForm(f => ({ ...f, name: decodedName }))
-    }
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserId(user.id)
 
-    // Check if user already has an org
-    const checkExistingOrg = async () => {
-      const userEmail = getCookie('user_email')
-      if (!userEmail) return
+      // Pre-fill form with OAuth data
+      if (user.email && !form.email) {
+        setForm(f => ({ ...f, email: user.email! }))
+      }
+      const oauthName = user.user_metadata?.full_name || user.user_metadata?.name
+      if (oauthName && !form.name) {
+        setForm(f => ({ ...f, name: oauthName }))
+      }
 
+      // Check if user already has an org
       const { data: org } = await supabase
         .from('organizations')
         .select('*')
-        .eq('email', userEmail)
+        .or(`auth_user_id.eq.${user.id},email.eq.${user.email}`)
+        .limit(1)
         .single()
 
       if (org) {
@@ -251,7 +235,7 @@ function SignupPage() {
         }
       }
     }
-    checkExistingOrg()
+    checkAuth()
 
     // Handle return from Stripe
     const sessionId = searchParams?.get('session_id')
@@ -411,7 +395,8 @@ function SignupPage() {
     if (step === 4) {
       setLoading(true)
       try {
-        const userEmail = getCookie('user_email')
+        const { data: { user: authUser2 } } = await supabase.auth.getUser()
+        const userEmail = authUser2?.email || form.email
 
         // Use existing org or create new
         let org: any = existingOrg
@@ -427,7 +412,7 @@ function SignupPage() {
             await supabase
               .from('organizations')
               .update({ 
-                user_id: userId,
+                user_id: userId, auth_user_id: userId,
                 plan: form.plan,
               })
               .eq('id', foundOrg.id)

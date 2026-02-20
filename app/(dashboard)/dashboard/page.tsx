@@ -4,18 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
-import { supabase } from '@/lib/supabase'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -26,55 +15,46 @@ export default function DashboardPage() {
   const [userId, setUserId] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
+  const supabase = createClient()
+
   useEffect(() => {
-    // Check if logged in
-    const email = getCookie('user_email')
-    const id = getCookie('user_id')
-    
-    if (!email || !id) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserEmail(user.email || null)
+      setUserId(user.id)
     }
-    
-    setUserEmail(email)
-    setUserId(id)
+    checkAuth()
   }, [router])
 
   const loadData = async () => {
-    if (!userId) return
-    
+    if (!userId || !userEmail) return
+
     setLoading(true)
     try {
-      // Get user's organizations — try user_id first, fall back to email
+      // Get user's organizations — try auth_user_id first, fall back to email
       let { data: orgs } = await supabase
         .from('organizations')
         .select('*')
-        .eq('user_id', userId)
+        .eq('auth_user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
 
       if (!orgs?.length) {
-        const email = getCookie('user_email')
-        if (email) {
-          const { data: orgsByEmail } = await supabase
-            .from('organizations')
-            .select('*')
-            .eq('email', email)
-            .order('created_at', { ascending: false })
-            .limit(1)
-          orgs = orgsByEmail
-          // Fix user_id for future lookups
-          if (orgs?.[0]) {
-            await supabase
-              .from('organizations')
-              .update({ user_id: userId })
-              .eq('id', orgs[0].id)
-          }
-        }
+        const { data: orgsByEmail } = await supabase
+          .from('organizations')
+          .select('*')
+          .eq('email', userEmail)
+          .order('created_at', { ascending: false })
+          .limit(1)
+        orgs = orgsByEmail
       }
 
       const org = orgs?.[0]
-      
+
       setOrganization(org)
 
       if (org) {
@@ -83,7 +63,7 @@ export default function DashboardPage() {
           .from('properties')
           .select('*, property_config_sheets(*)')
           .eq('org_id', org.id)
-        
+
         setProperties(props || [])
       }
     } catch (err) {
@@ -111,9 +91,8 @@ export default function DashboardPage() {
     return () => document.removeEventListener('click', handleClickOutside)
   }, [dropdownOpen])
 
-  const handleLogout = () => {
-    document.cookie = 'user_id=; Max-Age=0; path=/'
-    document.cookie = 'user_email=; Max-Age=0; path=/'
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
     router.push('/login')
   }
 

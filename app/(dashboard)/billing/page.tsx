@@ -4,18 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
-import { supabase } from '@/lib/supabase'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 const PLANS = [
   { id: 'starter', name: 'Starter', emoji: '🌱', price: '$49', period: '/mo', properties: 5, messages: 500 },
@@ -31,27 +20,27 @@ export default function BillingPage() {
   const [orgId, setOrgId] = useState<string | null>(null)
   const [showPlans, setShowPlans] = useState(false)
 
-  useEffect(() => {
-    const email = getCookie('user_email')
-    const id = getCookie('user_id')
-    if (!email || !id) {
-      router.push('/login')
-      return
-    }
+  const supabase = createClient()
 
-    // Get org
+  useEffect(() => {
     const loadOrg = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+
       let { data: orgs } = await supabase
         .from('organizations')
         .select('id')
-        .eq('user_id', id)
+        .eq('auth_user_id', user.id)
         .limit(1)
 
-      if (!orgs?.length && email) {
+      if (!orgs?.length && user.email) {
         const { data: orgsByEmail } = await supabase
           .from('organizations')
           .select('id')
-          .eq('email', email)
+          .eq('email', user.email)
           .limit(1)
         orgs = orgsByEmail
       }

@@ -1,23 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { requireAuth } from '@/lib/auth/require-auth'
+import { createAdminClient } from '@/lib/supabase/admin'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const orgId = request.nextUrl.searchParams.get('orgId')
-    if (!orgId) {
-      return NextResponse.json({ error: 'orgId is required' }, { status: 400 })
+    const { user, org } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    if (!org) {
+      return NextResponse.json({ error: 'No organization found' }, { status: 404 })
+    }
+
+    const supabase = createAdminClient()
 
     // Get properties for this org
     const { data: properties } = await supabase
       .from('properties')
       .select('id')
-      .eq('org_id', orgId)
+      .eq('org_id', org.id)
 
     const propertyIds = properties?.map(p => p.id) || []
     const propertyCount = propertyIds.length

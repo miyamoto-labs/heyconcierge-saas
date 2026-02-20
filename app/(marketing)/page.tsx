@@ -5,17 +5,7 @@ import Link from 'next/link'
 import MascotSVG from '@/components/brand/MascotSVG'
 import CookieSettingsLink from '@/components/ui/CookieSettingsLink'
 import LogoSVG from '@/components/brand/LogoSVG'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
@@ -23,10 +13,11 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const userId = getCookie('user_id')
-    const email = getCookie('user_email')
-    setIsLoggedIn(!!userId)
-    setUserEmail(email)
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user)
+      setUserEmail(user?.email || null)
+    })
   }, [])
   useEffect(() => {
     const observer = new IntersectionObserver(

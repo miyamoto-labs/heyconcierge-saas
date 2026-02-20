@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { requireAuth } from '@/lib/auth/require-auth'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const maxDuration = 30
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
 export async function POST(request: NextRequest) {
   try {
+    const { user, org } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const supabase = createAdminClient()
+
     const formData = await request.formData()
     const propertyId = formData.get('propertyId') as string
     const tagsJson = formData.get('tags') as string
@@ -17,6 +20,19 @@ export async function POST(request: NextRequest) {
 
     if (!propertyId || !tagsJson || files.length === 0) {
       return NextResponse.json({ error: 'propertyId, tags, and images are required' }, { status: 400 })
+    }
+
+    // Verify property belongs to user's org
+    if (org) {
+      const { data: property } = await supabase
+        .from('properties')
+        .select('id')
+        .eq('id', propertyId)
+        .eq('org_id', org.id)
+        .single()
+      if (!property) {
+        return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+      }
     }
 
     const tags = JSON.parse(tagsJson)

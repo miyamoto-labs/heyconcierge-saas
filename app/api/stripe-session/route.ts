@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { requireAuth } from '@/lib/auth/require-auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,6 +12,11 @@ function getStripe() {
 
 export async function POST(request: NextRequest) {
   try {
+    const { user } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { sessionId } = await request.json()
 
     if (!sessionId) {

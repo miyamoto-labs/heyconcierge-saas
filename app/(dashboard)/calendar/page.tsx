@@ -4,18 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
-import { supabase } from '@/lib/supabase'
-
-function getCookie(name: string): string | null {
-  if (typeof document === 'undefined') return null
-  const value = `; ${document.cookie}`
-  const parts = value.split(`; ${name}=`)
-  if (parts.length === 2) {
-    const cookie = parts.pop()?.split(';').shift() || null
-    return cookie ? decodeURIComponent(cookie) : null
-  }
-  return null
-}
+import { createClient } from '@/lib/supabase/client'
 
 interface Booking {
   id: string
@@ -42,29 +31,31 @@ export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [userEmail, setUserEmail] = useState<string | null>(null)
 
+  const supabase = createClient()
+
   useEffect(() => {
-    const email = getCookie('user_email')
-    const id = getCookie('user_id')
-
-    if (!email || !id) {
-      router.push('/login')
-      return
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push('/login')
+        return
+      }
+      setUserEmail(user.email || null)
+      loadData(user.id, user.email || '')
     }
-
-    setUserEmail(email)
-    loadData()
+    checkAuth()
   }, [])
 
-  const loadData = async () => {
+  const loadData = async (authUserId?: string, authEmail?: string) => {
     setLoading(true)
     try {
-      const userId = getCookie('user_id')
-      
+      const uid = authUserId
+
       // Get user's organizations
-      const { data: orgs } = await supabase
+      let { data: orgs } = await supabase
         .from('organizations')
         .select('id')
-        .eq('user_id', userId)
+        .eq('auth_user_id', uid)
         .limit(1)
       
       if (orgs && orgs[0]) {
