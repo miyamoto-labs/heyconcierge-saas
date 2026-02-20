@@ -1,5 +1,6 @@
 import { requireAdminSession } from '@/lib/admin-auth'
 import { redirect } from 'next/navigation'
+import Stripe from 'stripe'
 
 interface Metrics {
   totalCustomers: number
@@ -13,6 +14,18 @@ interface Metrics {
   totalProperties: number
   totalMessages: number
   activeBots: number
+}
+
+interface RevenueMetrics {
+  mrrActive: number    // Monthly income from active (paying) customers
+  mrrTrialing: number  // Monthly income from trialing customers (after trial)
+  mrrTotal: number     // Combined
+}
+
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2026-01-28.clover' as any,
+  })
 }
 
 interface StatCardProps {
@@ -112,6 +125,67 @@ export default async function AdminDashboardPage() {
     fetchError = 'Failed to load metrics'
   }
 
+  // Calculate MRR from Stripe subscriptions
+  let revenue: RevenueMetrics | null = null
+  try {
+    const stripe = getStripe()
+    const allSubs = await stripe.subscriptions.list({
+      limit: 100,
+      expand: ['data.items.data.price', 'data.discounts'],
+    })
+
+    let mrrActive = 0
+    let mrrTrialing = 0
+
+    for (const sub of allSubs.data as any[]) {
+      const price = sub.items?.data?.[0]?.price
+      const baseAmount = price?.unit_amount ?? 0
+
+      // Normalize to monthly amount
+      let monthlyBase = baseAmount
+      if (price?.recurring?.interval === 'year') {
+        monthlyBase = Math.round(baseAmount / 12)
+      }
+
+      // Calculate effective amount after discounts
+      let effectiveMonthly = monthlyBase
+
+      if (Array.isArray(sub.discounts) && sub.discounts.length > 0) {
+        const first = sub.discounts[0]
+        const couponId = first?.source?.coupon
+          ?? (typeof first?.coupon === 'string' ? first.coupon : null)
+          ?? (typeof first?.coupon === 'object' ? first.coupon?.id : null)
+
+        if (couponId) {
+          try {
+            const coupon = await stripe.coupons.retrieve(couponId)
+            if (coupon.percent_off) {
+              effectiveMonthly = Math.round(monthlyBase * (1 - coupon.percent_off / 100))
+            } else if (coupon.amount_off) {
+              effectiveMonthly = Math.max(0, monthlyBase - coupon.amount_off)
+            }
+          } catch {
+            // Coupon fetch failed, use base amount
+          }
+        }
+      }
+
+      if (sub.status === 'active') {
+        mrrActive += effectiveMonthly
+      } else if (sub.status === 'trialing') {
+        mrrTrialing += effectiveMonthly
+      }
+    }
+
+    revenue = {
+      mrrActive,
+      mrrTrialing,
+      mrrTotal: mrrActive + mrrTrialing,
+    }
+  } catch (err) {
+    console.error('Revenue metrics error:', err)
+  }
+
   // Suppress unused variable warning for baseUrl
   void baseUrl
 
@@ -157,6 +231,33 @@ export default async function AdminDashboardPage() {
               />
             </div>
           </div>
+
+          {/* Revenue */}
+          {revenue && (
+            <div>
+              <SectionTitle>Monthly Recurring Revenue</SectionTitle>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                <StatCard
+                  label="Active customers"
+                  value={`$${(revenue.mrrActive / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                  accent="green"
+                  sub="paying subscriptions"
+                />
+                <StatCard
+                  label="Trialing customers"
+                  value={`$${(revenue.mrrTrialing / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                  accent="yellow"
+                  sub="expected after trial"
+                />
+                <StatCard
+                  label="Total MRR"
+                  value={`$${(revenue.mrrTotal / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                  accent="green"
+                  sub="all subscriptions"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Plans */}
           <div>

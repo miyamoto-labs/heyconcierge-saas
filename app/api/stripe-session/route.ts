@@ -28,9 +28,17 @@ export async function POST(request: NextRequest) {
       expand: ['subscription', 'customer'],
     })
 
+    // Extract IDs — expanded objects need .id, unexpanded are already strings
+    const customerId = typeof session.customer === 'string'
+      ? session.customer
+      : session.customer?.id ?? null
+    const subscriptionId = typeof session.subscription === 'string'
+      ? session.subscription
+      : session.subscription?.id ?? null
+
     return NextResponse.json({
-      customerId: session.customer,
-      subscriptionId: session.subscription,
+      customerId,
+      subscriptionId,
       status: session.status,
       paymentStatus: session.payment_status,
     })
