@@ -194,7 +194,10 @@ export default function DashboardPage() {
             <Link href="/calendar" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
               📅 <span className="hidden sm:inline">Calendar</span>
             </Link>
-            
+            <Link href="/billing" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+              💳 <span className="hidden sm:inline">Billing</span>
+            </Link>
+
             {/* Organization Dropdown */}
             <div className="relative">
               <button
@@ -215,13 +218,13 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   
-                  {/* Billing & Subscription */}
+                  {/* Billing & Plan */}
                   <Link
                     href="/billing"
                     onClick={() => setDropdownOpen(false)}
                     className="block w-full text-left px-4 py-3 text-sm hover:bg-[rgba(108,92,231,0.05)] transition-colors no-underline text-dark"
                   >
-                    💳 Billing & Subscription
+                    💳 Billing & Usage
                   </Link>
                   
                   {/* Logout */}

@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import LogoSVG from '@/components/brand/LogoSVG'
 import { supabase } from '@/lib/supabase'
 
@@ -17,254 +17,350 @@ function getCookie(name: string): string | null {
   return null
 }
 
-const PLAN_DETAILS = {
-  starter: { name: 'Starter', price: '$49', features: ['1 property', 'AI guest support', 'Basic analytics'] },
-  professional: { name: 'Professional', price: '$149', features: ['5 properties', 'Priority support', 'Advanced analytics', 'Custom branding'] },
-  premium: { name: 'Premium', price: '$299', features: ['Unlimited properties', '24/7 support', 'White-label', 'API access'] },
-}
+const PLANS = [
+  { id: 'starter', name: 'Starter', emoji: '🌱', price: '$49', period: '/mo', properties: 5, messages: 500 },
+  { id: 'professional', name: 'Professional', emoji: '⚡', price: '$149', period: '/mo', properties: 20, messages: 2000, popular: true },
+  { id: 'premium', name: 'Premium', emoji: '👑', price: '$299', period: '/mo', properties: 40, messages: -1 },
+]
 
 export default function BillingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
-  const [organization, setOrganization] = useState<any>(null)
-  const [userEmail, setUserEmail] = useState<string | null>(null)
-  const [showCancelModal, setShowCancelModal] = useState(false)
-  const [cancelling, setCancelling] = useState(false)
-  const [cancelError, setCancelError] = useState<string | null>(null)
+  const [billing, setBilling] = useState<any>(null)
+  const [usage, setUsage] = useState<any>(null)
+  const [orgId, setOrgId] = useState<string | null>(null)
+  const [showPlans, setShowPlans] = useState(false)
 
   useEffect(() => {
     const email = getCookie('user_email')
     const id = getCookie('user_id')
-    
     if (!email || !id) {
       router.push('/login')
       return
     }
-    
-    setUserEmail(email)
-    loadOrganization(email)
-  }, [router])
 
-  const loadOrganization = async (email: string) => {
-    setLoading(true)
-    try {
-      const { data: org } = await supabase
+    // Get org
+    const loadOrg = async () => {
+      let { data: orgs } = await supabase
         .from('organizations')
-        .select('*')
-        .eq('email', email)
-        .single()
+        .select('id')
+        .eq('user_id', id)
+        .limit(1)
 
-      setOrganization(org)
-    } catch (error) {
-      console.error('Failed to load organization:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleCancelSubscription = async () => {
-    if (!organization?.stripe_customer_id) {
-      setCancelError('No active subscription found')
-      return
-    }
-
-    setCancelling(true)
-    setCancelError(null)
-
-    try {
-      const response = await fetch('/api/cancel-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          organizationId: organization.id,
-          customerId: organization.stripe_customer_id,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to cancel subscription')
+      if (!orgs?.length && email) {
+        const { data: orgsByEmail } = await supabase
+          .from('organizations')
+          .select('id')
+          .eq('email', email)
+          .limit(1)
+        orgs = orgsByEmail
       }
 
-      // Reload organization data
-      await loadOrganization(userEmail!)
-      setShowCancelModal(false)
-      alert('Subscription cancelled successfully. You will have access until the end of your billing period.')
-    } catch (error) {
-      console.error('Cancel error:', error)
-      setCancelError(error instanceof Error ? error.message : 'Failed to cancel subscription')
-    } finally {
-      setCancelling(false)
+      if (orgs?.[0]) {
+        setOrgId(orgs[0].id)
+      } else {
+        setLoading(false)
+      }
     }
-  }
+    loadOrg()
+  }, [router])
 
-  const handleLogout = () => {
-    document.cookie = 'user_id=; path=/; max-age=0'
-    document.cookie = 'user_email=; path=/; max-age=0'
-    document.cookie = 'user_name=; path=/; max-age=0'
-    router.push('/login')
-  }
+  useEffect(() => {
+    if (!orgId) return
+
+    const loadBilling = async () => {
+      try {
+        const [billingRes, usageRes] = await Promise.all([
+          fetch(`/api/billing/current?orgId=${orgId}`),
+          fetch(`/api/billing/usage?orgId=${orgId}`),
+        ])
+
+        if (billingRes.ok) setBilling(await billingRes.json())
+        if (usageRes.ok) setUsage(await usageRes.json())
+      } catch (err) {
+        console.error('Billing load error:', err)
+      }
+      setLoading(false)
+    }
+    loadBilling()
+  }, [orgId])
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-center">
-          <LogoSVG className="w-16 h-16 mx-auto mb-4 animate-pulse" />
-          <p className="text-gray-600">Loading...</p>
-        </div>
+      <div className="min-h-screen bg-bg flex items-center justify-center">
+        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
-  const plan = organization?.plan || 'starter'
-  const planDetails = PLAN_DETAILS[plan as keyof typeof PLAN_DETAILS] || PLAN_DETAILS.starter
-  const subscriptionStatus = organization?.subscription_status || 'unknown'
-  const trialEndsAt = organization?.trial_ends_at ? new Date(organization.trial_ends_at) : null
-  const isTrialing = subscriptionStatus === 'trialing'
-  const isCancelled = subscriptionStatus === 'cancelled'
+  const currentPlan = PLANS.find(p => p.id === billing?.org?.plan) || PLANS[0]
+  const status = billing?.org?.status || 'trialing'
+  const trialDays = billing?.org?.trialDaysLeft || 0
+
+  const messageLimit = currentPlan.messages
+  const messageUsed = usage?.messages || 0
+  const messagePercent = messageLimit > 0 ? Math.min(100, Math.round((messageUsed / messageLimit) * 100)) : 0
+
+  const propertyLimit = currentPlan.properties
+  const propertyUsed = usage?.properties || 0
+  const propertyPercent = Math.min(100, Math.round((propertyUsed / propertyLimit) * 100))
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-bg">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/dashboard" className="flex items-center gap-3 no-underline">
-            <LogoSVG className="w-10 h-10" />
-            <span className="font-nunito font-bold text-xl text-gray-900">HeyConcierge</span>
+      <header className="px-4 sm:px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
+        <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-2">
+          <Link href="/dashboard" className="font-nunito text-lg sm:text-xl font-black no-underline flex items-center gap-2 flex-shrink-0">
+            <LogoSVG className="w-6 h-6 sm:w-8 sm:h-8" />
+            <span className="text-accent hidden sm:inline">Hey</span><span className="text-dark hidden sm:inline">Concierge</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{userEmail}</span>
-            <button
-              onClick={handleLogout}
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              Logout
-            </button>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Link href="/dashboard" className="text-xs sm:text-sm text-dark hover:text-primary font-bold">
+              ← Dashboard
+            </Link>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="mb-8">
-          <h1 className="font-nunito font-extrabold text-4xl text-gray-900 mb-2">Billing & Subscription</h1>
-          <p className="text-gray-600">Manage your subscription and billing information</p>
-        </div>
+      <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
+        <h1 className="font-nunito text-2xl sm:text-4xl font-black mb-2">Billing & Usage</h1>
+        <p className="text-sm sm:text-base text-muted mb-8">Manage your subscription and track usage</p>
 
         {/* Current Plan Card */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 mb-6">
-          <div className="flex items-start justify-between mb-6">
+        <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
-              <h2 className="font-nunito font-bold text-2xl text-gray-900 mb-2">
-                {planDetails.name} Plan
-              </h2>
-              <p className="text-3xl font-bold text-blue-600">{planDetails.price}<span className="text-lg text-gray-500">/month</span></p>
+              <div className="flex items-center gap-3 mb-2">
+                <span className="text-3xl">{currentPlan.emoji}</span>
+                <h2 className="font-nunito text-2xl font-black">{currentPlan.name}</h2>
+                <StatusBadge status={status} trialDays={trialDays} />
+              </div>
+              <p className="text-muted">
+                {status === 'trialing'
+                  ? `Free trial — ${trialDays} day${trialDays !== 1 ? 's' : ''} remaining`
+                  : status === 'active'
+                  ? 'Your subscription is active'
+                  : status === 'cancelled'
+                  ? 'Your subscription has been cancelled'
+                  : 'Subscription inactive'}
+              </p>
             </div>
-            <div className="flex flex-col items-end gap-2">
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                isTrialing ? 'bg-green-100 text-green-700' :
-                isCancelled ? 'bg-red-100 text-red-700' :
-                'bg-blue-100 text-blue-700'
-              }`}>
-                {isTrialing ? '🎉 Free Trial' : isCancelled ? '⚠️ Cancelled' : '✓ Active'}
-              </span>
-              {isTrialing && trialEndsAt && (
-                <span className="text-sm text-gray-600">
-                  Trial ends {trialEndsAt.toLocaleDateString()}
-                </span>
+            <div className="text-right">
+              <div className="font-nunito text-3xl font-black text-dark">
+                {currentPlan.price}<span className="text-base text-muted font-normal">{currentPlan.period}</span>
+              </div>
+              {!billing?.org?.stripeConnected && status === 'trialing' && (
+                <p className="text-xs text-muted mt-1">No payment method added yet</p>
               )}
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-6 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3">Plan Features:</h3>
-            <ul className="space-y-2">
-              {planDetails.features.map((feature, idx) => (
-                <li key={idx} className="flex items-center gap-2 text-gray-700">
-                  <span className="text-green-500">✓</span>
-                  {feature}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {!isCancelled && organization?.stripe_customer_id && (
-            <div className="border-t border-gray-200 pt-6">
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setShowPlans(!showPlans)}
+              className="bg-primary text-white px-6 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all"
+            >
+              {showPlans ? 'Hide Plans' : 'Change Plan'}
+            </button>
+            {status === 'active' && (
               <button
-                onClick={() => setShowCancelModal(true)}
-                className="text-red-600 hover:text-red-700 font-semibold transition-colors"
+                onClick={() => alert('Stripe integration coming soon. Contact support to cancel.')}
+                className="border-2 border-red-200 text-red-600 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-50 transition-all"
               >
                 Cancel Subscription
               </button>
-            </div>
-          )}
-
-          {isCancelled && (
-            <div className="border-t border-gray-200 pt-6">
-              <p className="text-gray-600 mb-4">
-                Your subscription has been cancelled. You will have access until the end of your current billing period.
-              </p>
-              <Link
-                href="/signup?step=4"
-                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors no-underline"
+            )}
+            {!billing?.org?.stripeConnected && (
+              <button
+                onClick={() => alert('Stripe payment setup coming soon.')}
+                className="border-2 border-primary text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:bg-[rgba(108,92,231,0.05)] transition-all"
               >
-                Reactivate Subscription
-              </Link>
+                Add Payment Method
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Plan Selector */}
+        {showPlans && (
+          <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8 mb-6 animate-slide-up">
+            <h3 className="font-nunito text-xl font-black mb-4">Available Plans</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {PLANS.map(plan => {
+                const isCurrent = plan.id === currentPlan.id
+                return (
+                  <div
+                    key={plan.id}
+                    className={`rounded-2xl p-5 border-2 transition-all ${
+                      isCurrent
+                        ? 'border-primary bg-[rgba(108,92,231,0.03)]'
+                        : 'border-[#E8E4FF] hover:border-primary hover:-translate-y-0.5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-2xl">{plan.emoji}</span>
+                      <span className="font-nunito font-extrabold text-lg">{plan.name}</span>
+                      {plan.popular && (
+                        <span className="bg-primary text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>
+                      )}
+                    </div>
+                    <div className="font-nunito font-black text-2xl text-dark mb-3">
+                      {plan.price}<span className="text-sm text-muted font-normal">{plan.period}</span>
+                    </div>
+                    <ul className="space-y-1.5 text-sm text-muted mb-4">
+                      <li>Up to {plan.properties} properties</li>
+                      <li>{plan.messages === -1 ? 'Unlimited' : plan.messages.toLocaleString()} messages/mo</li>
+                    </ul>
+                    {isCurrent ? (
+                      <div className="text-center text-sm font-bold text-primary py-2">Current Plan</div>
+                    ) : (
+                      <button
+                        onClick={() => alert('Stripe integration coming soon. Contact support to change plans.')}
+                        className="w-full bg-[rgba(108,92,231,0.1)] text-primary py-2 rounded-lg font-bold text-sm hover:bg-[rgba(108,92,231,0.2)] transition-all"
+                      >
+                        {PLANS.indexOf(plan) > PLANS.indexOf(currentPlan) ? 'Upgrade' : 'Downgrade'}
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Back to Dashboard */}
-        <div className="text-center">
-          <Link
-            href="/dashboard"
-            className="text-blue-600 hover:text-blue-700 font-semibold no-underline"
-          >
-            ← Back to Dashboard
-          </Link>
-        </div>
-      </div>
-
-      {/* Cancel Confirmation Modal */}
-      {showCancelModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <h3 className="font-nunito font-bold text-2xl text-gray-900 mb-4">
-              Cancel Subscription?
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to cancel your subscription? You'll still have access until the end of your current billing period.
-            </p>
-
-            {cancelError && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <p className="text-red-700 text-sm">{cancelError}</p>
+        {/* Usage Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
+          {/* Messages */}
+          <div className="bg-white rounded-2xl shadow-card p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-muted">Messages</span>
+              <span className="text-2xl">💬</span>
+            </div>
+            <div className="font-nunito text-3xl font-black text-dark mb-1">
+              {messageUsed.toLocaleString()}
+            </div>
+            <div className="text-xs text-muted mb-3">
+              of {messageLimit === -1 ? 'unlimited' : messageLimit.toLocaleString()} this month
+            </div>
+            {messageLimit > 0 && (
+              <div className="h-2 bg-[#E8E4FF] rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    messagePercent >= 90 ? 'bg-accent' : messagePercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
+                  }`}
+                  style={{ width: `${messagePercent}%` }}
+                />
               </div>
             )}
+          </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowCancelModal(false)
-                  setCancelError(null)
-                }}
-                disabled={cancelling}
-                className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                Keep Subscription
-              </button>
-              <button
-                onClick={handleCancelSubscription}
-                disabled={cancelling}
-                className="flex-1 px-6 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
-              >
-                {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
-              </button>
+          {/* Properties */}
+          <div className="bg-white rounded-2xl shadow-card p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-muted">Properties</span>
+              <span className="text-2xl">🏠</span>
+            </div>
+            <div className="font-nunito text-3xl font-black text-dark mb-1">
+              {propertyUsed}
+            </div>
+            <div className="text-xs text-muted mb-3">
+              of {propertyLimit} available
+            </div>
+            <div className="h-2 bg-[#E8E4FF] rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  propertyPercent >= 90 ? 'bg-accent' : propertyPercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
+                }`}
+                style={{ width: `${propertyPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Guests */}
+          <div className="bg-white rounded-2xl shadow-card p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-muted">Guests</span>
+              <span className="text-2xl">👤</span>
+            </div>
+            <div className="font-nunito text-3xl font-black text-dark mb-1">
+              {(usage?.guests || 0).toLocaleString()}
+            </div>
+            <div className="text-xs text-muted mb-3">
+              unique guests this month
+            </div>
+            <div className="text-xs text-muted">
+              {usage?.period?.label || ''}
             </div>
           </div>
         </div>
-      )}
+
+        {/* Invoice History (Placeholder) */}
+        <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-nunito text-xl font-black">Invoice History</h3>
+          </div>
+
+          {billing?.org?.stripeConnected ? (
+            <p className="text-muted text-sm">Invoice history will appear here once Stripe is connected.</p>
+          ) : (
+            <div className="text-center py-8">
+              <div className="text-4xl mb-3">📄</div>
+              <p className="text-muted text-sm mb-1">No invoices yet</p>
+              <p className="text-xs text-muted">
+                Invoices will appear here after your trial ends and a payment method is added.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Account Info */}
+        <div className="mt-6 bg-white rounded-2xl shadow-card p-6 sm:p-8">
+          <h3 className="font-nunito text-xl font-black mb-4">Account Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-muted font-bold block mb-1">Organization</span>
+              <span className="text-dark">{billing?.org?.name || '—'}</span>
+            </div>
+            <div>
+              <span className="text-muted font-bold block mb-1">Email</span>
+              <span className="text-dark">{billing?.org?.email || '—'}</span>
+            </div>
+            <div>
+              <span className="text-muted font-bold block mb-1">Member Since</span>
+              <span className="text-dark">
+                {billing?.org?.createdAt
+                  ? new Date(billing.org.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+                  : '—'}
+              </span>
+            </div>
+            <div>
+              <span className="text-muted font-bold block mb-1">Payment Method</span>
+              <span className="text-dark">
+                {billing?.org?.stripeConnected ? 'Connected via Stripe' : 'Not connected'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
+}
+
+function StatusBadge({ status, trialDays }: { status: string; trialDays: number }) {
+  if (status === 'trialing') {
+    return (
+      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+        trialDays <= 3 ? 'bg-red-100 text-red-600' : 'bg-[#FDCB6E33] text-[#E17055]'
+      }`}>
+        TRIAL {trialDays > 0 ? `• ${trialDays}d left` : '• Expired'}
+      </span>
+    )
+  }
+  if (status === 'active') {
+    return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-mint-soft text-mint-dark">ACTIVE</span>
+  }
+  if (status === 'cancelled') {
+    return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-600">CANCELLED</span>
+  }
+  return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-500">{status.toUpperCase()}</span>
 }
