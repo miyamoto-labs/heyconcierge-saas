@@ -5,7 +5,8 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const twilio = require('twilio');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -32,7 +33,7 @@ function getTomorrowDate() {
 function formatCheckinMessage(booking, property, config) {
   const propertyName = property.name;
   const guestName = booking.guest_name;
-  const checkinDate = new Date(booking.check_in_date).toLocaleDateString('en-US', {
+  const checkinDate = new Date(booking.check_in).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -111,7 +112,7 @@ async function sendCheckinReminders() {
     const { data: bookings, error: bookingsError } = await supabase
       .from('bookings')
       .select('*, properties!inner(*, property_config_sheets(*))')
-      .eq('check_in_date', tomorrow)
+      .eq('check_in', tomorrow)
       .eq('status', 'confirmed');
     
     if (bookingsError) throw bookingsError;

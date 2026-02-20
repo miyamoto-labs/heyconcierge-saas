@@ -7,7 +7,8 @@
 const ical = require('ical');
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -68,9 +69,9 @@ function parseBookings(events, propertyId) {
       bookings.push({
         property_id: propertyId,
         guest_name: guestName,
-        check_in_date: event.start.toISOString().split('T')[0],
-        check_out_date: event.end.toISOString().split('T')[0],
-        platform,
+        check_in: event.start.toISOString().split('T')[0],
+        check_out: event.end.toISOString().split('T')[0],
+        booking_source: platform,
         status: new Date(event.start) > new Date() ? 'confirmed' : 'completed',
       });
     }
