@@ -16,6 +16,7 @@ export default function PropertyViewPage() {
   const [messages, setMessages] = useState<any[]>([])
   const [bookings, setBookings] = useState<any[]>([])
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [qrDataUrl, setQrDataUrl] = useState('')
 
   const supabase = createClient()
 
@@ -43,7 +44,18 @@ export default function PropertyViewPage() {
 
       if (prop) {
         setProperty(prop)
-        
+
+        // Generate QR code
+        try {
+          const QRCode = (await import('qrcode')).default
+          const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'HeyConciergeBot'
+          const qrUrl = `https://t.me/${botUsername}?start=${propertyId}`
+          const dataUrl = await QRCode.toDataURL(qrUrl, { width: 300, margin: 2, color: { dark: '#2D2B55', light: '#FFFFFF' } })
+          setQrDataUrl(dataUrl)
+        } catch (err) {
+          console.error('QR code generation error:', err)
+        }
+
         // Load messages
         const { data: msgs } = await supabase
           .from('goconcierge_messages')
@@ -147,19 +159,65 @@ export default function PropertyViewPage() {
             <div className="text-3xl font-black">{messages.length}</div>
             <div className="text-sm text-muted">Messages</div>
           </div>
-          
+
           <div className="bg-white rounded-2xl shadow-card p-6">
             <div className="text-4xl mb-2">📅</div>
             <div className="text-3xl font-black">{bookings.length}</div>
             <div className="text-sm text-muted">Bookings</div>
           </div>
-          
+
           <div className="bg-white rounded-2xl shadow-card p-6">
             <div className="text-4xl mb-2">{property.whatsapp_number ? '✅' : '⚠️'}</div>
             <div className="text-xl font-black">{property.whatsapp_number ? 'Active' : 'Setup Required'}</div>
             <div className="text-sm text-muted">Messaging Status</div>
           </div>
         </div>
+
+        {/* QR Code */}
+        {qrDataUrl && (
+          <div className="bg-white rounded-2xl shadow-card p-8 mb-8">
+            <h2 className="font-nunito text-2xl font-black mb-6">Guest QR Code</h2>
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              <div className="bg-[rgba(108,92,231,0.05)] rounded-2xl p-6">
+                <img src={qrDataUrl} alt="QR Code" className="w-[200px] h-[200px]" />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <p className="text-muted mb-4">
+                  Print this QR code and place it in your property. Guests scan it to open Telegram and start chatting with your AI concierge instantly.
+                </p>
+                <div className="flex gap-3 flex-wrap justify-center md:justify-start">
+                  <a
+                    href={qrDataUrl}
+                    download={`heyconcierge-qr-${property.name}.png`}
+                    className="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline"
+                  >
+                    📥 Download QR
+                  </a>
+                  <button
+                    onClick={() => {
+                      const printWindow = window.open('', '_blank')
+                      if (printWindow) {
+                        printWindow.document.write(`
+                          <html><head><title>QR Code - ${property.name}</title></head>
+                          <body style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;">
+                            <img src="${qrDataUrl}" style="width:300px;height:300px;" />
+                            <h2 style="margin-top:16px;">${property.name}</h2>
+                            <p style="color:#666;">Scan to chat with HeyConcierge</p>
+                          </body></html>
+                        `)
+                        printWindow.document.close()
+                        printWindow.print()
+                      }
+                    }}
+                    className="inline-flex items-center gap-2 border-2 border-primary text-primary px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all"
+                  >
+                    🖨️ Print QR
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Recent Messages */}
         <div className="bg-white rounded-2xl shadow-card p-8 mb-8">
