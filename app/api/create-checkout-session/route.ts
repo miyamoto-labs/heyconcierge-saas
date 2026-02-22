@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { plan, propertyId } = await request.json()
+    const { plan } = await request.json()
 
     if (!plan || !PLAN_PRICES[plan as keyof typeof PLAN_PRICES]) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 })
@@ -63,11 +63,10 @@ export async function POST(request: NextRequest) {
       subscription_data: {
         trial_period_days: 14,
       },
-      success_url: `${request.headers.get('origin')}/signup?step=5&session_id={CHECKOUT_SESSION_ID}${propertyId ? `&propertyId=${propertyId}` : ''}`,
-      cancel_url: `${request.headers.get('origin')}/signup?step=4`,
+      success_url: `${request.headers.get('origin')}/signup?step=3&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${request.headers.get('origin')}/signup?step=2`,
       metadata: {
         plan,
-        propertyId: propertyId || '',
       },
     })
 

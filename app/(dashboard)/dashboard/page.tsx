@@ -234,7 +234,7 @@ export default function DashboardPage() {
             <p className="text-sm sm:text-base text-muted">Manage your AI concierges</p>
           </div>
           <Link
-            href="/signup?step=3"
+            href="/property/new"
             className="bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline text-center whitespace-nowrap self-start sm:self-auto"
           >
             + Add Property
@@ -248,7 +248,7 @@ export default function DashboardPage() {
             <h2 className="font-nunito text-2xl font-black mb-2">No properties yet</h2>
             <p className="text-muted mb-6">Add your first property to get started!</p>
             <Link
-              href="/signup?step=3"
+              href="/property/new"
               className="inline-block bg-primary text-white px-8 py-4 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline"
             >
               Add Your First Property
