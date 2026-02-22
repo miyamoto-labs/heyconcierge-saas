@@ -42,6 +42,7 @@ export async function GET(request: NextRequest) {
         status: org.subscription_status || 'trialing',
         trialDaysLeft,
         stripeConnected: !!org.stripe_customer_id,
+        stripeCustomerId: org.stripe_customer_id || null,
         createdAt: org.created_at,
       },
       limits,

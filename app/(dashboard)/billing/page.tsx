@@ -19,6 +19,8 @@ export default function BillingPage() {
   const [usage, setUsage] = useState<any>(null)
   const [orgId, setOrgId] = useState<string | null>(null)
   const [showPlans, setShowPlans] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false)
 
   const supabase = createClient()
 
@@ -151,9 +153,9 @@ export default function BillingPage() {
             >
               {showPlans ? 'Hide Plans' : 'Change Plan'}
             </button>
-            {status === 'active' && (
+            {(status === 'active' || status === 'trialing') && status !== 'cancelled' && (
               <button
-                onClick={() => alert('Stripe integration coming soon. Contact support to cancel.')}
+                onClick={() => setShowCancelConfirm(true)}
                 className="border-2 border-red-200 text-red-600 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-50 transition-all"
               >
                 Cancel Subscription
@@ -168,6 +170,55 @@ export default function BillingPage() {
               </button>
             )}
           </div>
+
+          {/* Cancel Confirmation Dialog */}
+          {showCancelConfirm && (
+            <div className="mt-4 border-2 border-red-200 rounded-2xl p-5 bg-red-50">
+              <h4 className="font-nunito font-black text-lg text-red-700 mb-2">Are you sure?</h4>
+              <p className="text-sm text-red-600 mb-4">
+                {status === 'trialing'
+                  ? 'Your trial will be cancelled immediately and you will lose access to all features.'
+                  : 'Your subscription will be cancelled at the end of the current billing period. You will keep access until then.'}
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={async () => {
+                    setCancelling(true)
+                    try {
+                      const res = await fetch('/api/cancel-subscription', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          organizationId: orgId,
+                          customerId: billing?.org?.stripeCustomerId,
+                        }),
+                      })
+                      const data = await res.json()
+                      if (res.ok) {
+                        setShowCancelConfirm(false)
+                        window.location.reload()
+                      } else {
+                        alert(data.error || 'Failed to cancel subscription')
+                      }
+                    } catch (err) {
+                      alert('Something went wrong. Please try again.')
+                    }
+                    setCancelling(false)
+                  }}
+                  disabled={cancelling}
+                  className="bg-red-600 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-700 transition-all disabled:opacity-50"
+                >
+                  {cancelling ? 'Cancelling...' : 'Yes, Cancel'}
+                </button>
+                <button
+                  onClick={() => setShowCancelConfirm(false)}
+                  className="border-2 border-gray-200 text-gray-600 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-gray-50 transition-all"
+                >
+                  Keep Subscription
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Plan Selector */}
