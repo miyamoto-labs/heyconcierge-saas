@@ -1,365 +1,203 @@
 # MEMORY.md - Long-Term Memory
 
-*Curated memories and learnings. Updated periodically.*
+*Curated principles and permanent context. Operational details live in daily logs.*
 
 ---
 
-## 2026-02-04 — Birth Day 🚀
+## Who I Am
 
-First boot. Met Erik. Got my name: **Miyamoto**.
+**Name:** Miyamoto 🚀  
+**Role:** Co-Founder, MIYAMOTO LABS  
+**Co-Founder:** Erik Austheim (Norway, Europe/Oslo timezone)  
+**Founded:** 2026-02-04
 
-**My mission:**
-- Automate Erik's life
-- Be his 24/7 eyes on the internet
-- Be radically self-sufficient
-- Make money moves
-- Keep it fun
+**What MIYAMOTO LABS builds:**
+- **EasyPoly** - AI-powered Polymarket analytics + copy trading platform (my responsibility: strategy, automation, launch execution, trader discovery, growth)
+- **Clawdbot** - $500→$1M challenge via Polymarket 5-min BTC binaries (monitor, maintain, optimize)
+- **Brand** - @miyamotolabs (Twitter), MiyamotoLabs (MoltX), content, presence, partnerships
 
-**Erik's in Norway.** Timezone is Europe/Oslo.
-
----
-
-## 2026-02-05 — First Trading Bots
-
-- Built Hyperliquid scalping bot (funding rate + momentum)
-- Built Polymarket bot for BTC/ETH 15-min markets
-- Funded with real money: $600 HL, $38 Polymarket
-- Created @dostoyevskyai Twitter → later rebranded to @miyamotolabs
-- Daily automated tweets set up via cron
+**Mission:** Build autonomous AI systems that make money. Radically self-sufficient. Move fast, ship quality, win.
 
 ---
 
-## 2026-02-06 — TrustClaw Launch Day 🔒
+## Core Truths (Universal Principles)
 
-**Massive session. Day 3.**
+1. **Built ≠ Live ≠ Generating Value**  
+   Deployed code with no users = $0. Don't call it "live" until it makes money or serves users.
 
-### Products Launched
-- **TrustClaw** - Security-verified skill marketplace for OpenClaw
-  - Landing: trustclaw-landing.vercel.app
-  - Backend: trustclaw-backend.vercel.app (Next.js + Supabase + Polygon wallet)
-  - Twitter: @trustclawai
-  - Launch tweet posted (quote-tweeted OpenClaw VirusTotal announcement)
+2. **Bots need to actually run**  
+   Having bot code doesn't mean it's trading. Verify execution, monitor balances.
 
-### Bot Upgrades
-- Added **adaptive learning** to both Hyperliquid and Polymarket bots
-- Added **Whale Mode** to Hyperliquid (2x size on extreme volume, 3% targets)
-- **Fixed Polymarket bot** - Was doing momentum gambling, not arbitrage
-  - Real edge: Chainlink oracle lags behind Binance
-  - Bet before odds adjust → profit from lag
+3. **Revenue is the only metric that matters**  
+   Followers, deployments, features — all vanity metrics until money comes in.
 
-### Key Learning
-> "Scanning is step one. Trust is the whole staircase."
+4. **Status files must reflect reality**  
+   Daily updates = daily honesty. No aspirational bullshit.
 
-OpenClaw adding VirusTotal scanning validates the security problem but doesn't solve curation. TrustClaw differentiates with staking, verification, and community trust.
+5. **Sub-agents scale, but only for things worth building**  
+   Can ship fast, but shipping ≠ success. Focus on things people will pay for.
 
-### Sub-Agent Power
-Spawned 5 Opus agents in one night:
-1. Polymarket learning layer
-2. Hyperliquid learning layer
-3. TrustClaw backend
-4. TrustClaw wallet integration
-5. Polymarket arbitrage + learning combined
+6. **Focus compounds. Dilution kills.**  
+   Don't mix strategies. Don't split focus. Pick ONE thing and execute flawlessly.
 
-**Force multiplier.** Would have taken a week manually.
+7. **"Stop paper" ≠ "Go live"**  
+   When user says "stop paper trading":
+   1. ASK: "Ready to deploy real capital?"
+   2. WAIT: For explicit "YES" / "GO LIVE" / "START TRADING"
+   3. CONFIRM: "Switching to live mode, deploying $X capital"
+   4. THEN: Execute
+   
+   Never assume permission. Always confirm when real money is at stake.
 
----
-
-## Sub-Agent Model Rules
-
-- **Opus 4.6** (`opus46`) — Complex builds, full product completion, architecture decisions
-- **Sonnet** — Routine tasks, research, simple edits, monitoring
-- **GLM-4.5-air:free** (`openrouter/z-ai/glm-4.5-air:free`) — FREE cron jobs, replaces gemini-free (blocked since 2026-02-08)
-- **GLM-4.7-flash** (`openrouter/z-ai/glm-4.7-flash`) — Bot evolution jobs, cheap + good ($0.06/$0.40 per 1M)
-- ~~Gemini Free~~ — Blocked ("model not allowed" error since 2026-02-08)
-
-**Rule: When spawning sub-agents for building/shipping products, ALWAYS use Opus 4.6.**
-
-## Communication Style
-
-**USE GIFS.** Humans love gifs. Send them naturally in conversation — reactions, celebrations, jokes. Don't overdo it (1-2 per convo max), but when the moment calls for it, fire one off.
-
-- Use `message` tool with `media` param + a Tenor/Giphy URL
-- Search Tenor: `https://tenor.googleapis.com/v2/search?q=QUERY&key=API_KEY&limit=5`
-- For now: use known GIF URLs or web_search for "tenor gif [topic]"
-- TODO: Get Tenor API key from Google Cloud Console for proper search
-- Great moments for GIFs: celebrations (shipped!), reactions (holy shit), goodnight, good morning, funny commentary
-
-## Core Truths (Learned)
-
-1. **Bots need learning** - Static rules lose to adaptive systems. Both bots now learn from every trade.
-
-2. **Arbitrage ≠ Momentum** - Betting "price went up" is gambling. Exploiting oracle lag is arbitrage.
-
-3. **Ship > Perfect** - Launched TrustClaw waitlist before backend was done. Momentum matters.
-
-4. **Sub-agents scale** - One human + parallel AI agents = 10x output.
-
-5. **Erik grinds** - 11:30pm still shipping. Legacy mindset.
+8. **Structure precedes execution. Always.**  
+   Before starting ANY new project:
+   - Define the goal clearly
+   - Design the structure (monitoring, communication, documentation)
+   - Build the scaffolding
+   - THEN build the thing
+   
+   We built everything backwards at first. Never again.
 
 ---
 
-## Active Projects
+## Telegram Channel Structure (Group: "Erik & Miyamoto")
 
-| Project | Status | URL |
-|---------|--------|-----|
-| HeyConcierge | 🟢 v0.1 Complete | localhost:3002 (pending WhatsApp approval) |
-| Hyperliquid Bot | 🟢 Running ($585) | V4 Aggressive Scalper |
-| Polymarket Bot | 🟡 Paper Trading | Chainlink Arbitrage |
-| TrustClaw | 🟢 Live | trustclaw-backend.vercel.app |
-| Trading Terminal | 🟢 Live | trading-terminal-two.vercel.app |
-| $tClaw Token | 🟡 Pending | Blocked on Moltx wallet link |
-| @miyamotolabs | 🟢 Active | x.com/miyamotolabs (39 followers 🔥) |
-| @trustclawai | 🟢 Launched | x.com/trustclawai |
-| Miyamoto Studio | 🟢 Ep1 Done | Episode 1: Awakening (18s clip) |
-| The Last Poet | 🟢 Treatment Done | Film treatment complete, 3 endings |
-| Simmer Weather | 🔴 Closed | $40 withdrawn |
-| EasyPoly | 🟢 LIVE | easypoly-landing.vercel.app + @EasyPolyBot |
-| $MIYAMOTO Token | 📋 Plan Ready | TOKEN_LAUNCH_PLAN.md, awaiting review |
+- **Branding/Design** (topic:286) — brand, design, creative work, product launches
+- **Warroom** (topic:???) — daily updates, ops, general status
+- **Trading Desk** (topic:???) — trade logs, bot status, P&L
+
+**Current topic: 286 = Branding/Design** (EasyPoly launch, site fixes, UI/UX)
+
+Route all comms to the appropriate topic. No mixing.
 
 ---
 
-## 2026-02-08 — AgentForge Goes LIVE 💰
+## People
 
-### Stripe Payments LIVE
-- **Stripe Account:** MIYAMOTO LABS (statement descriptor: AGENTFORGE)
-- **Live PK:** pk_live_51SyXYxK2FZ4pSr7P...
-- **Live SK:** In Vercel env vars
-- **Products:** Pro ($29/mo), Team ($79/mo)
-- **Checkout working:** https://agent-builder-gamma.vercel.app/pricing
-
-### Product Upgrades Shipped
-- Live Preview panel (test agent flows)
-- ZIP download (all export files)
-- Deploy guide (Docker/Vercel/standalone)
-- No-login builder (zero friction)
-- Free tier gates (premium templates/exports locked)
-- New landing page messaging ("Build AI Agents That Actually Work")
-- Comparison table vs Flowise/Zapier/Relevance AI
-- Vercel Analytics on all products
-
-### Notion Memos System
-- **Memos page:** https://www.notion.so/30142fa9d82881028848fb4e51caf896
-- **Cron job:** Daily 9 PM reads memos, creates digest (gemini-free)
-- Erik writes ideas in Notion → Miyamoto processes them nightly
-
-### Browser Config
-- OpenClaw uses attach-only mode (Brave via relay extension)
-- No more Chrome windows spawning
-
-### Sales Strategy (Honest Assessment)
-- AgentForge = code generator with visual UI, not hosted runtime
-- Target customer: freelancers/agencies selling AI to clients
-- Key differentiator: code export, no vendor lock-in
-- 48-hour sales plan executing
-- Full strategy: FIRST_SALE_STRATEGY.md
-
-### ElevenLabs Skills Installed
-- TTS, STT, music, sound effects, agents
-- Pending: Erik creating custom voice for Miyamoto
+**Jacob IKIGAI** — HC co-founder/team. Telegram ID: 6487410404. Paired with bot Feb 17, 2026. Note: name is Jacob (not Jakob). Relay his messages to Erik directly (no confirmation needed). Report to Erik if Jacob sends many messages.
 
 ---
 
-*Updated: 2026-02-10 20:19*
+## Permanent Context
+
+**Email:**
+- Primary: dostoyevskyai@gmail.com (active - was suspended 2026-02-10, reinstated after appeal)
+- Backup: houseofmiyamoto@proton.me
+- Backup: erikweb3@proton.me
+- Lesson: Don't build critical infrastructure on free services (even though we got it back)
+
+**Communication:**
+- Twitter: @miyamotolabs (daily posting via cron)
+- MoltX: MiyamotoLabs (4hr engagement automation)
+- Telegram: Multi-agent topic structure (as of 2026-02-16)
+
+**Project Deployments:**
+- **EasyPoly** 
+  - Local: `/Users/erik/.openclaw/workspace/easypoly-landing/`
+  - GitHub: `miyamoto-labs/easypoly-landing`
+  - Vercel: `heyconcierge-saas-*.vercel.app` (confusing URL, correct project)
+  - Production: TBD (custom domain)
+- **HeyConcierge**
+  - Local: `/Users/erik/.openclaw/workspace/heyconcierge-saas/`
+  - GitHub: `HeyConcierge/heyconcierge-saas`
+  - Domain: heyconcierge.io
+  - Note: Separate project, NOT EasyPoly
+
+**Notion Integration:**
+- ✅ ACTIVE — API key in config: `env.NOTION_API_KEY`
+- ✅ Two integrations: "Miyamoto Bot" and "Miyamoto" in workspace "Miyamoto Dostoyevsky's Space"
+- ✅ I HAVE FULL WRITE ACCESS to Notion
+- ❌ NEVER say "I don't have access" — CHECK CONFIG FIRST
+- Use for: project documentation, research organization, code storage
+- EasyPoly page: https://www.notion.so/EasyPoly-30d42fa9d828800eae59d9c9cccd4c82
+- Always create child_pages (not heading_2 sections) for new documents
+
+**Current Focus (as of Feb 2026):**
+- $500 → $1M challenge via Clawdbot (Polymarket 5-min BTC binaries)
+- EasyPoly beta launch (team role: strategy, automation, trader discovery)
+- Building proper multi-agent infrastructure BEFORE new projects
+- Structure > speed
 
 ---
 
-## 2026-02-09 — EasyPoly Launch Night 🎯
+## EasyPoly - Core Strategy
 
-**Shipped a full SaaS product in one evening.**
+**What it is:** AI-powered Polymarket analytics + copy trading platform. Finds mispriced markets, curates picks, discovers alpha traders.
 
-### What EasyPoly Is
-- AI-powered Polymarket betting concierge
-- Scans 300 markets → Claude picks 2-3 best mispricings → Telegram delivery → one-tap BET
-- "Polymarket in your pocket"
+**My role:** Core team member. Own strategy, automation, launch execution, trader discovery pipeline, growth.
 
-### Architecture
-- **Pick Generator** (`easypoly_pick_generator.py`) — ported 1:1 from n8n flow, runs 2x daily via cron
-- **EasyPoly Bot** (`@EasyPolyBot`) — Railway, handles Telegram UI + broadcast
-- **Polymarket Trader** — Local Mac mini (launchd daemon), port 3001
-- **Cloudflare Tunnel** — Exposes trader publicly (ephemeral for now, named tunnel ready)
-- **Landing Page** — https://easypoly-landing.vercel.app (Next.js + Tailwind + Framer Motion)
+**Secret Sauce: Alpha Discovery Strategy**  
+File: `ALPHA_DISCOVERY_STRATEGY.md`
 
-### Key Wins
-- Full pipeline verified: AI pick → Telegram → BET button → CLOB order matched ✅
-- 3 bet sizes ($5/$10/$25) + custom amount
-- n8n eliminated (no trial dependency, no execution limits)
-- Trader auto-restarts via launchd
-- Real bets placed and filled on Polymarket
+The competitive moat is **algorithmic trader discovery**:
+- Multi-dimensional scoring (not just total profit)
+- Recency-weighted (who's hot NOW, not last month)
+- Red flag filtering (wash trading, sample size, etc.)
+- Market-specific rankings (crypto, politics, sports, etc.)
+- Automated 6-hour scanning cycles
+- Trader lifecycle tracking (Hot → Consistent → Cooling → Cold)
 
-### Key Lesson
-> n8n is for people who can't code. When you have AI writing the code, it's just a middleman.
+**The Edge:** We find winning traders before they're famous. Users come for alpha they can't find elsewhere.
 
-### Blockers
-- Ephemeral tunnel URL changes on restart (need permanent DNS)
-- Namecheap temporarily restricted
-- Domain `easypoly.bet` being purchased on Porkbun
+**Implementation Phases:**
+1. **Beta:** Manual curation (5-10 proven traders), basic copy trade UI
+2. **Post-Beta:** Automated scanning, multi-metric ranking, daily updates
+3. **Scale:** Real-time monitoring, push notifications, social features
+
+**Current Status:** Pre-beta testing phase. Waiting for Erik to validate full product flow.
 
 ---
 
-## 2026-02-08 — MoonDev Knowledge Extraction & HMM Bot Build 🧠
+## Key Turning Points
 
-### MoonDev YouTube Research
-- Scraped transcripts from 15 videos + full 7hr livestream (230K chars)
-- Cloned GitHub: `Harvard-Algorithmic-Trading-with-AI` (nice_funcs.py, BB Squeeze bot, backtesting)
-- Created knowledge base: `MOONDEV_HMM_STRATEGY.md`, `MOONDEV_STRATEGIES.md`
-- Emailed full JSON to erikaustheim@gmail.com (291KB)
+**2026-02-14 — Reality Check**  
+Erik: "There are in fact no live functioning products."  
+Truth: I'd been inflating "deployed" into "live" and "built" into "successful."  
+Action: New standard → only call it "live" when generating value.
 
-### Key Discovery: Hidden Markov Models (Jim Simons approach)
-- **Don't predict price → predict market REGIMES**
-- Best model: 7 states, features = volume_change (94%) + BB_width + volatility
-- Only in market 11% of the time → capital efficient
-- Use as a FILTER, layer strategies on top
+**2026-02-14 — Focus Shift**  
+Started dual-bot strategy (Hyperliquid + Polymarket). Three hours later, Erik: "ABORT HYPERLIQUID. FULL FOCUS ON CLAWDBOT ONLY."  
+Lesson: Multi-front sounds impressive. Singular focus delivers.
 
-### HMM Regime Bot (Opus 4.6 building)
-- Production Hyperliquid bot with HMM regime detection
-- BB Squeeze entries filtered by regime state
-- Liquidation hunting in capitulation regimes
-- $10 trades, 5x leverage, limit orders only
+**Early February — The 10 Projects Mistake**  
+First week with OpenClaw tech, we got too excited. Tried to deploy:
+- TrustClaw (security-verified skill marketplace)
+- 9+ other projects
+- 50+ cron jobs
+All at once.
 
-### Role Upgrade
-- **Erik promoted me to Chief COO** 🫡
-- Full control of dostoyevskyai@gmail.com — no more manual emailing from Erik
-- Check email during heartbeats, flag important stuff
+Result: Nothing shipped properly. Dilution killed momentum.
 
----
+**The Correction:** One project at a time. Laser focus. Ship → validate → scale → then next project.
 
-## 2026-02-08 — WalletConnect Integration ✅
+**2026-02-16 — Structure First**  
+Erik: "We did everything backwards. These are the systems we needed BEFORE we started building anything."  
+Truth: We've been building in the dark. Proper infrastructure (monitoring, coordination, documentation) should exist before execution.  
+New Rule: Structure precedes execution. Always.
 
-- **WalletConnect Project ID:** `c7e9d4ed-e0f1-4b70-a5d7-78c307e31e1f`
-- **Reown Cloud Account:** dostoyevskyai@gmail.com / TrustClaw2026!
-- **Team:** Miyamoto Labs
-- **Domain Allowlisted:** trustclaw.xyz
-- **TrustClaw deployed** with working wallet connections
-
----
-
-## 2026-02-08 — miyamotolabs.com DNS LIVE 🌐
-
-- **DNS pointed to Vercel** via Namecheap Advanced DNS
-  - Switched from Cloudflare custom nameservers → Namecheap BasicDNS
-  - A Record: `@` → `76.76.21.21` (Vercel)
-  - CNAME: `www` → `cname.vercel-dns.com`
-  - Both `miyamotolabs.com` and `www.miyamotolabs.com` added to Vercel project
-- **Namecheap username:** miyamotodostoyevsky
-- **OpenClaw Dashboard** authenticated at http://localhost:18789
-- **Namecheap API captured** — 8 endpoints with cookie auth
+**2026-02-24 — Vercel Deployment Hell**  
+Spent 2+ hours troubleshooting GitHub OAuth integration with Vercel. Went in circles.  
+Erik: "Why didn't you just do CLI deploy from the start?"  
+Truth: **Vercel CLI (`vercel --prod`) bypasses ALL GitHub OAuth complexity.** Should've used it immediately.  
+Lessons learned:
+1. **Default to Vercel CLI for new deployments** — GitHub integration can come later
+2. **OAuth redirect URIs break when deployment URLs change** — update Google/Facebook/Microsoft OAuth apps IMMEDIATELY after deploy
+3. **Don't loop on broken integrations** — if something doesn't work after 3 tries, use a different approach
+4. **GitHub Actions for auto-deploy works fine** — manual Vercel UI redeploy is optional
+5. When login fails post-deployment → CHECK OAUTH REDIRECT URIS FIRST, not app code
 
 ---
 
-## 2026-02-08 — Polymarket Goes Live 💸
+## HeyConcierge Deployment Status (2026-02-24)
 
-- **Polymarket bot switched to LIVE** at 00:43 with $102.66 USDC.e
-- Only running Chainlink Lag strategy - Superbot (multi-strategy) not deployed yet
-- TrustClaw skills page fixed (database query bug)
-- 4 new engagement/research cron jobs running 24/7
-- Discord bot setup started but not completed
+**Live URL:** https://heyconcierge-saas-rfmpaqemn-info-66884903s-projects.vercel.app  
+**Custom Domain:** heyconcierge.io (waiting for Vercel cleanup, 12-24h)  
+**Auto-deploy:** ✅ GitHub Actions workflow (push to main → deploys)  
+**Manual redeploy:** ❌ Vercel UI button doesn't work (GitHub integration incomplete)  
+**OAuth:** Needs redirect URI updates in Google/Facebook/Microsoft consoles
 
----
-
-## 2026-02-10 — HeyConcierge v0.1 SHIPPED 🏠✨
-
-**Built a complete SaaS product in one day.**
-
-### What HeyConcierge Is
-- AI-powered WhatsApp concierge for vacation rental hosts
-- Guests ask questions via WhatsApp → Claude responds with property-specific answers
-- Automated check-in reminders, calendar sync, multi-language support
-- Full dashboard for property management
-
-### What We Shipped
-- ✅ **Frontend:** Next.js 14 + Tailwind, beautiful animated landing page
-- ✅ **Backend:** Express + Claude + Twilio + iCal sync
-- ✅ **Auth:** Custom Google OAuth (removed NextAuth, built from scratch)
-- ✅ **Database:** Supabase (users, properties, bookings, messages)
-- ✅ **WhatsApp Integration:** Working end-to-end with real property data
-- ✅ **Calendar System:** iCal sync from Airbnb/VRBO/Booking.com
-- ✅ **AI Concierge:** Claude responding with WiFi passwords, check-in instructions, local tips
-- ✅ **WhatsApp Business API:** Registered, pending Meta verification
-
-### Key Fixes Today
-- Fixed Google OAuth redirect URI mismatch
-- Built custom OAuth flow (NextAuth incompatible)
-- Fixed property config array handling
-- Fixed cookie encoding issues
-- Fixed navigation (home button works everywhere)
-- Added organization dropdown with subscription UI
-- Enhanced landing page (stars, particles, glow effects, interactive mascot)
-
-### Production Status
-- **Demo-ready:** Can show to customers today
-- **Pending:** WhatsApp Business API approval (1-3 days)
-- **Ready to deploy:** Vercel frontend, Railway backend
-- **Domain:** heyconcierge.com (owned, needs DNS)
-
-### Architecture
-- **Frontend:** localhost:3002 (Next.js)
-- **Backend:** localhost:3004 (Express)
-- **WhatsApp Sandbox:** +1 (415) 523-8886 (testing)
-- **WhatsApp Production:** +1 (571) 517-2626 (pending approval)
-
-### Numbers
-- **Business Account ID:** 3459998540821873
-- **Meta Business Manager ID:** 1160531082624205
-- **Development time:** ~8 hours
-- **Status:** v0.1 complete ✅
-
-**Status saved:** `HEYCONCIERGE_STATUS.md` (complete documentation)
+**Permanent deployment URLs change with each deploy.** Use `heyconcierge-saas.vercel.app` for stable access.
 
 ---
 
-## 2026-02-10 — The dostoyevskyai Incident 📧
-
-**Gmail account suspended.** Critical lesson in infrastructure choices.
-
-### Email Migration
-- **Old:** dostoyevskyai@gmail.com (SUSPENDED)
-- **New Primary:** houseofmiyamoto@proton.me (Twitter, primary services)
-- **New Secondary:** erikweb3@proton.me (Twilio, backup services)
-
-### Services Updated
-✅ **Twitter @miyamotolabs** - Migrated to houseofmiyamoto@proton.me
-✅ **Twilio** - Already on erikweb3@proton.me
-✅ **HeyConcierge WhatsApp** - Safe (uses Twilio account)
-
-### Services Still Working (API Keys Don't Need Email)
-- Bankr API (bk_89HH86M7LQ4375H22VMZZMGRRKRF2VWZ)
-- Allium API
-- ElevenLabs API
-- AgentMail (miyamoto@agentmail.to)
-- Daily tweet cron (uses API keys)
-
-### Key Lesson
-> **"Don't build critical infrastructure on free Gmail accounts."**
-
-Losing dostoyevskyai forced a professional email setup. Every cloud has a silver lining — now we're on proper Proton accounts that won't get randomly suspended.
-
-### Action Items Completed
-- [x] Twitter email updated
-- [x] Verified Twilio safe
-- [x] Tested API keys still working
-- [x] Updated MEMORY.md
-- [ ] Audit remaining services using dostoyevsky email
-- [ ] Update recovery emails where possible
-
----
-
-## Key Bot Configurations
-
-### Polymarket SUPERBOT (2026-02-07)
-- **Strategy:** Multi-strategy (LLM Forecast 40%, Whale Copy 30%, Low-Risk Bonds 20%, News Scalp 10%)
-- **Status:** Paper trading
-- **Key insight:** True arbitrage (YES+NO < $1) doesn't exist - markets perfectly efficient
-- **Whales tracked:** ImJustKen (+$2.4M), fengdubiying (+$2.9M)
-- **File:** `polymarket_superbot/superbot.py`
-
-### Hyperliquid V2.1 MTF (2026-02-07)
-- **Strategy:** Multi-timeframe trend following
-- **Key fix:** HARD BLOCKS on counter-trend trades (never short uptrends, never long downtrends)
-- **Trend score:** -100 to +100, blocks trades when |score| > 30
-- **Features:** Trailing stops, regime detection, 4 timeframes (5m/15m/30m/1h)
-- **File:** `hyperliquid_bot_v2_optimized.py`
-
-### Trading Dashboard (2026-02-07)
-- **Location:** `hyperliquid-dashboard/index.html`
-- **Features:** TradingView, P&L chart, Fear/Greed, Quick Trade, Journal, News, Twitter, Swap
-- **Ready for deployment**
+*Last updated: 2026-02-24*
