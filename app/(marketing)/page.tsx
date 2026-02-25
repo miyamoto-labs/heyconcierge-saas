@@ -7,7 +7,7 @@ import CookieSettingsLink from '@/components/ui/CookieSettingsLink'
 import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
-import ChatWidget from '@/components/chat/SimpleChatWidget'
+import ChatWidget from '@/components/chat/UltraSimpleWidget'
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
