@@ -67,6 +67,7 @@ export async function middleware(request: NextRequest) {
     '/api/admin',
     '/api/telegram-webhook',
     '/api/cron',
+    '/api/chat', // Chat API for admin dashboard (uses admin_session, not Supabase auth)
   ]
   const isPublicApi = publicApiPaths.some(path => pathname.startsWith(path))
 

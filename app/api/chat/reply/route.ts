@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
+    // Verify admin session
+    const cookieStore = await cookies()
+    const adminSession = cookieStore.get('admin_session')
+    if (!adminSession?.value) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { chatId, content } = await request.json()
 
     if (!chatId || !content?.trim()) {
