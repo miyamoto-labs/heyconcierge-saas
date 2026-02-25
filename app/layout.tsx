@@ -1,10 +1,23 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import CookieBanner from '@/components/ui/CookieBanner'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 
 export const metadata: Metadata = {
   title: 'HeyConcierge — Your Friendly AI Concierge',
   description: 'AI-powered guest concierge for vacation rentals. Answers questions instantly via Telegram, WhatsApp, or SMS. Speaks every language and knows your property inside out.',
+  manifest: '/manifest.json',
+  themeColor: '#000000',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'HeyConcierge',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -18,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-quicksand">
         {children}
         <CookieBanner />
+        <PWAInstallPrompt />
       </body>
     </html>
   )
