@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 import Anthropic from '@anthropic-ai/sdk'
 
 const anthropic = new Anthropic({
@@ -91,7 +91,6 @@ export async function POST(request: NextRequest) {
   try {
     const { chatId, message, userEmail, userName } = await request.json()
 
-    const supabase = await createClient()
 
     // Create chat if new
     let finalChatId = chatId
