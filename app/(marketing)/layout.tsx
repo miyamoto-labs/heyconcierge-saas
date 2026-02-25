@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 
-const TestWidget = dynamic(() => import('@/components/chat/TestWidget'), {
+const ChatWidget = dynamic(() => import('@/components/chat/SimpleChatWidget'), {
   ssr: false,
 })
 
@@ -8,7 +8,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
   return (
     <>
       {children}
-      <TestWidget />
+      <ChatWidget />
     </>
   )
 }
