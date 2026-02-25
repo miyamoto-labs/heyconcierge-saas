@@ -1,6 +1,21 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+let _client: SupabaseClient | null = null
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+function getClient(): SupabaseClient {
+  if (!_client) {
+    _client = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+  }
+  return _client
+}
+
+// Lazy-initialized singleton — defers createClient() until first use at runtime,
+// preventing "supabaseUrl is required" errors during Next.js build.
+export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
+  get(_, prop, receiver) {
+    return Reflect.get(getClient(), prop, receiver)
+  }
+})
