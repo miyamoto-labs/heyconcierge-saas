@@ -30,6 +30,13 @@ export default function ChatsPage() {
 
   useEffect(() => {
     loadChats()
+    
+    // Poll for new chats every 10 seconds
+    const chatsPollInterval = setInterval(() => {
+      loadChats()
+    }, 10000)
+
+    return () => clearInterval(chatsPollInterval)
   }, [])
 
   useEffect(() => {
@@ -37,6 +44,17 @@ export default function ChatsPage() {
       loadMessages(selectedChat.id)
     }
   }, [selectedChat])
+
+  // Poll for new messages every 3 seconds when chat is selected
+  useEffect(() => {
+    if (!selectedChat) return
+
+    const pollInterval = setInterval(() => {
+      loadMessages(selectedChat.id)
+    }, 3000) // Poll every 3 seconds
+
+    return () => clearInterval(pollInterval)
+  }, [selectedChat?.id])
 
   const loadChats = async () => {
     try {
