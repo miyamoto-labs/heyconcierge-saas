@@ -34,3 +34,34 @@ export async function GET(
     )
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    // Delete messages first (foreign key constraint)
+    const { error: messagesError } = await supabase
+      .from('messages')
+      .delete()
+      .eq('chat_id', params.id)
+
+    if (messagesError) throw messagesError
+
+    // Delete the chat
+    const { error: chatError } = await supabase
+      .from('chats')
+      .delete()
+      .eq('id', params.id)
+
+    if (chatError) throw chatError
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('Delete chat error:', error)
+    return NextResponse.json(
+      { error: 'Failed to delete chat' },
+      { status: 500 }
+    )
+  }
+}

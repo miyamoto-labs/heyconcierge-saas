@@ -6,6 +6,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
+  // Take control of all pages immediately
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(

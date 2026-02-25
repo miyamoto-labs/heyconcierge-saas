@@ -127,6 +127,27 @@ export default function ChatsPage() {
     }
   }
 
+  const deleteChat = async (chatId: string, chatName: string) => {
+    if (!confirm(`Delete chat with "${chatName}"? This will permanently remove all messages.`)) return
+
+    try {
+      const response = await fetch(`/api/chat/${chatId}`, { method: 'DELETE' })
+      if (!response.ok) throw new Error('Failed to delete chat')
+
+      // Clear selection if we deleted the selected chat
+      if (selectedChat?.id === chatId) {
+        setSelectedChat(null)
+        setMessages([])
+      }
+
+      // Remove from list
+      setChats(prev => prev.filter(c => c.id !== chatId))
+    } catch (error) {
+      console.error('Failed to delete chat:', error)
+      alert('Failed to delete chat. Please try again.')
+    }
+  }
+
   const resolveChat = async () => {
     if (!selectedChat) return
 
@@ -227,14 +248,22 @@ export default function ChatsPage() {
                       Started {new Date(selectedChat.created_at).toLocaleString()}
                     </p>
                   </div>
-                  {selectedChat.status !== 'resolved' && (
+                  <div className="flex items-center gap-2">
+                    {selectedChat.status !== 'resolved' && (
+                      <button
+                        onClick={resolveChat}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition"
+                      >
+                        Mark Resolved
+                      </button>
+                    )}
                     <button
-                      onClick={resolveChat}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition"
+                      onClick={() => deleteChat(selectedChat.id, selectedChat.user_name || selectedChat.user_email || 'Anonymous')}
+                      className="px-4 py-2 bg-red-600/20 text-red-400 rounded-lg text-sm font-semibold hover:bg-red-600 hover:text-white transition border border-red-600/30"
                     >
-                      Mark Resolved
+                      Delete
                     </button>
-                  )}
+                  </div>
                 </div>
 
                 {/* Messages */}
