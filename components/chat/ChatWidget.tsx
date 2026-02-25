@@ -153,14 +153,9 @@ export default function ChatWidget() {
           }])
         }
 
-        // If escalated, show notification
-        if (data.escalated) {
-          setMessages(prev => [...prev, {
-            id: Date.now().toString(),
-            sender_type: 'ai',
-            content: "I've notified our team. They'll respond shortly! 😊",
-            created_at: new Date().toISOString()
-          }])
+        // If escalated (and not already escalated before), show notification
+        if (data.escalated && data.reply && data.reply.includes("I'll connect you")) {
+          // Only show escalation message if it's the first time (API will send the message)
         }
       }
     } catch (error) {

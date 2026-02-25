@@ -117,6 +117,26 @@ export async function POST(request: NextRequest) {
       content: message
     })
 
+    // Get chat status to check if already escalated
+    const { data: chatData } = await supabase
+      .from('chats')
+      .select('status')
+      .eq('id', finalChatId)
+      .single()
+
+    const isAlreadyEscalated = chatData?.status === 'escalated'
+
+    // If already escalated, just notify team of new message and don't send AI reply
+    if (isAlreadyEscalated) {
+      await sendTelegramNotification(finalChatId, message, userEmail, userName)
+
+      return NextResponse.json({
+        chatId: finalChatId,
+        reply: null, // No AI reply when chat is escalated
+        escalated: true
+      })
+    }
+
     // Check if should escalate
     const needsEscalation = shouldEscalate(message)
 
