@@ -177,13 +177,13 @@ export default function ChatsPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 flex-1 min-h-0">
+        <div className="grid grid-cols-3 gap-6 flex-1 min-h-0 overflow-hidden">
           {/* Chat List */}
-          <div className="bg-white rounded-xl shadow-sm overflow-y-auto">
-            <div className="p-4 border-b border-gray-200">
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-gray-200 flex-shrink-0">
               <h2 className="font-semibold">All Chats</h2>
             </div>
-            <div className="divide-y">
+            <div className="flex-1 overflow-y-auto divide-y">
               {chats.map((chat) => (
                 <button
                   key={chat.id}
@@ -214,11 +214,11 @@ export default function ChatsPage() {
           </div>
 
           {/* Chat Messages */}
-          <div className="col-span-2 bg-white rounded-xl shadow-sm flex flex-col">
+          <div className="col-span-2 bg-white rounded-xl shadow-sm flex flex-col overflow-hidden">
             {selectedChat ? (
               <>
                 {/* Chat Header */}
-                <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+                <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
                   <div>
                     <h2 className="font-semibold">
                       {selectedChat.user_name || selectedChat.user_email || 'Anonymous'}
@@ -268,7 +268,7 @@ export default function ChatsPage() {
                 </div>
 
                 {/* Reply Input */}
-                <form onSubmit={sendReply} className="p-4 border-t border-gray-200">
+                <form onSubmit={sendReply} className="p-4 border-t border-gray-200 flex-shrink-0">
                   <div className="flex gap-2">
                     <textarea
                       value={replyText}
