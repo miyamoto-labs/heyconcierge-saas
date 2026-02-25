@@ -40,7 +40,6 @@ export default function ChatsPage() {
 
   const loadChats = async () => {
     try {
-      const client = supabase
       const { data, error } = await supabase
         .from('chats')
         .select('*')
@@ -75,7 +74,6 @@ export default function ChatsPage() {
     setIsSending(true)
 
     try {
-      const client = supabase
 
       // Save human reply
       await supabase.from('messages').insert({
@@ -104,7 +102,6 @@ export default function ChatsPage() {
     if (!selectedChat) return
 
     try {
-      const client = supabase
       await supabase
         .from('chats')
         .update({ status: 'resolved', resolved_at: new Date().toISOString() })
