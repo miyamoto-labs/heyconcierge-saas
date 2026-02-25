@@ -10,8 +10,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Admin routes — keep existing admin auth (separate system, untouched)
-  // Also protect /chats admin dashboard
-  if ((pathname.startsWith('/admin') && pathname !== '/admin/login') || pathname.startsWith('/chats')) {
+  if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
     const adminSession = request.cookies.get('admin_session')
     if (!adminSession?.value) {
       return NextResponse.redirect(new URL('/admin/login', request.url))

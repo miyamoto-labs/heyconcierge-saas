@@ -160,52 +160,52 @@ export default function ChatsPage() {
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto p-6 h-full flex flex-col">
+    <div className="h-full bg-slate-950 p-6 flex flex-col">
+      <div className="max-w-7xl mx-auto flex-1 flex flex-col min-h-0">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-dark">Customer Chats</h1>
-            <p className="text-muted mt-1">
+            <h1 className="text-3xl font-bold text-white">Customer Chats</h1>
+            <p className="text-slate-400 mt-1">
               {chats.filter(c => c.status === 'escalated').length} escalated • {chats.filter(c => c.status === 'active').length} active
             </p>
           </div>
           <Link
-            href="/dashboard"
-            className="text-primary hover:text-dark transition"
+            href="/admin"
+            className="text-slate-400 hover:text-white transition"
           >
-            ← Back to Dashboard
+            ← Back to Admin
           </Link>
         </div>
 
         <div className="grid grid-cols-3 gap-6 flex-1 min-h-0 overflow-hidden">
           {/* Chat List */}
-          <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
-            <div className="p-4 border-b border-gray-200 flex-shrink-0">
-              <h2 className="font-semibold">All Chats</h2>
+          <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden flex flex-col">
+            <div className="p-4 border-b border-slate-800 flex-shrink-0">
+              <h2 className="font-semibold text-white">All Chats</h2>
             </div>
-            <div className="flex-1 overflow-y-auto divide-y">
+            <div className="flex-1 overflow-y-auto divide-y divide-slate-800">
               {chats.map((chat) => (
                 <button
                   key={chat.id}
                   onClick={() => setSelectedChat(chat)}
-                  className={`w-full p-4 text-left hover:bg-gray-50 transition ${
-                    selectedChat?.id === chat.id ? 'bg-blue-50' : ''
+                  className={`w-full p-4 text-left hover:bg-slate-800/60 transition ${
+                    selectedChat?.id === chat.id ? 'bg-slate-800' : ''
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <p className="font-semibold text-sm">
+                      <p className="font-semibold text-sm text-white">
                         {chat.user_name || chat.user_email || 'Anonymous'}
                       </p>
                       {chat.user_email && chat.user_name && (
-                        <p className="text-xs text-gray-500">{chat.user_email}</p>
+                        <p className="text-xs text-slate-400">{chat.user_email}</p>
                       )}
                     </div>
                     <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(chat.status)}`}>
                       {chat.status}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-slate-500">
                     {new Date(chat.created_at).toLocaleString()}
                   </p>
                 </button>
@@ -214,16 +214,16 @@ export default function ChatsPage() {
           </div>
 
           {/* Chat Messages */}
-          <div className="col-span-2 bg-white rounded-xl shadow-sm flex flex-col overflow-hidden">
+          <div className="col-span-2 bg-slate-900 rounded-xl border border-slate-800 flex flex-col overflow-hidden">
             {selectedChat ? (
               <>
                 {/* Chat Header */}
-                <div className="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+                <div className="p-4 border-b border-slate-800 flex items-center justify-between flex-shrink-0">
                   <div>
-                    <h2 className="font-semibold">
+                    <h2 className="font-semibold text-white">
                       {selectedChat.user_name || selectedChat.user_email || 'Anonymous'}
                     </h2>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-slate-400">
                       Started {new Date(selectedChat.created_at).toLocaleString()}
                     </p>
                   </div>
@@ -249,8 +249,8 @@ export default function ChatsPage() {
                           msg.sender_type === 'user'
                             ? 'bg-blue-600 text-white'
                             : msg.sender_type === 'human'
-                            ? 'bg-accent text-white'
-                            : 'bg-gray-100 text-gray-800'
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-slate-800 text-slate-200 border border-slate-700'
                         }`}
                       >
                         {msg.sender_type !== 'user' && (
@@ -268,20 +268,20 @@ export default function ChatsPage() {
                 </div>
 
                 {/* Reply Input */}
-                <form onSubmit={sendReply} className="p-4 border-t border-gray-200 flex-shrink-0">
+                <form onSubmit={sendReply} className="p-4 border-t border-slate-800 flex-shrink-0">
                   <div className="flex gap-2">
                     <textarea
                       value={replyText}
                       onChange={(e) => setReplyText(e.target.value)}
                       placeholder="Type your reply..."
                       rows={3}
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:outline-none resize-none"
+                      className="flex-1 px-4 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:border-blue-500 focus:outline-none resize-none text-white placeholder-slate-500"
                       disabled={isSending || selectedChat.status === 'resolved'}
                     />
                     <button
                       type="submit"
                       disabled={isSending || !replyText.trim() || selectedChat.status === 'resolved'}
-                      className="px-6 bg-primary text-white rounded-lg font-semibold hover:bg-dark transition disabled:opacity-50 disabled:cursor-not-allowed self-end"
+                      className="px-6 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed self-end"
                     >
                       Send
                     </button>
@@ -289,7 +289,7 @@ export default function ChatsPage() {
                 </form>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-gray-500">
+              <div className="flex-1 flex items-center justify-center text-slate-500">
                 <p>Select a chat to view messages</p>
               </div>
             )}
