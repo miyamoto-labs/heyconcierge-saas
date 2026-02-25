@@ -117,15 +117,33 @@ export default function SimpleChatWidget() {
                 <p className="text-xs text-gray-200">Online</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:bg-white/20 rounded-full p-2 transition"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  if (confirm('Start a new chat? This will clear the current conversation.')) {
+                    localStorage.removeItem('heyconcierge_chat_id')
+                    setChatId(null)
+                    setMessages([])
+                  }
+                }}
+                className="text-white hover:bg-white/20 rounded-full p-2 transition"
+                title="New chat"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 5v14M5 12h14"></path>
+                </svg>
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-white hover:bg-white/20 rounded-full p-2 transition"
+                title="Close"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
