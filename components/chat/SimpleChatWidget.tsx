@@ -116,9 +116,9 @@ export default function SimpleChatWidget() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col" style={{ zIndex: 9999 }}>
+        <div className="fixed bottom-0 right-0 w-full h-[100dvh] sm:bottom-4 sm:right-4 sm:w-[360px] sm:h-[500px] sm:rounded-2xl bg-white shadow-2xl flex flex-col" style={{ zIndex: 9999 }}>
           {/* Header */}
-          <div className="bg-purple-600 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between">
+          <div className="bg-purple-600 text-white px-6 py-4 sm:rounded-t-2xl flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
                 <span className="text-2xl">🤖</span>
