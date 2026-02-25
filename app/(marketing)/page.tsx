@@ -414,7 +414,28 @@ export default function Home() {
         </div>
       </footer>
       <PWAInstallPrompt />
-      <ChatWidget />
+      
+      {/* Simple chat button - inline for guaranteed visibility */}
+      <button
+        onClick={() => alert('Chat widget coming soon!')}
+        style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          width: '64px',
+          height: '64px',
+          backgroundColor: '#8B5CF6',
+          color: 'white',
+          borderRadius: '50%',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '32px',
+          zIndex: 999999,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+        }}
+      >
+        💬
+      </button>
     </>
   )
 }
