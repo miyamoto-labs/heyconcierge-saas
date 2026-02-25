@@ -65,6 +65,7 @@ export async function middleware(request: NextRequest) {
     '/api/auth',
     '/api/admin',
     '/api/telegram-webhook',
+    '/api/webhooks',
     '/api/cron',
     '/api/chat', // Chat API for admin dashboard (uses admin_session, not Supabase auth)
   ]

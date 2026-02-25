@@ -150,11 +150,12 @@ export async function POST(request: NextRequest) {
         const events = parseICS(icsText)
         const bookings = extractBookings(events, property.id)
 
-        // Delete old bookings for this property
+        // Delete old iCal-sourced bookings for this property (preserve Hostaway-sourced ones)
         await supabase
           .from('bookings')
           .delete()
           .eq('property_id', property.id)
+          .or('source.is.null,source.eq.ical')
 
         // Insert new bookings
         if (bookings.length > 0) {
