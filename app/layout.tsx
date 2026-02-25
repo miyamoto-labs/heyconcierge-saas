@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import CookieBanner from '@/components/ui/CookieBanner'
-import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 
 export const metadata: Metadata = {
   title: 'HeyConcierge — Your Friendly AI Concierge',
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-quicksand">
         {children}
         <CookieBanner />
-        <PWAInstallPrompt />
       </body>
     </html>
   )
