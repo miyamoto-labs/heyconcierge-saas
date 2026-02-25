@@ -92,25 +92,36 @@ export default function ChatsPage() {
     setIsSending(true)
 
     try {
-
-      // Save human reply
-      await supabase.from('messages').insert({
-        chat_id: selectedChat.id,
-        sender_type: 'human',
-        content: replyText.trim()
+      const response = await fetch('/api/chat/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chatId: selectedChat.id,
+          content: replyText.trim()
+        })
       })
 
-      // Add to local messages
+      if (!response.ok) {
+        throw new Error('Failed to send reply')
+      }
+
+      const data = await response.json()
+
+      // Add to local messages immediately for instant feedback
       setMessages(prev => [...prev, {
-        id: Date.now().toString(),
+        id: data.message.id,
         sender_type: 'human',
-        content: replyText.trim(),
-        created_at: new Date().toISOString()
+        content: data.message.content,
+        created_at: data.message.created_at
       }])
 
       setReplyText('')
+      
+      // Trigger immediate poll to sync
+      loadMessages(selectedChat.id)
     } catch (error) {
       console.error('Failed to send reply:', error)
+      alert('Failed to send message. Please try again.')
     } finally {
       setIsSending(false)
     }
