@@ -149,8 +149,8 @@ export default function ChatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-6">
+    <div className="fixed inset-0 bg-gray-50 overflow-hidden">
+      <div className="max-w-7xl mx-auto p-6 h-full flex flex-col">
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-dark">Customer Chats</h1>
@@ -166,7 +166,7 @@ export default function ChatsPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-3 gap-6 h-[calc(100vh-180px)]">
+        <div className="grid grid-cols-3 gap-6 flex-1 min-h-0">
           {/* Chat List */}
           <div className="bg-white rounded-xl shadow-sm overflow-y-auto">
             <div className="p-4 border-b border-gray-200">
