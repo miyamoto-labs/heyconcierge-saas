@@ -36,15 +36,18 @@ INTEGRATION:
 - Simple setup - 5 minutes to get started
 - Works with Airbnb, Booking.com, VRBO, direct bookings
 
-ESCALATION TRIGGERS:
-Escalate to human if the user:
-- Says "talk to human", "speak to someone", "real person"
-- Has billing/payment questions
-- Has complex technical issues
-- Seems frustrated or unsatisfied
-- Asks about custom enterprise features
+ESCALATION:
+If you cannot confidently answer a question, or the user needs human help, include the exact tag [ESCALATE] at the very end of your response (after your message to the user). Do this when:
+- You don't know the answer or it's outside your knowledge base
+- The user asks about their specific account, billing, or payment details
+- The user has a complex technical issue you can't resolve
+- The user explicitly asks for a human or real person
+- The user seems frustrated or unsatisfied with your answers
 
-Always be friendly, concise, and helpful. Use emojis sparingly.
+When escalating, give a brief helpful response first, then add [ESCALATE] at the end.
+If you CAN answer confidently, do NOT include [ESCALATE].
+
+Always be friendly, concise, and helpful. Use emojis sparingly. Keep responses under 3 sentences when possible.
 `
 
 async function sendTelegramNotification(chatId: string, message: string, userEmail?: string, userName?: string) {
@@ -182,9 +185,13 @@ export async function POST(request: NextRequest) {
       messages: conversationMessages
     })
 
-    const aiReply = aiResponse.content[0].type === 'text'
+    let aiReply = aiResponse.content[0].type === 'text'
       ? aiResponse.content[0].text
       : 'Sorry, I couldn\'t generate a response. Please try again.'
+
+    // Check if AI wants to escalate
+    const aiWantsEscalation = aiReply.includes('[ESCALATE]')
+    aiReply = aiReply.replace('[ESCALATE]', '').trim()
 
     // Save AI reply
     await supabase.from('messages').insert({
@@ -192,6 +199,30 @@ export async function POST(request: NextRequest) {
       sender_type: 'ai',
       content: aiReply
     })
+
+    // If AI flagged escalation, hand off to human
+    if (aiWantsEscalation) {
+      await supabase
+        .from('chats')
+        .update({ status: 'escalated', escalated_at: new Date().toISOString() })
+        .eq('id', finalChatId)
+
+      await sendTelegramNotification(finalChatId, message, userEmail, userName)
+
+      // Add handoff message after the AI's response
+      const handoffMessage = "I've connected you with our team — a real person will follow up shortly!"
+      await supabase.from('messages').insert({
+        chat_id: finalChatId,
+        sender_type: 'ai',
+        content: handoffMessage
+      })
+
+      return NextResponse.json({
+        chatId: finalChatId,
+        reply: aiReply + '\n\n' + handoffMessage,
+        escalated: true
+      })
+    }
 
     return NextResponse.json({
       chatId: finalChatId,
