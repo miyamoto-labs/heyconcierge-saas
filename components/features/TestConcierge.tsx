@@ -7,6 +7,7 @@ interface Message {
   id: number
   role: 'guest' | 'concierge'
   text: string
+  images?: string[]
 }
 
 interface TestConciergeProps {
@@ -65,7 +66,7 @@ export default function TestConcierge({ property, config, onClose }: TestConcier
         throw new Error(data.error || 'Failed to get response')
       }
 
-      const conciergeMsg: Message = { id: nextIdRef.current++, role: 'concierge', text: data.reply }
+      const conciergeMsg: Message = { id: nextIdRef.current++, role: 'concierge', text: data.reply, images: data.images }
       setMessages(prev => [...prev, conciergeMsg])
       setMascotMood('happy')
       setTimeout(() => setMascotMood('idle'), 2000)
@@ -150,13 +151,27 @@ export default function TestConcierge({ property, config, onClose }: TestConcier
                 </div>
               )}
               <div
-                className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+                className={`max-w-[80%] rounded-2xl text-sm leading-relaxed ${
                   msg.role === 'guest'
-                    ? 'bg-primary text-white rounded-br-md'
+                    ? 'bg-primary text-white rounded-br-md px-4 py-2.5'
                     : 'bg-white text-dark shadow-sm border border-[rgba(108,92,231,0.08)] rounded-bl-md'
                 }`}
               >
-                {msg.text}
+                {msg.role === 'concierge' && msg.images && msg.images.length > 0 && (
+                  <div className="p-2 pb-0 flex gap-1.5 flex-wrap">
+                    {msg.images.map((url, i) => (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`Property photo ${i + 1}`}
+                        className="w-full rounded-xl object-cover max-h-48"
+                      />
+                    ))}
+                  </div>
+                )}
+                <div className={msg.role === 'concierge' ? 'px-4 py-2.5 whitespace-pre-wrap' : 'whitespace-pre-wrap'}>
+                  {msg.text}
+                </div>
               </div>
             </div>
           ))}

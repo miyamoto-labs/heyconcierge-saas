@@ -98,10 +98,13 @@ function NewPropertyPage() {
   }, [router])
 
   const handlePdfUpload = async (files: File[]) => {
-    const pdfFiles = files.filter(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
+    const supportedFiles = files.filter(f =>
+      f.type === 'application/pdf' || f.name.endsWith('.pdf') ||
+      f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || f.name.endsWith('.docx')
+    )
 
-    if (pdfFiles.length === 0) {
-      alert('Please upload PDF files only')
+    if (supportedFiles.length === 0) {
+      alert('Please upload PDF or Word (.docx) files')
       return
     }
 
@@ -110,9 +113,9 @@ function NewPropertyPage() {
 
     try {
       const formData = new FormData()
-      pdfFiles.forEach(file => formData.append('pdfs', file))
+      supportedFiles.forEach(file => formData.append('files', file))
 
-      const response = await fetch('/api/extract-pdf', {
+      const response = await fetch('/api/extract-document', {
         method: 'POST',
         body: formData,
       })
@@ -147,7 +150,7 @@ function NewPropertyPage() {
         setForm(f => ({ ...f, ...updates }))
       }
 
-      const fileName = pdfFiles.length === 1 ? pdfFiles[0].name : `${pdfFiles.length} PDFs`
+      const fileName = supportedFiles.length === 1 ? supportedFiles[0].name : `${supportedFiles.length} files`
       update('pdfExtractedFile', { name: fileName, fields: filledFields })
 
       // Auto-expand manual fields so user can see what was filled
@@ -412,7 +415,7 @@ function NewPropertyPage() {
               >
                 <input
                   type="file"
-                  accept=".pdf"
+                  accept=".pdf,.docx"
                   onChange={(e) => {
                     if (e.target.files && e.target.files.length > 0) {
                       handlePdfUpload(Array.from(e.target.files));
@@ -424,7 +427,7 @@ function NewPropertyPage() {
                 {form.pdfExtracting ? (
                   <div className="flex items-center justify-center gap-3 py-2">
                     <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                    <span className="text-dark font-bold text-sm">Reading your PDF and filling in the fields below...</span>
+                    <span className="text-dark font-bold text-sm">Reading your document and filling in the fields below...</span>
                   </div>
                 ) : form.pdfExtractError ? (
                   <div className="flex items-center gap-3 py-1">
@@ -455,8 +458,8 @@ function NewPropertyPage() {
                 ) : (
                   <div className="text-center py-2">
                     <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    <p className="text-dark font-bold text-sm">Drop your property guide PDF here</p>
-                    <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from one document</p>
+                    <p className="text-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
+                    <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from your document</p>
                   </div>
                 )}
               </div>

@@ -7,6 +7,7 @@ import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import { ToastProvider, useToast } from '@/components/ui/Toast'
 import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
+import MergeOverwriteModal from '@/components/MergeOverwriteModal'
 
 const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
 
@@ -37,6 +38,8 @@ function PropertySettingsPage() {
   const [images, setImages] = useState<any[]>([])
   const [uploadingImages, setUploadingImages] = useState(false)
   const [showTestChat, setShowTestChat] = useState(false)
+  const [showMergeModal, setShowMergeModal] = useState(false)
+  const [pendingExtraction, setPendingExtraction] = useState<any>(null)
 
   // Track unsaved changes
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -229,21 +232,24 @@ function PropertySettingsPage() {
     setPdfDragActive(false)
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      await extractPDF(Array.from(e.dataTransfer.files))
+      await extractDocument(Array.from(e.dataTransfer.files))
     }
   }
 
   const handlePdfFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      await extractPDF(Array.from(e.target.files))
+      await extractDocument(Array.from(e.target.files))
     }
   }
 
-  const extractPDF = async (files: File[]) => {
-    const pdfFiles = files.filter(f => f.type === 'application/pdf' || f.name.endsWith('.pdf'))
+  const extractDocument = async (files: File[]) => {
+    const supportedFiles = files.filter(f =>
+      f.type === 'application/pdf' || f.name.endsWith('.pdf') ||
+      f.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || f.name.endsWith('.docx')
+    )
 
-    if (pdfFiles.length === 0) {
-      toast('Please upload PDF files only', 'error')
+    if (supportedFiles.length === 0) {
+      toast('Please upload PDF or Word (.docx) files', 'error')
       return
     }
 
@@ -251,9 +257,10 @@ function PropertySettingsPage() {
     setPdfExtractError(null)
     try {
       const formData = new FormData()
-      pdfFiles.forEach(file => formData.append('pdfs', file))
+      supportedFiles.forEach(file => formData.append('files', file))
+      formData.append('propertyId', propertyId)
 
-      const response = await fetch('/api/extract-pdf', {
+      const response = await fetch('/api/extract-document', {
         method: 'POST',
         body: formData,
       })
@@ -272,21 +279,94 @@ function PropertySettingsPage() {
       if (extracted.local_tips) { updates.local_tips = extracted.local_tips; filledFields.push('Local tips') }
       if (extracted.house_rules) { updates.house_rules = extracted.house_rules; filledFields.push('House rules') }
 
-      if (Object.keys(updates).length > 0) {
-        updateConfig(updates)
-      }
+      const fileName = supportedFiles.length === 1 ? supportedFiles[0].name : `${supportedFiles.length} files`
 
-      const fileName = pdfFiles.length === 1 ? pdfFiles[0].name : `${pdfFiles.length} PDFs`
-      setPdfExtractedFile({ name: fileName, fields: filledFields })
-      if (filledFields.length > 0) {
-        toast(`Extracted ${filledFields.join(', ')} from PDF`, 'success')
+      // Check if there are conflicts with existing data
+      const existingFields: string[] = []
+      if (config?.wifi_password || config?.wifi_network) existingFields.push('WiFi')
+      if (config?.checkin_instructions) existingFields.push('Check-in')
+      if (config?.local_tips) existingFields.push('Local tips')
+      if (config?.house_rules) existingFields.push('House rules')
+
+      const conflicting = filledFields.filter(f => existingFields.includes(f))
+
+      if (conflicting.length > 0) {
+        // Store pending extraction and show merge modal
+        setPendingExtraction({
+          updates,
+          filledFields,
+          fileName,
+          extractedImageCount: extracted.extracted_images?.length || 0,
+          imageCountSkipped: extracted.image_count_skipped || 0,
+        })
+        setShowMergeModal(true)
+      } else {
+        // No conflicts — apply directly
+        if (Object.keys(updates).length > 0) {
+          updateConfig(updates)
+        }
+        setPdfExtractedFile({ name: fileName, fields: filledFields })
+        if (filledFields.length > 0) {
+          toast(`Extracted ${filledFields.join(', ')} from document`, 'success')
+        }
+        if (extracted.extracted_images?.length > 0) {
+          toast(`${extracted.extracted_images.length} image(s) auto-tagged and saved`, 'success')
+          await loadProperty()
+        }
       }
     } catch (err) {
-      console.error('PDF extraction error:', err)
+      console.error('Document extraction error:', err)
       setPdfExtractError(err instanceof Error ? err.message : 'Extraction failed')
-      toast('PDF extraction failed', 'error')
+      toast('Document extraction failed', 'error')
     }
     setPdfExtracting(false)
+  }
+
+  const handleMerge = () => {
+    if (!pendingExtraction) return
+    const { updates, filledFields, fileName, extractedImageCount } = pendingExtraction
+
+    // Merge: for text fields, append new to existing; for WiFi, replace
+    const mergedUpdates: Record<string, string> = {}
+    for (const [key, value] of Object.entries(updates)) {
+      if (key === 'wifi_password' || key === 'wifi_network') {
+        // WiFi is a credential — replace
+        mergedUpdates[key] = value as string
+      } else {
+        // Text fields — append
+        const existing = config?.[key]
+        if (existing && (value as string)) {
+          mergedUpdates[key] = `${existing}\n\n--- Updated from document ---\n${value}`
+        } else {
+          mergedUpdates[key] = value as string
+        }
+      }
+    }
+
+    updateConfig(mergedUpdates)
+    setPdfExtractedFile({ name: fileName, fields: filledFields })
+    toast(`Merged ${filledFields.join(', ')} from document`, 'success')
+    if (extractedImageCount > 0) {
+      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
+      loadProperty()
+    }
+    setShowMergeModal(false)
+    setPendingExtraction(null)
+  }
+
+  const handleOverwrite = () => {
+    if (!pendingExtraction) return
+    const { updates, filledFields, fileName, extractedImageCount } = pendingExtraction
+
+    updateConfig(updates)
+    setPdfExtractedFile({ name: fileName, fields: filledFields })
+    toast(`Replaced fields with ${filledFields.join(', ')} from document`, 'success')
+    if (extractedImageCount > 0) {
+      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
+      loadProperty()
+    }
+    setShowMergeModal(false)
+    setPendingExtraction(null)
   }
 
   const handleClearPdf = () => {
@@ -512,7 +592,7 @@ function PropertySettingsPage() {
             </div>
             <div>
               <h2 className="font-nunito text-lg font-black text-dark">Guest Knowledge</h2>
-              <p className="text-xs text-muted">What your AI concierge tells guests — type it or drop a PDF</p>
+              <p className="text-xs text-muted">What your AI concierge tells guests — type it or drop a PDF/Word doc</p>
             </div>
           </div>
           <div className="px-8 py-6 space-y-5">
@@ -531,7 +611,7 @@ function PropertySettingsPage() {
             >
               <input
                 type="file"
-                accept=".pdf"
+                accept=".pdf,.docx"
                 multiple
                 onChange={handlePdfFileInput}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -540,7 +620,7 @@ function PropertySettingsPage() {
               {pdfExtracting ? (
                 <div className="flex items-center justify-center gap-3 py-2">
                   <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                  <span className="text-dark font-bold text-sm">Reading your PDF and filling in the fields below...</span>
+                  <span className="text-dark font-bold text-sm">Reading your document and filling in the fields below...</span>
                 </div>
               ) : pdfExtractError ? (
                 <div className="flex items-center gap-3 py-1">
@@ -571,8 +651,8 @@ function PropertySettingsPage() {
               ) : (
                 <div className="text-center py-2">
                   <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                  <p className="text-dark font-bold text-sm">Drop your property guide PDF here</p>
-                  <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from one document</p>
+                  <p className="text-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
+                  <p className="text-xs text-muted mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
                 </div>
               )}
             </div>
@@ -659,6 +739,32 @@ function PropertySettingsPage() {
           {saving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Save Changes'}
         </button>
       </div>
+
+      {/* Merge/Overwrite Modal */}
+      <MergeOverwriteModal
+        isOpen={showMergeModal}
+        onClose={() => { setShowMergeModal(false); setPendingExtraction(null) }}
+        onMerge={handleMerge}
+        onOverwrite={handleOverwrite}
+        existingFields={(() => {
+          const fields: string[] = []
+          if (config?.wifi_password || config?.wifi_network) fields.push('WiFi')
+          if (config?.checkin_instructions) fields.push('Check-in')
+          if (config?.local_tips) fields.push('Local tips')
+          if (config?.house_rules) fields.push('House rules')
+          return fields
+        })()}
+        newFields={pendingExtraction?.filledFields || []}
+        conflictingFields={(pendingExtraction?.filledFields || []).filter((f: string) => {
+          if (f === 'WiFi') return !!(config?.wifi_password || config?.wifi_network)
+          if (f === 'Check-in') return !!config?.checkin_instructions
+          if (f === 'Local tips') return !!config?.local_tips
+          if (f === 'House rules') return !!config?.house_rules
+          return false
+        })}
+        extractedImageCount={pendingExtraction?.extractedImageCount || 0}
+        existingImageCount={images.length}
+      />
 
       {/* Test Concierge modal */}
       {showTestChat && (
