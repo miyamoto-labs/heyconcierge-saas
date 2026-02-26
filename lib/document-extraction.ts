@@ -46,9 +46,10 @@ export async function extractFromPDF(buffer: Buffer): Promise<ExtractionResult> 
         if (images.length >= MAX_IMAGES) break
 
         const fnId = ops.fnArray[i]
+        const OPS = pdfjsLib.OPS as any
         // paintJpegImageXObject = already JPEG encoded
         // paintImageXObject = raw pixel data
-        if (fnId === pdfjsLib.OPS.paintJpegImageXObject) {
+        if (fnId === OPS.paintJpegImageXObject) {
           const imgName = ops.argsArray[i][0]
           try {
             const imgObj: any = await new Promise((resolve, reject) => {
@@ -69,7 +70,7 @@ export async function extractFromPDF(buffer: Buffer): Promise<ExtractionResult> 
           } catch (e) {
             console.error(`Failed to extract JPEG image from page ${pageNum}:`, e)
           }
-        } else if (fnId === pdfjsLib.OPS.paintImageXObject) {
+        } else if (fnId === OPS.paintImageXObject) {
           const imgName = ops.argsArray[i][0]
           try {
             const imgObj: any = await new Promise((resolve, reject) => {

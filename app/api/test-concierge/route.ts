@@ -59,8 +59,9 @@ ${config?.house_rules || 'Not provided'}`
     }
 
     if (images && images.length > 0) {
-      const tagSummary = images.map(img => (img.tags || []).join(', ')).filter(Boolean)
-      propertyContext += `\n\nProperty Images Available: ${images.length} image(s) with tags: ${[...new Set(tagSummary.join(', ').split(', '))].join(', ')}
+      const allTags = images.flatMap(img => img.tags || [])
+      const uniqueTags = allTags.filter((t, i) => allTags.indexOf(t) === i)
+      propertyContext += `\n\nProperty Images Available: ${images.length} image(s) with tags: ${uniqueTags.join(', ')}
 (When guests ask about check-in, entry, parking, etc., relevant photos will be automatically attached to your response.)`
     }
 
