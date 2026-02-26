@@ -10,9 +10,7 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    if (!org) {
-      return NextResponse.json({ error: 'No organization found' }, { status: 403 })
-    }
+    // org may be null for properties created before org system
 
     const { propertyId } = await request.json()
 
@@ -29,8 +27,11 @@ export async function POST(request: NextRequest) {
       .eq('id', propertyId)
       .single()
 
-    if (!property || property.org_id !== org.id) {
-      return NextResponse.json({ error: 'Property not found or access denied' }, { status: 403 })
+    if (!property) {
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+    }
+    if (org && property.org_id && property.org_id !== org.id) {
+      return NextResponse.json({ error: 'Access denied' }, { status: 403 })
     }
 
     // Delete related data first

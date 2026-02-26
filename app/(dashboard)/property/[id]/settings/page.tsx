@@ -156,46 +156,15 @@ function PropertySettingsPage() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const { error: propErr } = await supabase
-        .from('properties')
-        .update({
-          name: property.name,
-          address: property.address,
-          property_type: property.property_type,
-          whatsapp_number: property.whatsapp_number,
-          ical_url: property.ical_url,
-        })
-        .eq('id', propertyId)
+      const response = await fetch('/api/save-property', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ propertyId, property, config }),
+      })
 
-      if (propErr) throw propErr
-
-      if (config.id) {
-        const { error } = await supabase
-          .from('property_config_sheets')
-          .update({
-            wifi_network: config.wifi_network || '',
-            wifi_password: config.wifi_password || '',
-            checkin_instructions: config.checkin_instructions || '',
-            local_tips: config.local_tips || '',
-            house_rules: config.house_rules || '',
-          })
-          .eq('id', config.id)
-
-        if (error) throw error
-      } else {
-        const { error } = await supabase
-          .from('property_config_sheets')
-          .insert({
-            property_id: propertyId,
-            sheet_url: '',
-            wifi_network: config.wifi_network || '',
-            wifi_password: config.wifi_password || '',
-            checkin_instructions: config.checkin_instructions || '',
-            local_tips: config.local_tips || '',
-            house_rules: config.house_rules || '',
-          })
-
-        if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to save')
       }
 
       toast('Settings saved!', 'success')
@@ -301,18 +270,30 @@ function PropertySettingsPage() {
         })
         setShowMergeModal(true)
       } else {
-        // No conflicts — apply directly
+        // No conflicts — apply directly and auto-save
         if (Object.keys(updates).length > 0) {
-          updateConfig(updates)
+          const newConfig = { ...config, ...updates }
+          setConfig(newConfig)
+
+          // Auto-save extracted data to database
+          const saveResponse = await fetch('/api/save-property', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ propertyId, property, config: newConfig }),
+          })
+          if (!saveResponse.ok) {
+            const errData = await saveResponse.json()
+            console.error('Auto-save failed:', errData.error)
+          }
         }
         setPdfExtractedFile({ name: fileName, fields: filledFields })
         if (filledFields.length > 0) {
-          toast(`Extracted ${filledFields.join(', ')} from document`, 'success')
+          toast(`Extracted and saved ${filledFields.join(', ')} from document`, 'success')
         }
         if (extracted.extracted_images?.length > 0) {
           toast(`${extracted.extracted_images.length} image(s) auto-tagged and saved`, 'success')
-          await loadProperty()
         }
+        await loadProperty()
       }
     } catch (err) {
       console.error('Document extraction error:', err)
@@ -322,7 +303,7 @@ function PropertySettingsPage() {
     setPdfExtracting(false)
   }
 
-  const handleMerge = () => {
+  const handleMerge = async () => {
     if (!pendingExtraction) return
     const { updates, filledFields, fileName, extractedImageCount } = pendingExtraction
 
@@ -330,10 +311,8 @@ function PropertySettingsPage() {
     const mergedUpdates: Record<string, string> = {}
     for (const [key, value] of Object.entries(updates)) {
       if (key === 'wifi_password' || key === 'wifi_network') {
-        // WiFi is a credential — replace
         mergedUpdates[key] = value as string
       } else {
-        // Text fields — append
         const existing = config?.[key]
         if (existing && (value as string)) {
           mergedUpdates[key] = `${existing}\n\n--- Updated from document ---\n${value}`
@@ -343,30 +322,56 @@ function PropertySettingsPage() {
       }
     }
 
-    updateConfig(mergedUpdates)
-    setPdfExtractedFile({ name: fileName, fields: filledFields })
-    toast(`Merged ${filledFields.join(', ')} from document`, 'success')
-    if (extractedImageCount > 0) {
-      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
-      loadProperty()
-    }
+    const newConfig = { ...config, ...mergedUpdates }
+    setConfig(newConfig)
     setShowMergeModal(false)
     setPendingExtraction(null)
+
+    // Auto-save merged data
+    const saveResponse = await fetch('/api/save-property', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ propertyId, property, config: newConfig }),
+    })
+    if (!saveResponse.ok) {
+      const errData = await saveResponse.json()
+      toast('Failed to save: ' + errData.error, 'error')
+    } else {
+      setPdfExtractedFile({ name: fileName, fields: filledFields })
+      toast(`Merged and saved ${filledFields.join(', ')} from document`, 'success')
+    }
+    if (extractedImageCount > 0) {
+      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
+    }
+    await loadProperty()
   }
 
-  const handleOverwrite = () => {
+  const handleOverwrite = async () => {
     if (!pendingExtraction) return
     const { updates, filledFields, fileName, extractedImageCount } = pendingExtraction
 
-    updateConfig(updates)
-    setPdfExtractedFile({ name: fileName, fields: filledFields })
-    toast(`Replaced fields with ${filledFields.join(', ')} from document`, 'success')
-    if (extractedImageCount > 0) {
-      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
-      loadProperty()
-    }
+    const newConfig = { ...config, ...updates }
+    setConfig(newConfig)
     setShowMergeModal(false)
     setPendingExtraction(null)
+
+    // Auto-save overwritten data
+    const saveResponse = await fetch('/api/save-property', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ propertyId, property, config: newConfig }),
+    })
+    if (!saveResponse.ok) {
+      const errData = await saveResponse.json()
+      toast('Failed to save: ' + errData.error, 'error')
+    } else {
+      setPdfExtractedFile({ name: fileName, fields: filledFields })
+      toast(`Replaced and saved ${filledFields.join(', ')} from document`, 'success')
+    }
+    if (extractedImageCount > 0) {
+      toast(`${extractedImageCount} image(s) auto-tagged and saved`, 'success')
+    }
+    await loadProperty()
   }
 
   const handleClearPdf = () => {
