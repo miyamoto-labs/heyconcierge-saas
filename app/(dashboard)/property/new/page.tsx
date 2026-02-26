@@ -46,6 +46,13 @@ function NewPropertyPage() {
   const [createdPropertyId, setCreatedPropertyId] = useState<string | null>(null)
   const [showTestChat, setShowTestChat] = useState(false)
 
+  // Store uploaded doc files so images can be extracted after property creation
+  const [pendingDocFiles, setPendingDocFiles] = useState<File[]>([])
+  const [pendingImageCount, setPendingImageCount] = useState(0)
+  // Store manually uploaded images + tags for upload after property creation
+  const [pendingImages, setPendingImages] = useState<{ files: File[]; tags: string[] }[]>([])
+  const [pendingImagePreviews, setPendingImagePreviews] = useState<{ url: string; tags: string[] }[]>([])
+
   const [form, setForm] = useState({
     propertyName: '',
     propertyAddress: '',
@@ -108,12 +115,16 @@ function NewPropertyPage() {
       return
     }
 
+    // Store files for image extraction after property creation
+    setPendingDocFiles(supportedFiles)
+
     update('pdfExtracting', true)
     update('pdfExtractError', null)
 
     try {
       const formData = new FormData()
       supportedFiles.forEach(file => formData.append('files', file))
+      // No propertyId — text-only extraction for now, images saved after property creation
 
       const response = await fetch('/api/extract-document', {
         method: 'POST',
@@ -150,8 +161,18 @@ function NewPropertyPage() {
         setForm(f => ({ ...f, ...updates }))
       }
 
+      // Track pending images (will be extracted after property creation)
+      const imgCount = extracted.image_count_skipped || 0
+      // The API returns how many images were found but not stored (since no propertyId)
+      // We need the total image count — check extracted_images array or use allImages count
+      setPendingImageCount(imgCount)
+
       const fileName = supportedFiles.length === 1 ? supportedFiles[0].name : `${supportedFiles.length} files`
-      update('pdfExtractedFile', { name: fileName, fields: filledFields })
+      const fieldSummary = [...filledFields]
+      if (imgCount > 0) {
+        fieldSummary.push(`${imgCount} image(s) pending`)
+      }
+      update('pdfExtractedFile', { name: fileName, fields: fieldSummary })
 
       // Auto-expand manual fields so user can see what was filled
       update('showManualFields', true)
@@ -209,6 +230,49 @@ function NewPropertyPage() {
       if (configErr) {
         console.error('Config sheet creation error:', configErr)
       }
+
+      // Extract and store images from uploaded docs (now that we have a propertyId)
+      if (pendingDocFiles.length > 0) {
+        try {
+          const imgFormData = new FormData()
+          pendingDocFiles.forEach(file => imgFormData.append('files', file))
+          imgFormData.append('propertyId', prop.id)
+
+          const imgResponse = await fetch('/api/extract-document', {
+            method: 'POST',
+            body: imgFormData,
+          })
+
+          if (imgResponse.ok) {
+            const imgResult = await imgResponse.json()
+            if (imgResult.extracted_images?.length > 0) {
+              console.log(`Saved ${imgResult.extracted_images.length} image(s) from document`)
+            }
+          }
+        } catch (err) {
+          console.error('Image extraction after creation failed:', err)
+        }
+        setPendingDocFiles([])
+      }
+
+      // Upload manually added images with tags
+      for (const pending of pendingImages) {
+        try {
+          const imgFormData = new FormData()
+          imgFormData.append('propertyId', prop.id)
+          imgFormData.append('tags', JSON.stringify(pending.tags))
+          pending.files.forEach(file => imgFormData.append('images', file))
+
+          await fetch('/api/upload-image', {
+            method: 'POST',
+            body: imgFormData,
+          })
+        } catch (err) {
+          console.error('Image upload after creation failed:', err)
+        }
+      }
+      setPendingImages([])
+      setPendingImagePreviews([])
 
       // Generate QR code
       const QRCode = (await import('qrcode')).default
@@ -459,7 +523,7 @@ function NewPropertyPage() {
                   <div className="text-center py-2">
                     <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     <p className="text-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
-                    <p className="text-xs text-muted mt-0.5">AI will auto-fill WiFi, check-in, tips & rules from your document</p>
+                    <p className="text-xs text-muted mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
                   </div>
                 )}
               </div>
@@ -507,6 +571,43 @@ function NewPropertyPage() {
                   </AIField>
                 </div>
               )}
+
+              {/* Property Images (for AI concierge to send to guests) */}
+              <div className="bg-[#FFF5F5] border-2 border-[#FFE4E4] rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-pink/10 text-pink">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-dark">Property Images (Optional)</p>
+                    <p className="text-xs text-muted">Photos sent to guests when they ask about check-in, parking, etc.</p>
+                  </div>
+                </div>
+                <PendingImageUpload
+                  pendingImages={pendingImagePreviews}
+                  onAdd={(files, tags) => {
+                    setPendingImages(prev => [...prev, { files, tags }])
+                    // Create preview URLs
+                    const newPreviews = files.map(f => ({
+                      url: URL.createObjectURL(f),
+                      tags,
+                    }))
+                    setPendingImagePreviews(prev => [...prev, ...newPreviews])
+                  }}
+                  onRemove={(idx) => {
+                    setPendingImages(prev => prev.filter((_, i) => i !== idx))
+                    setPendingImagePreviews(prev => {
+                      URL.revokeObjectURL(prev[idx].url)
+                      return prev.filter((_, i) => i !== idx)
+                    })
+                  }}
+                />
+                {pendingImageCount > 0 && (
+                  <p className="text-xs text-green-600 mt-2 font-bold">
+                    + {pendingImageCount} image(s) from uploaded document will be auto-tagged and saved
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -645,6 +746,127 @@ function AIField({ label, icon, color, children }: {
       <div className="space-y-2">
         {children}
       </div>
+    </div>
+  )
+}
+
+const AVAILABLE_TAGS = [
+  { id: 'entry', label: 'Entry/Door', emoji: '\u{1F6AA}' },
+  { id: 'keybox', label: 'Key Box', emoji: '\u{1F511}' },
+  { id: 'checkin', label: 'Check-in', emoji: '\u2705' },
+  { id: 'parking', label: 'Parking', emoji: '\u{1F17F}\uFE0F' },
+  { id: 'exterior', label: 'Exterior', emoji: '\u{1F3E0}' },
+  { id: 'interior', label: 'Interior', emoji: '\u{1F6CB}\uFE0F' },
+  { id: 'view', label: 'View', emoji: '\u{1F304}' },
+  { id: 'amenity', label: 'Amenities', emoji: '\u{1F3CA}' },
+  { id: 'other', label: 'Other', emoji: '\u{1F4CE}' },
+]
+
+function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
+  pendingImages: { url: string; tags: string[] }[]
+  onAdd: (files: File[], tags: string[]) => void
+  onRemove: (index: number) => void
+}) {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+
+  const handleAdd = () => {
+    if (selectedFiles.length === 0 || selectedTags.length === 0) return
+    onAdd(selectedFiles, selectedTags)
+    setSelectedFiles([])
+    setSelectedTags([])
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* File selection */}
+      <div className="relative border-2 border-dashed border-[rgba(108,92,231,0.15)] hover:border-primary rounded-xl p-4 text-center transition-all">
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(e) => {
+            if (e.target.files && e.target.files.length > 0) {
+              setSelectedFiles(Array.from(e.target.files).filter(f => f.type.startsWith('image/')))
+            }
+          }}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+        />
+        <p className="text-dark font-bold text-sm">Drop images here or click to browse</p>
+        <p className="text-xs text-muted">PNG, JPG up to 10MB each</p>
+      </div>
+
+      {/* Selected files */}
+      {selectedFiles.length > 0 && (
+        <>
+          <div className="bg-white rounded-lg p-3">
+            <p className="text-sm font-bold mb-1">Selected: {selectedFiles.length} file(s)</p>
+            {selectedFiles.map((file, i) => (
+              <p key={i} className="text-xs text-muted truncate">{'\u2022'} {file.name}</p>
+            ))}
+          </div>
+
+          <div>
+            <p className="text-sm font-bold mb-2">Select tags:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {AVAILABLE_TAGS.map(tag => (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() => setSelectedTags(prev =>
+                    prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]
+                  )}
+                  className={`px-3 py-1.5 rounded-full font-bold text-xs transition-all ${
+                    selectedTags.includes(tag.id)
+                      ? 'bg-primary text-white'
+                      : 'bg-[rgba(108,92,231,0.1)] text-dark hover:bg-[rgba(108,92,231,0.2)]'
+                  }`}
+                >
+                  {tag.emoji} {tag.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {selectedTags.length > 0 && (
+            <button
+              type="button"
+              onClick={handleAdd}
+              className="w-full bg-primary text-white px-4 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all"
+            >
+              Add {selectedFiles.length} Image(s)
+            </button>
+          )}
+        </>
+      )}
+
+      {/* Preview of pending images */}
+      {pendingImages.length > 0 && (
+        <div>
+          <p className="text-sm font-bold mb-2">Pending ({pendingImages.length} image{pendingImages.length !== 1 ? 's' : ''}):</p>
+          <div className="grid grid-cols-3 gap-2">
+            {pendingImages.map((img, i) => (
+              <div key={i} className="relative">
+                <img src={img.url} alt={`Pending ${i + 1}`} className="w-full h-24 object-cover rounded-lg" />
+                <div className="flex flex-wrap gap-0.5 mt-1">
+                  {img.tags.map(tag => (
+                    <span key={tag} className="text-[9px] bg-[rgba(108,92,231,0.1)] px-1 py-0.5 rounded-full">
+                      {AVAILABLE_TAGS.find(t => t.id === tag)?.emoji} {tag}
+                    </span>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onRemove(i)}
+                  className="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white rounded-full text-xs font-bold flex items-center justify-center"
+                >
+                  {'\u2715'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
