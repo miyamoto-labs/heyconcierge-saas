@@ -37,3 +37,7 @@ next-env.d.ts
 backend/node_modules
 backend/.env
 .env.production
+
+# claude
+CLAUDE.md
+.claude/

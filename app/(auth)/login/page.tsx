@@ -14,6 +14,7 @@ export default function LoginPage() {
       provider,
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
+        scopes: provider === 'azure' ? 'openid profile email User.Read' : undefined,
       },
     })
     if (error) {
