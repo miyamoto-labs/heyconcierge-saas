@@ -41,16 +41,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No files uploaded' }, { status: 400 })
     }
 
-    // Verify property belongs to user's org (if propertyId provided)
+    // Verify property exists and belongs to user's org (if propertyId provided)
     const supabase = createAdminClient()
-    if (propertyId && org) {
+    if (propertyId) {
       const { data: property } = await supabase
         .from('properties')
-        .select('id')
+        .select('id, org_id')
         .eq('id', propertyId)
-        .eq('org_id', org.id)
         .single()
       if (!property) {
+        return NextResponse.json({ error: 'Property not found' }, { status: 404 })
+      }
+      if (org && property.org_id && property.org_id !== org.id) {
         return NextResponse.json({ error: 'Property not found' }, { status: 404 })
       }
     }
