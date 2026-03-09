@@ -14,6 +14,9 @@ interface Metrics {
   totalProperties: number
   totalMessages: number
   activeBots: number
+  totalGuestRatings: number
+  avgGuestRating: number
+  totalPlatformRatings: number
 }
 
 interface RevenueMetrics {
@@ -107,6 +110,23 @@ export default async function AdminDashboardPage() {
       supabase.from('goconcierge_messages').select('id', { count: 'exact', head: true }).gte('created_at', oneWeekAgo),
     ])
 
+    // Ratings metrics (separate queries, tables may not exist yet)
+    let totalGuestRatings = 0
+    let avgGuestRating = 0
+    let totalPlatformRatings = 0
+    try {
+      const [guestRatingsResult, guestRatingsData, platformRatingsResult] = await Promise.all([
+        supabase.from('guest_ratings').select('id', { count: 'exact', head: true }).eq('status', 'completed'),
+        supabase.from('guest_ratings').select('rating').eq('status', 'completed'),
+        supabase.from('platform_ratings').select('id', { count: 'exact', head: true }),
+      ])
+      totalGuestRatings = guestRatingsResult.count ?? 0
+      totalPlatformRatings = platformRatingsResult.count ?? 0
+      if (guestRatingsData.data && guestRatingsData.data.length > 0) {
+        avgGuestRating = Math.round((guestRatingsData.data.reduce((s: number, r: any) => s + r.rating, 0) / guestRatingsData.data.length) * 10) / 10
+      }
+    } catch { /* tables may not exist yet */ }
+
     metrics = {
       totalCustomers: orgsResult.count ?? 0,
       inTrial: trialingResult.count ?? 0,
@@ -119,6 +139,9 @@ export default async function AdminDashboardPage() {
       totalProperties: propertiesResult.count ?? 0,
       totalMessages: messagesResult.count ?? 0,
       activeBots: activeBotsResult.count ?? 0,
+      totalGuestRatings,
+      avgGuestRating,
+      totalPlatformRatings,
     }
   } catch (err) {
     console.error('Dashboard metrics error:', err)
@@ -286,6 +309,30 @@ export default async function AdminDashboardPage() {
                 value={metrics.activeBots}
                 accent={metrics.activeBots > 0 ? 'blue' : 'default'}
                 sub="with Telegram"
+              />
+            </div>
+          </div>
+
+          {/* Ratings */}
+          <div>
+            <SectionTitle>Ratings</SectionTitle>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+              <StatCard
+                label="Guest reviews"
+                value={metrics.totalGuestRatings}
+                accent={metrics.totalGuestRatings > 0 ? 'yellow' : 'default'}
+                sub="completed ratings"
+              />
+              <StatCard
+                label="Average rating"
+                value={metrics.avgGuestRating > 0 ? `${metrics.avgGuestRating} / 5` : '-'}
+                accent={metrics.avgGuestRating >= 4 ? 'green' : metrics.avgGuestRating >= 3 ? 'yellow' : 'default'}
+              />
+              <StatCard
+                label="Platform reviews"
+                value={metrics.totalPlatformRatings}
+                accent="purple"
+                sub="host feedback"
               />
             </div>
           </div>

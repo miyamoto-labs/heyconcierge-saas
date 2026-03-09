@@ -16,6 +16,9 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: t
 // Telegram + Upselling services
 const { sendTelegram, resolveTelegramGuestProperty, setWebhook, getWebhookInfo } = require('./telegram_service');
 const { scanAndScheduleOffers, sendDueOffers, handleUpsellResponse, expireStaleOffers, getUpsellDashboard } = require('./upsell_service');
+const { scanAndScheduleRatings, sendDueRatings, handleRatingCallback, handleRatingComment, handleWhatsAppRatingResponse, expireStaleRatings } = require('../ratings/rating_service');
+
+const TELEGRAM_API = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`;
 
 const app = express();
 
@@ -283,6 +286,20 @@ app.post('/webhook/whatsapp', async (req, res) => {
     if (upsellReply) {
       await sendMessage(From, upsellReply);
       await logConversation(property.id, From, Body, upsellReply);
+      return res.status(200).send('OK');
+    }
+
+    // Check if this is a rating response (1-5) or comment
+    const whatsappRatingReply = await handleWhatsAppRatingResponse(From, Body);
+    if (whatsappRatingReply) {
+      await sendMessage(From, whatsappRatingReply);
+      await logConversation(property.id, From, Body, whatsappRatingReply);
+      return res.status(200).send('OK');
+    }
+    const ratingCommentReply = await handleRatingComment(From, Body);
+    if (ratingCommentReply) {
+      await sendMessage(From, ratingCommentReply);
+      await logConversation(property.id, From, Body, ratingCommentReply);
       return res.status(200).send('OK');
     }
 
@@ -854,6 +871,28 @@ ${aiResponse}
 
 app.post('/webhook/telegram', async (req, res) => {
   try {
+    // Handle inline keyboard callbacks (e.g. rating buttons)
+    if (req.body?.callback_query) {
+      const { callback_query } = req.body;
+      const chatId = callback_query.from.id;
+      const callbackData = callback_query.data;
+
+      // Answer the callback to remove loading state
+      await fetch(`${TELEGRAM_API}/answerCallbackQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ callback_query_id: callback_query.id })
+      });
+
+      // Handle rating callback
+      const ratingReply = await handleRatingCallback(callbackData, chatId);
+      if (ratingReply) {
+        await sendTelegram(chatId, ratingReply);
+      }
+
+      return res.status(200).send('OK');
+    }
+
     const msg = req.body?.message;
     if (!msg || !msg.text) return res.status(200).send('OK');
 
@@ -908,6 +947,14 @@ app.post('/webhook/telegram', async (req, res) => {
     if (upsellReply) {
       await sendTelegram(chatId, upsellReply);
       await logConversation(property.id, guestPhone, text, upsellReply);
+      return res.status(200).send('OK');
+    }
+
+    // Check rating comment (guest replying to "add a comment?" prompt)
+    const ratingCommentReply = await handleRatingComment(guestPhone, text);
+    if (ratingCommentReply) {
+      await sendTelegram(chatId, ratingCommentReply);
+      await logConversation(property.id, guestPhone, text, ratingCommentReply);
       return res.status(200).send('OK');
     }
 
@@ -1002,7 +1049,7 @@ app.get('/upsell/dashboard/:propertyId', async (req, res) => {
 });
 
 // ==========================================
-// Upsell cron — scan + send + expire every 15 minutes
+// Upsell + Ratings cron — scan + send + expire every 15 minutes
 // ==========================================
 setInterval(async () => {
   try {
@@ -1012,6 +1059,13 @@ setInterval(async () => {
   } catch (err) {
     console.error('Upsell cron error:', err.message);
   }
+  try {
+    await scanAndScheduleRatings();
+    await sendDueRatings();
+    await expireStaleRatings();
+  } catch (err) {
+    console.error('Rating cron error:', err.message);
+  }
 }, 15 * 60 * 1000);
 
 const PORT = process.env.PORT || 3001;
@@ -1020,4 +1074,5 @@ app.listen(PORT, () => {
   console.log(`📡 WhatsApp webhook: http://localhost:${PORT}/webhook/whatsapp`);
   console.log(`📡 Telegram webhook: http://localhost:${PORT}/webhook/telegram`);
   console.log(`📊 Upsell engine: active (15-min interval)`);
+  console.log(`⭐ Rating engine: active (15-min interval)`);
 });
