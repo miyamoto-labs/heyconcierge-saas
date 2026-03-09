@@ -8,6 +8,7 @@ import { ToastProvider, useToast } from '@/components/ui/Toast'
 import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
 import MergeOverwriteModal from '@/components/MergeOverwriteModal'
+import AddressAutocomplete from '@/components/AddressAutocomplete'
 import RatingStars from '@/components/RatingStars'
 
 const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
@@ -583,8 +584,20 @@ function PropertySettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-1.5 text-dark">Address</label>
-              <input type="text" value={property.address} onChange={(e) => updateProperty({ address: e.target.value })} className={inputClass} />
+              <AddressAutocomplete
+                value={property.address || ''}
+                onChange={(v) => updateProperty({ address: v })}
+                onAddressSelect={(result) => {
+                  updateProperty({
+                    address: result.address,
+                    postal_code: result.postalCode || property.postal_code,
+                    city: result.city || property.city,
+                    country: result.country || property.country,
+                    latitude: result.lat,
+                    longitude: result.lng,
+                  })
+                }}
+              />
             </div>
 
             <div>
