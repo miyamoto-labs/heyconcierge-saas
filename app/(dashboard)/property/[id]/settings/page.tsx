@@ -140,28 +140,22 @@ function PropertySettingsPage() {
         savedConfigRef.current = { ...cfg }
       }
 
-      const { data: propertyImages } = await supabase
-        .from('property_images')
-        .select('*')
-        .eq('property_id', propertyId)
-        .order('created_at', { ascending: false })
+      // Load images and ratings in parallel
+      const [imagesResult, ratingsResult] = await Promise.allSettled([
+        supabase
+          .from('property_images')
+          .select('*')
+          .eq('property_id', propertyId)
+          .order('created_at', { ascending: false }),
+        fetch(`/api/ratings?propertyId=${propertyId}`).then(r => r.ok ? r.json() : null),
+      ])
 
-      if (propertyImages) {
-        setImages(propertyImages)
+      if (imagesResult.status === 'fulfilled' && imagesResult.value.data) {
+        setImages(imagesResult.value.data)
       }
-
-      // Load ratings
-      if (propertyId) {
-        try {
-          const ratingsRes = await fetch(`/api/ratings?propertyId=${propertyId}`)
-          if (ratingsRes.ok) {
-            const ratingsData = await ratingsRes.json()
-            setRatings(ratingsData.ratings || [])
-            setRatingStats(ratingsData.stats || null)
-          }
-        } catch (err) {
-          console.error('Failed to load ratings:', err)
-        }
+      if (ratingsResult.status === 'fulfilled' && ratingsResult.value) {
+        setRatings(ratingsResult.value.ratings || [])
+        setRatingStats(ratingsResult.value.stats || null)
       }
     } catch (err) {
       console.error('Load error:', err)

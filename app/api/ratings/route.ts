@@ -15,31 +15,32 @@ export async function GET(request: NextRequest) {
 
   const supabase = createAdminClient()
 
-  // Fetch ratings for this property
-  const { data: ratings, error } = await supabase
-    .from('guest_ratings')
-    .select('id, rating, comment, channel, status, completed_at, created_at')
-    .eq('property_id', propertyId)
-    .eq('status', 'completed')
-    .not('rating', 'is', null)
-    .order('completed_at', { ascending: false })
+  // Fetch completed ratings and all status counts in parallel
+  const [completedResult, allResult] = await Promise.all([
+    supabase
+      .from('guest_ratings')
+      .select('id, rating, comment, channel, status, completed_at, created_at')
+      .eq('property_id', propertyId)
+      .eq('status', 'completed')
+      .not('rating', 'is', null)
+      .order('completed_at', { ascending: false }),
+    supabase
+      .from('guest_ratings')
+      .select('status')
+      .eq('property_id', propertyId),
+  ])
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  if (completedResult.error) {
+    return NextResponse.json({ error: completedResult.error.message }, { status: 500 })
   }
 
-  // Calculate stats
-  const completedRatings = ratings || []
+  const completedRatings = completedResult.data || []
   const totalCount = completedRatings.length
   const averageRating = totalCount > 0
     ? completedRatings.reduce((sum, r) => sum + r.rating, 0) / totalCount
     : 0
 
-  // Count by status (all ratings, not just completed)
-  const { data: allRatings } = await supabase
-    .from('guest_ratings')
-    .select('status')
-    .eq('property_id', propertyId)
+  const allRatings = allResult.data
 
   const statusCounts = {
     scheduled: 0,
