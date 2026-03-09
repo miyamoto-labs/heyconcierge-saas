@@ -1,5 +1,6 @@
 'use client'
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react'
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''
@@ -47,7 +48,7 @@ interface Props {
 
 export default function AddressAutocomplete({ value, onChange, onAddressSelect, placeholder = '123 Sunset Blvd' }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
+  const autocompleteRef = useRef<any>(null)
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
@@ -57,6 +58,9 @@ export default function AddressAutocomplete({ value, onChange, onAddressSelect, 
 
   useEffect(() => {
     if (!ready || !inputRef.current || autocompleteRef.current) return
+
+    const google = (window as any).google
+    if (!google?.maps?.places) return
 
     const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
       types: ['address'],
