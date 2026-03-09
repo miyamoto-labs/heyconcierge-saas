@@ -15,6 +15,11 @@ export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [showRatingPrompt, setShowRatingPrompt] = useState(false)
+  const [platformRating, setPlatformRating] = useState<number>(0)
+  const [platformComment, setPlatformComment] = useState('')
+  const [ratingSubmitted, setRatingSubmitted] = useState(false)
+  const [submittingRating, setSubmittingRating] = useState(false)
 
   const supabase = createClient()
 
@@ -66,6 +71,24 @@ export default function DashboardPage() {
           .eq('org_id', org.id)
 
         setProperties(props || [])
+
+        // Check if we should show platform rating prompt (10+ completed guest ratings)
+        try {
+          const { count: guestRatingCount } = await supabase
+            .from('guest_ratings')
+            .select('id', { count: 'exact', head: true })
+            .in('property_id', (props || []).map((p: any) => p.id))
+            .eq('status', 'completed')
+
+          const existingRating = await fetch('/api/platform-rating')
+          const ratingData = await existingRating.json()
+
+          if ((guestRatingCount ?? 0) >= 10 && !ratingData.rating) {
+            setShowRatingPrompt(true)
+          }
+        } catch {
+          // Rating check failed, don't show prompt
+        }
       }
     } catch (err) {
       console.error('Load error:', err)
@@ -120,6 +143,24 @@ export default function DashboardPage() {
       console.error('Delete error:', error)
       alert('Failed to delete property. Please try again.')
     }
+  }
+
+  const handlePlatformRatingSubmit = async () => {
+    if (platformRating === 0) return
+    setSubmittingRating(true)
+    try {
+      const res = await fetch('/api/platform-rating', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: platformRating, comment: platformComment || null }),
+      })
+      if (res.ok) {
+        setRatingSubmitted(true)
+      }
+    } catch {
+      // Silent fail
+    }
+    setSubmittingRating(false)
   }
 
   if (loading) {
@@ -241,6 +282,67 @@ export default function DashboardPage() {
             + Add Property
           </Link>
         </div>
+
+        {/* Platform Rating Prompt */}
+        {showRatingPrompt && !ratingSubmitted && (
+          <div className="bg-white rounded-2xl shadow-card p-6 mb-8 border-2 border-[rgba(108,92,231,0.15)]">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+              <div className="flex-1">
+                <h3 className="font-nunito text-lg font-black mb-1">How&apos;s your experience with HeyConcierge?</h3>
+                <p className="text-sm text-muted mb-4">Your feedback helps us improve the service for everyone.</p>
+                <div className="flex items-center gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      onClick={() => setPlatformRating(star)}
+                      className="p-0 border-0 bg-transparent cursor-pointer"
+                    >
+                      <svg
+                        className={`w-8 h-8 transition-colors ${star <= platformRating ? 'text-yellow-400' : 'text-gray-200 hover:text-yellow-200'}`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    </button>
+                  ))}
+                </div>
+                {platformRating > 0 && (
+                  <div className="space-y-3">
+                    <textarea
+                      value={platformComment}
+                      onChange={(e) => setPlatformComment(e.target.value)}
+                      placeholder="Any thoughts you'd like to share? (optional)"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:border-primary"
+                      rows={2}
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handlePlatformRatingSubmit}
+                        disabled={submittingRating}
+                        className="bg-primary text-white px-5 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                      >
+                        {submittingRating ? 'Sending...' : 'Submit'}
+                      </button>
+                      <button
+                        onClick={() => setShowRatingPrompt(false)}
+                        className="text-sm text-muted hover:text-dark font-bold px-3"
+                      >
+                        Maybe later
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {ratingSubmitted && (
+          <div className="bg-white rounded-2xl shadow-card p-6 mb-8 text-center">
+            <p className="font-nunito text-lg font-black">Thank you for your feedback! 🙏</p>
+          </div>
+        )}
 
         {/* Properties Grid */}
         {properties.length === 0 ? (

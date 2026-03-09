@@ -8,6 +8,7 @@ import { ToastProvider, useToast } from '@/components/ui/Toast'
 import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
 import MergeOverwriteModal from '@/components/MergeOverwriteModal'
+import RatingStars from '@/components/RatingStars'
 
 const TestConcierge = dynamic(() => import('@/components/features/TestConcierge'), { ssr: false })
 
@@ -40,6 +41,8 @@ function PropertySettingsPage() {
   const [showTestChat, setShowTestChat] = useState(false)
   const [showMergeModal, setShowMergeModal] = useState(false)
   const [pendingExtraction, setPendingExtraction] = useState<any>(null)
+  const [ratings, setRatings] = useState<any[]>([])
+  const [ratingStats, setRatingStats] = useState<any>(null)
 
   // Track unsaved changes
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -145,6 +148,20 @@ function PropertySettingsPage() {
 
       if (propertyImages) {
         setImages(propertyImages)
+      }
+
+      // Load ratings
+      if (propertyId) {
+        try {
+          const ratingsRes = await fetch(`/api/ratings?propertyId=${propertyId}`)
+          if (ratingsRes.ok) {
+            const ratingsData = await ratingsRes.json()
+            setRatings(ratingsData.ratings || [])
+            setRatingStats(ratingsData.stats || null)
+          }
+        } catch (err) {
+          console.error('Failed to load ratings:', err)
+        }
       }
     } catch (err) {
       console.error('Load error:', err)
@@ -728,6 +745,75 @@ function PropertySettingsPage() {
               onDelete={handleDeleteImage}
               uploading={uploadingImages}
             />
+          </div>
+        </div>
+
+        {/* Section 4: Guest Reviews */}
+        <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(255,193,7,0.08)] to-transparent flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-yellow/15 flex items-center justify-center">
+              <svg className="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+            </div>
+            <div className="flex-1">
+              <h2 className="font-nunito text-lg font-black text-dark">Guest Reviews</h2>
+              <p className="text-xs text-muted">Ratings collected automatically after guest checkout</p>
+            </div>
+            {ratingStats && ratingStats.totalCompleted > 0 && (
+              <div className="flex items-center gap-2 bg-[rgba(255,193,7,0.1)] px-4 py-2 rounded-full">
+                <RatingStars rating={Math.round(ratingStats.averageRating)} size="sm" />
+                <span className="font-bold text-sm text-dark">{ratingStats.averageRating}</span>
+                <span className="text-xs text-muted">({ratingStats.totalCompleted} review{ratingStats.totalCompleted !== 1 ? 's' : ''})</span>
+              </div>
+            )}
+          </div>
+          <div className="px-8 py-6">
+            {ratings.length === 0 ? (
+              <div className="text-center py-8">
+                <svg className="w-12 h-12 mx-auto mb-3 text-[#E8E4FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+                <p className="text-muted font-bold mb-1">No reviews yet</p>
+                <p className="text-xs text-muted">Ratings are collected automatically via Telegram/WhatsApp 2 hours after guest checkout.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* Stats bar */}
+                {ratingStats && (
+                  <div className="flex gap-4 text-center">
+                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
+                      <p className="text-2xl font-black text-dark">{ratingStats.totalCompleted}</p>
+                      <p className="text-xs text-muted font-bold">Completed</p>
+                    </div>
+                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
+                      <p className="text-2xl font-black text-dark">{ratingStats.sent}</p>
+                      <p className="text-xs text-muted font-bold">Pending</p>
+                    </div>
+                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
+                      <p className="text-2xl font-black text-dark">{ratingStats.expired}</p>
+                      <p className="text-xs text-muted font-bold">Expired</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Review list */}
+                {ratings.map((review: any) => (
+                  <div key={review.id} className="border-2 border-[rgba(108,92,231,0.08)] rounded-2xl p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <RatingStars rating={review.rating} size="md" />
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] bg-[rgba(108,92,231,0.08)] text-muted px-2 py-0.5 rounded-full font-bold uppercase">
+                          {review.channel}
+                        </span>
+                        <span className="text-xs text-muted">
+                          {new Date(review.completed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </span>
+                      </div>
+                    </div>
+                    {review.comment && review.comment.length > 0 && (
+                      <p className="text-sm text-dark mt-2">&ldquo;{review.comment}&rdquo;</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

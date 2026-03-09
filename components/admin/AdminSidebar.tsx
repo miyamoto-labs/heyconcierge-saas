@@ -8,6 +8,7 @@ import {
   Users,
   HeadphonesIcon,
   MessageSquare,
+  Star,
   LogOut,
 } from 'lucide-react'
 
@@ -27,6 +28,7 @@ const navItems = [
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/support', label: 'Support', icon: HeadphonesIcon },
   { href: '/admin/chats', label: 'Chats', icon: MessageSquare },
+  { href: '/admin/reviews', label: 'Reviews', icon: Star },
 ]
 
 const roleColors: Record<string, string> = {
