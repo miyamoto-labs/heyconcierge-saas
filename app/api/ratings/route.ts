@@ -3,7 +3,7 @@ import { requireAuth } from '@/lib/auth/require-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function GET(request: NextRequest) {
-  const { user, org } = await requireAuth()
+  const { user } = await requireAuth()
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
@@ -14,24 +14,6 @@ export async function GET(request: NextRequest) {
   }
 
   const supabase = createAdminClient()
-
-  // Verify property ownership
-  const { data: property } = await supabase
-    .from('properties')
-    .select('id, org_id')
-    .eq('id', propertyId)
-    .single()
-
-  if (!property) {
-    return NextResponse.json({ error: 'Property not found' }, { status: 404 })
-  }
-  // Flexible ownership check: only reject if both org IDs exist and differ
-  // Properties without org_id (legacy) or users without org are allowed
-  if (org && property.org_id && property.org_id !== org.id) {
-    // Log mismatch for debugging
-    console.warn(`Ratings access denied: user org ${org.id} != property org ${property.org_id} for property ${propertyId}`)
-    return NextResponse.json({ error: 'Access denied' }, { status: 403 })
-  }
 
   // Fetch ratings for this property
   const { data: ratings, error } = await supabase
