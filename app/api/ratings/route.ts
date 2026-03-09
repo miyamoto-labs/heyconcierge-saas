@@ -25,7 +25,11 @@ export async function GET(request: NextRequest) {
   if (!property) {
     return NextResponse.json({ error: 'Property not found' }, { status: 404 })
   }
+  // Flexible ownership check: only reject if both org IDs exist and differ
+  // Properties without org_id (legacy) or users without org are allowed
   if (org && property.org_id && property.org_id !== org.id) {
+    // Log mismatch for debugging
+    console.warn(`Ratings access denied: user org ${org.id} != property org ${property.org_id} for property ${propertyId}`)
     return NextResponse.json({ error: 'Access denied' }, { status: 403 })
   }
 
@@ -58,7 +62,7 @@ export async function GET(request: NextRequest) {
   const statusCounts = {
     scheduled: 0,
     sent: 0,
-    completed: totalCount,
+    completed: 0,
     expired: 0,
   }
   if (allRatings) {
