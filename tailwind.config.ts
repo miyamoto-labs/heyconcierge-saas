@@ -9,6 +9,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // === NEW: Professional SaaS palette (used by landing page) ===
+        'saas-dark': '#0F172A',
+        'saas-text': '#334155',
+        'saas-muted': '#64748B',
+        'saas-light': '#94A3B8',
+        'saas-border': '#E2E8F0',
+        'saas-bg': '#FAF9F7',
+        'saas-subtle': '#F5F3F0',
+        'saas-success': '#10B981',
+        'primary-dark': '#5A4BD1',
+
+        // === LEGACY: Keep all old colors for dashboard/auth/admin pages ===
         bg: '#FFF8F0',
         'bg-alt': '#F0F4FF',
         dark: '#2D2B55',
@@ -18,7 +30,9 @@ const config: Config = {
         'accent-soft': '#FFE0E0',
         mint: '#55EFC4',
         'mint-dark': '#00B894',
+        'mint-soft': '#E8F8F0',
         yellow: '#FDCB6E',
+        'yellow-soft': '#FFF5E8',
         blue: '#74B9FF',
         pink: '#FD79A8',
         'pink-soft': '#FFF0F5',
@@ -27,10 +41,29 @@ const config: Config = {
         'text-light': '#A0A0C0',
       },
       fontFamily: {
+        inter: ['Inter', 'system-ui', 'sans-serif'],
         nunito: ['Nunito', 'sans-serif'],
         quicksand: ['Quicksand', 'sans-serif'],
       },
       keyframes: {
+        // === NEW: Subtle professional animations ===
+        fadeInUp: {
+          from: { opacity: '0', transform: 'translateY(24px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        slideInRight: {
+          from: { opacity: '0', transform: 'translateX(24px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        typing: {
+          '0%, 80%, 100%': { opacity: '0.3', transform: 'scale(0.8)' },
+          '40%': { opacity: '1', transform: 'scale(1)' },
+        },
+        // === LEGACY: Keep old animations for other pages ===
         float: {
           '0%, 100%': { transform: 'translate(0, 0) scale(1)' },
           '25%': { transform: 'translate(30px, -30px) scale(1.05)' },
@@ -59,6 +92,17 @@ const config: Config = {
         },
       },
       animation: {
+        // === NEW ===
+        'fade-in-up': 'fadeInUp 0.6s ease-out both',
+        'fade-in-up-1': 'fadeInUp 0.6s ease-out 0.1s both',
+        'fade-in-up-2': 'fadeInUp 0.6s ease-out 0.2s both',
+        'fade-in-up-3': 'fadeInUp 0.6s ease-out 0.3s both',
+        'fade-in': 'fadeIn 0.5s ease-out both',
+        'slide-in-right': 'slideInRight 0.7s ease-out 0.3s both',
+        'typing-1': 'typing 1.4s infinite 0s',
+        'typing-2': 'typing 1.4s infinite 0.2s',
+        'typing-3': 'typing 1.4s infinite 0.4s',
+        // === LEGACY ===
         float: 'float 20s infinite ease-in-out',
         'float-slow': 'float 8s infinite ease-in-out',
         'bounce-slow': 'bounce_slow 3s infinite ease-in-out',
@@ -77,6 +121,13 @@ const config: Config = {
       boxShadow: {
         card: '0 8px 30px rgba(45, 43, 85, 0.06)',
         'card-hover': '0 12px 40px rgba(108, 92, 231, 0.12)',
+        // NEW
+        'saas-sm': '0 1px 2px rgba(0, 0, 0, 0.05)',
+        'saas-md': '0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+        'saas-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04)',
+        'saas-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
+        'saas-primary': '0 4px 14px rgba(108, 92, 231, 0.25)',
+        'saas-primary-lg': '0 8px 25px rgba(108, 92, 231, 0.35)',
       },
     },
   },

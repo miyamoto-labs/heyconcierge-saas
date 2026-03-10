@@ -1,18 +1,34 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import MascotSVG from '@/components/brand/MascotSVG'
 import CookieSettingsLink from '@/components/ui/CookieSettingsLink'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 import ChatWidget from '@/components/chat/SimpleChatWidget'
+import {
+  MessageSquare,
+  Globe,
+  Smartphone,
+  Building2,
+  Star,
+  Zap,
+  Check,
+  ChevronDown,
+  ArrowRight,
+  UserPlus,
+  QrCode,
+  MessagesSquare,
+  Menu,
+  X,
+} from 'lucide-react'
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -21,6 +37,15 @@ export default function Home() {
       setUserEmail(user?.email || null)
     })
   }, [])
+
+  useEffect(() => {
+    const vid = videoRef.current
+    if (vid) {
+      vid.muted = true
+      vid.play().catch(() => {})
+    }
+  }, [])
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,8 +60,8 @@ export default function Home() {
     const handleScroll = () => {
       const nav = document.querySelector('nav')
       if (nav) {
-        if (window.scrollY > 50) nav.classList.add('scrolled')
-        else nav.classList.remove('scrolled')
+        if (window.scrollY > 10) nav.classList.add('saas-scrolled')
+        else nav.classList.remove('saas-scrolled')
       }
     }
     window.addEventListener('scroll', handleScroll)
@@ -46,375 +71,533 @@ export default function Home() {
     }
   }, [])
 
+  const features = [
+    { icon: MessageSquare, title: '24/7 AI Chat', desc: 'Instant, intelligent responses to guest questions around the clock. No more missed messages or delayed replies.' },
+    { icon: Globe, title: '50+ Languages', desc: 'Automatically detects and responds in your guest\'s language. Japanese guest? Japanese reply. Instantly.' },
+    { icon: Smartphone, title: 'WhatsApp, Telegram & SMS', desc: 'Meet guests where they already are. No app downloads, no friction — just text.' },
+    { icon: Building2, title: 'Property Knowledge', desc: 'Teach the AI about your property — WiFi, rules, local tips — and it answers like a local expert.' },
+    { icon: Star, title: 'Guest Satisfaction', desc: 'Faster responses lead to better reviews. Turn every interaction into a 5-star experience.' },
+    { icon: Zap, title: '5-Minute Setup', desc: 'No developers, no integrations required. Add your property, share the link, and you\'re live.' },
+  ]
+
+  const steps = [
+    { num: 1, icon: UserPlus, title: 'Sign Up', desc: 'Create your free account in 30 seconds. No credit card needed.' },
+    { num: 2, icon: QrCode, title: 'Add Your Property', desc: 'Tell the AI about your space — WiFi, house rules, local recommendations.' },
+    { num: 3, icon: MessagesSquare, title: 'Go Live', desc: 'Share your link or QR code. Guests chat, AI answers — 24/7.' },
+  ]
+
+  const plans = [
+    {
+      name: 'Starter',
+      price: '€49',
+      desc: 'Perfect for individual hosts',
+      features: ['1 property', '500 messages/mo', 'Basic analytics', 'Email support', 'All languages'],
+      cta: 'Get Started',
+      featured: false,
+    },
+    {
+      name: 'Pro',
+      price: '€99',
+      desc: 'For growing hospitality businesses',
+      features: ['5 properties', '2,500 messages/mo', 'Advanced analytics', 'Priority support', 'Custom branding', 'Calendar sync'],
+      cta: 'Get Started',
+      featured: true,
+    },
+    {
+      name: 'Enterprise',
+      price: '€249',
+      desc: 'For hotel groups and agencies',
+      features: ['Unlimited properties', 'Unlimited messages', 'API access', 'Dedicated manager', 'White-label option', 'Custom integrations'],
+      cta: 'Contact Sales',
+      featured: false,
+    },
+  ]
+
+  const faqs = [
+    { q: 'What is HeyConcierge?', a: 'HeyConcierge is an AI-powered guest concierge that answers your guests\' questions instantly via WhatsApp, Telegram, or SMS. It knows your property inside out and speaks 50+ languages.' },
+    { q: 'How does the AI know about my property?', a: 'You provide property details through a simple dashboard — WiFi password, house rules, local tips, check-in/out times, and more. The AI uses this information to give accurate, personalized answers.' },
+    { q: 'Which messaging platforms are supported?', a: 'We currently support WhatsApp, Telegram, and SMS. Your guests simply text a number or scan a QR code — no app downloads needed.' },
+    { q: 'Can I try it for free?', a: 'Yes! Sign up and explore the platform at no cost. Our Starter plan is the easiest way to get started with your first property.' },
+    { q: 'How long does setup take?', a: 'Most hosts are live within 5 minutes. Just add your property details and share the contact link with your guests. No technical knowledge required.' },
+    { q: 'What happens if the AI can\'t answer a question?', a: 'If the AI encounters a question it can\'t handle, it gracefully lets the guest know and can notify you for a personal follow-up.' },
+  ]
+
   return (
-    <>
-      {/* Floating Background Shapes */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="shape shape-1" />
-        <div className="shape shape-2" />
-        <div className="shape shape-3" />
-        
-        {/* Animated Stars */}
-        {[...Array(50)].map((_, i) => (
-          <div
-            key={i}
-            className="star"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-        
-        {/* Floating Particles */}
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={`particle-${i}`}
-            className="particle"
-            style={{
-              width: `${10 + Math.random() * 20}px`,
-              height: `${10 + Math.random() * 20}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${10 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
-
+    <div className="font-inter bg-[#FDFCFA] text-saas-text">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] px-8 py-4 backdrop-blur-[20px] bg-[rgba(255,248,240,0.85)] border-b border-[rgba(108,92,231,0.08)] transition-all duration-300">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-[1.6rem] font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-9 h-9 animate-bounce-slow" />
-            <span className="text-accent">Hey</span>
-            <span className="text-dark">Concierge</span>
+      <nav className="fixed top-0 left-0 right-0 z-[100] px-6 lg:px-8 py-4 backdrop-blur-[12px] bg-white/80 border-b border-transparent transition-all duration-300">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <MessageSquare className="w-4.5 h-4.5 text-white" size={18} />
+            </div>
+            <span className="text-saas-dark">Hey<span className="text-primary">Concierge</span></span>
           </Link>
-          
-          {/* Desktop Navigation */}
-          <ul className="hidden md:flex items-center gap-8 list-none">
-            <li><a href="#features" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">Features</a></li>
-            <li><a href="#how" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">How It Works</a></li>
-            <li><a href="#pricing" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">Pricing</a></li>
-            <li><Link href="/faq" className="no-underline text-muted font-semibold text-[0.95rem] hover:text-primary transition-colors">FAQ</Link></li>
-            {isLoggedIn && userEmail && (
-              <li className="text-muted font-semibold text-[0.95rem]">
-                {userEmail}
-              </li>
-            )}
-            <li>
-              {isLoggedIn ? (
-                <Link href="/dashboard" className="no-underline bg-primary text-white px-6 py-2.5 rounded-full font-bold text-[0.95rem] transition-all hover:bg-dark hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] hover:shadow-[0_6px_20px_rgba(45,43,85,0.3)]">
-                  Dashboard
-                </Link>
-              ) : (
-                <Link href="/login" className="no-underline bg-primary text-white px-6 py-2.5 rounded-full font-bold text-[0.95rem] transition-all hover:bg-dark hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] hover:shadow-[0_6px_20px_rgba(45,43,85,0.3)]">
-                  Start Here
-                </Link>
-              )}
-            </li>
-          </ul>
 
-          {/* Mobile Hamburger Button */}
-          <button 
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-sm font-medium text-saas-muted hover:text-saas-dark transition-colors no-underline">Features</a>
+            <a href="#how" className="text-sm font-medium text-saas-muted hover:text-saas-dark transition-colors no-underline">How It Works</a>
+            <a href="#pricing" className="text-sm font-medium text-saas-muted hover:text-saas-dark transition-colors no-underline">Pricing</a>
+            <Link href="/faq" className="text-sm font-medium text-saas-muted hover:text-saas-dark transition-colors no-underline">FAQ</Link>
+            {isLoggedIn && userEmail && (
+              <span className="text-sm text-saas-muted">{userEmail}</span>
+            )}
+            {isLoggedIn ? (
+              <Link href="/dashboard" className="text-sm font-semibold text-white bg-primary hover:bg-primary-dark px-5 py-2.5 rounded-lg transition-all no-underline shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5">
+                Dashboard
+              </Link>
+            ) : (
+              <Link href="/login" className="text-sm font-semibold text-white bg-primary hover:bg-primary-dark px-5 py-2.5 rounded-lg transition-all no-underline shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5">
+                Get Started
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden flex flex-col gap-1.5 w-8 h-8 justify-center items-center transition-all hover:scale-110"
+            className="md:hidden p-2 text-saas-dark hover:bg-saas-subtle rounded-lg transition-colors"
             aria-label="Toggle menu"
           >
-            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} />
-            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : ''}`} />
-            <span className={`block w-7 h-0.5 bg-dark transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden fixed top-[72px] left-0 right-0 bg-[rgba(255,248,240,0.98)] backdrop-blur-[20px] border-b border-[rgba(108,92,231,0.08)] transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
-          <ul className="flex flex-col gap-2 px-8 py-6 list-none">
-            <li><a href="#features" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">Features</a></li>
-            <li><a href="#how" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">How It Works</a></li>
-            <li><a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">Pricing</a></li>
-            <li><Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="block no-underline text-muted font-semibold text-base py-3 hover:text-primary transition-colors">FAQ</Link></li>
+        <div className={`md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-xl border-b border-saas-border transition-all duration-300 ${mobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+          <div className="px-6 py-5 flex flex-col gap-1">
+            <a href="#features" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-saas-muted hover:text-saas-dark py-3 no-underline transition-colors">Features</a>
+            <a href="#how" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-saas-muted hover:text-saas-dark py-3 no-underline transition-colors">How It Works</a>
+            <a href="#pricing" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-saas-muted hover:text-saas-dark py-3 no-underline transition-colors">Pricing</a>
+            <Link href="/faq" onClick={() => setMobileMenuOpen(false)} className="text-sm font-medium text-saas-muted hover:text-saas-dark py-3 no-underline transition-colors">FAQ</Link>
             {isLoggedIn && userEmail && (
-              <li className="text-muted font-semibold text-base py-2 border-t border-[rgba(108,92,231,0.1)] mt-2 pt-4">
-                {userEmail}
-              </li>
+              <span className="text-sm text-saas-muted py-2 border-t border-saas-border mt-2 pt-4">{userEmail}</span>
             )}
-            <li className="mt-4">
+            <div className="pt-3">
               {isLoggedIn ? (
-                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-center no-underline bg-primary text-white px-6 py-3 rounded-full font-bold text-base transition-all hover:bg-dark shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark px-5 py-3 rounded-lg transition-all no-underline">
                   Dashboard
                 </Link>
               ) : (
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block text-center no-underline bg-primary text-white px-6 py-3 rounded-full font-bold text-base transition-all hover:bg-dark shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
-                  Start Here
+                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="block text-center text-sm font-semibold text-white bg-primary hover:bg-primary-dark px-5 py-3 rounded-lg transition-all no-underline">
+                  Get Started
                 </Link>
               )}
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="relative z-[1] min-h-screen flex items-center pt-32 pb-16 px-8 overflow-hidden">
-        <div className="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-12 items-center w-full">
-          <div className="animate-slide-up md:text-left text-center">
-            <div className="inline-flex items-center gap-2 bg-[rgba(108,92,231,0.15)] border border-[rgba(108,92,231,0.2)] px-4 py-1.5 rounded-full text-[0.85rem] font-semibold text-primary mb-6 hover:bg-[rgba(108,92,231,0.2)] transition-all duration-300 cursor-default shadow-sm hover:shadow-md hover:scale-105" style={{animation: 'glowPulse 4s ease-in-out infinite'}}>
-              <span className="w-2 h-2 bg-mint rounded-full animate-pulse-dot shadow-[0_0_8px_rgba(85,239,196,0.8)]" />
-              Now Live — Try it Free
+      <section className="relative min-h-screen flex items-center pt-28 pb-20 px-6 lg:px-8 overflow-hidden">
+        {/* Video background — fades in subtly */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover opacity-50"
+          >
+            <source src="/hero-video.mp4" type="video/mp4" />
+            <source src="/hero-video.mov" type="video/quicktime" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-white/30 to-white/50" />
+        </div>
+
+        {/* Subtle gradient accents */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(108,92,231,0.06),transparent_70%)] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(108,92,231,0.04),transparent_70%)] pointer-events-none" />
+
+        <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full">
+          {/* Left: Copy */}
+          <div className="animate-fade-in-up lg:text-left text-center">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.08] border border-primary/[0.12] px-4 py-1.5 rounded-full text-xs font-semibold text-primary mb-6">
+              <span className="w-1.5 h-1.5 bg-saas-success rounded-full animate-pulse" />
+              AI-Powered Guest Communication
             </div>
-            <h1 className="font-nunito text-[3.8rem] max-md:text-[2.5rem] font-black leading-[1.1] mb-5 tracking-tight">
-              Your guests&apos;<br />
-              <span className="text-accent">favorite</span> new<br />
-              <span className="text-primary">friend.</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold text-saas-dark leading-[1.1] tracking-tight mb-6">
+              Your guests get instant answers.{' '}
+              <span className="text-primary">You get your time back.</span>
             </h1>
-            <p className="text-[1.2rem] text-muted mb-8 max-w-[480px] leading-[1.7] md:mx-0 mx-auto">
-              A happy little AI concierge that chats with your guests. Answers questions instantly, speaks every language, and knows your property inside out.
+            <p className="text-lg italic text-saas-dark/70 mb-6 lg:mx-0 mx-auto">
+              {'\u201c'}your Airbnb runs itself, finally.{'\u201d'}
             </p>
-            <div className="flex gap-3 flex-wrap mb-10 md:justify-start justify-center">
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[0.85rem] font-bold bg-accent-soft text-accent hover:scale-110 hover:-translate-y-1 transition-all duration-300 cursor-default shadow-sm hover:shadow-md">🤖 AI-Powered</span>
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[0.85rem] font-bold bg-[#E8F8F0] text-mint-dark hover:scale-110 hover:-translate-y-1 transition-all duration-300 cursor-default shadow-sm hover:shadow-md">💬 Telegram · WhatsApp · SMS</span>
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[0.85rem] font-bold bg-[#E8E4FF] text-primary hover:scale-110 hover:-translate-y-1 transition-all duration-300 cursor-default shadow-sm hover:shadow-md">🌍 Multilingual</span>
-            </div>
-            <div className="flex gap-4 items-center md:justify-start justify-center flex-wrap">
-              <Link 
-                href="/signup" 
-                className="group/btn relative inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-full font-nunito text-[1.05rem] font-extrabold no-underline transition-all shadow-[0_6px_25px_rgba(108,92,231,0.35)] hover:-translate-y-2 hover:shadow-[0_12px_40px_rgba(108,92,231,0.5)] hover:scale-105"
-                style={{animation: 'glowPulse 3s ease-in-out infinite'}}
+            <p className="text-lg text-saas-muted mb-8 max-w-xl leading-relaxed lg:mx-0 mx-auto">
+              An AI concierge that chats with your guests 24/7 on WhatsApp, Telegram, or SMS. Speaks every language, knows your property inside out, and never sleeps.
+            </p>
+            <div className="flex gap-4 items-center lg:justify-start justify-center flex-wrap mb-4">
+              <Link
+                href="/signup"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:rotate-12 transition-transform duration-300"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <span className="group-hover/btn:scale-110 inline-block transition-transform duration-300">Get Started Free</span>
+                Get Started Free
+                <ArrowRight size={16} />
               </Link>
-              <a 
-                href="#how" 
-                className="group/btn2 inline-flex items-center gap-2 bg-transparent text-dark px-7 py-4 rounded-full font-nunito text-base font-bold no-underline border-2 border-[rgba(45,43,85,0.1)] transition-all hover:border-primary hover:text-primary hover:-translate-y-2 hover:bg-[rgba(108,92,231,0.05)] hover:scale-105"
+              <a
+                href="#how"
+                className="inline-flex items-center gap-2 text-saas-dark px-6 py-3.5 rounded-lg font-semibold text-sm no-underline border border-saas-border hover:border-saas-muted transition-all hover:bg-saas-subtle"
               >
-                <span className="group-hover/btn2:scale-110 inline-block transition-transform duration-300">See How It Works</span>
-                <span className="group-hover/btn2:translate-y-1 inline-block transition-transform duration-300">↓</span>
+                See How It Works
               </a>
             </div>
+            <p className="text-xs text-saas-light lg:text-left text-center">No credit card required</p>
           </div>
 
-          {/* Hero Mascot */}
-          <div className="relative flex items-center justify-center animate-slide-up-delay md:order-none order-first group">
-            <div className="relative w-[380px] h-[380px] max-md:w-[250px] max-md:h-[250px]">
-              {/* Animated glow rings */}
-              <div className="absolute -inset-5 bg-[radial-gradient(circle,rgba(108,92,231,0.25),transparent_65%)] rounded-full animate-float-slow blur-xl group-hover:bg-[radial-gradient(circle,rgba(108,92,231,0.4),transparent_65%)] transition-all duration-500" />
-              <div className="absolute -inset-3 bg-[radial-gradient(circle,rgba(253,121,168,0.15),transparent_70%)] rounded-full animate-float-slow blur-2xl group-hover:bg-[radial-gradient(circle,rgba(253,121,168,0.25),transparent_70%)] transition-all duration-500" style={{animationDelay: '-5s'}} />
-              <div className="absolute -inset-8 rounded-full border-2 border-[rgba(108,92,231,0.1)] opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700 ease-out" />
-              
-              {/* Mascot with hover effects */}
-              <div 
-                className="relative w-full h-full hover:scale-110 transition-all duration-500 cursor-pointer" 
-                style={{animation: 'floatRotate 6s ease-in-out infinite'}}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.animation = 'floatRotate 1s ease-in-out infinite';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.animation = 'floatRotate 6s ease-in-out infinite';
-                }}
-              >
-                <MascotSVG className="relative w-full h-full z-[2] drop-shadow-[0_15px_40px_rgba(108,92,231,0.25)] group-hover:drop-shadow-[0_20px_60px_rgba(108,92,231,0.5)] transition-all duration-500" />
-              </div>
-              <div className="absolute w-3 h-3 rounded-full bg-yellow top-[10%] left-[10%] animate-sparkle shadow-[0_0_10px_rgba(255,213,0,0.6)]" />
-              <div className="absolute w-3 h-3 rounded-full bg-pink top-[5%] right-[20%] animate-sparkle-1 shadow-[0_0_10px_rgba(253,121,168,0.6)]" />
-              <div className="absolute w-3 h-3 rounded-full bg-mint bottom-[15%] right-[5%] animate-sparkle-2 shadow-[0_0_10px_rgba(85,239,196,0.6)]" />
-              <div className="absolute w-3 h-3 rounded-full bg-blue bottom-[30%] left-[5%] animate-sparkle-3 shadow-[0_0_10px_rgba(108,92,231,0.6)]" />
-              <div className="absolute w-2 h-2 rounded-full bg-yellow top-[60%] left-[15%] animate-sparkle shadow-[0_0_8px_rgba(255,213,0,0.5)]" style={{animationDelay: '-1.5s'}} />
-              <div className="absolute w-2 h-2 rounded-full bg-pink top-[70%] right-[15%] animate-sparkle-1 shadow-[0_0_8px_rgba(253,121,168,0.5)]" style={{animationDelay: '-0.8s'}} />
-              {/* Chat bubbles */}
-              <div className="absolute top-[20%] -right-[30px] bg-white rounded-[20px_20px_20px_4px] px-5 py-3 shadow-card text-[0.85rem] font-semibold text-dark z-[3] animate-pop-in-1 bubble-tail-left">
-                What&apos;s the WiFi? 📶
-              </div>
-              <div className="absolute bottom-[25%] -left-[60px] bg-primary text-white rounded-[20px_20px_4px_20px] px-5 py-3 shadow-card text-[0.85rem] font-semibold z-[3] animate-pop-in-2 bubble-tail-right">
-                AuroraHaven_Guest ✨
-              </div>
-              <div className="absolute top-[5%] -left-[20px] bg-white rounded-[20px_20px_20px_4px] px-5 py-3 shadow-card text-[0.8rem] font-semibold text-dark z-[3] animate-pop-in-3 bubble-tail-left-sm">
-                🇯🇵 日本語もOK!
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Problem Section */}
-      <section id="features" className="relative z-[1] py-24 px-8 bg-bg-alt">
-        <div className="max-w-[1100px] mx-auto">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.85rem] font-bold bg-accent-soft text-accent mb-4">😤 The Problem</span>
-          <h2 className="font-nunito text-[2.6rem] max-md:text-[2rem] font-black leading-[1.15] mb-4 reveal">Guests deserve better.</h2>
-          <p className="text-[1.1rem] text-muted max-w-[600px] mb-12 reveal">Hospitality hasn&apos;t kept up. Guests wait hours for simple answers while hosts drown in repetitive messages.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { icon: '⏰', bg: 'bg-accent-soft', title: '2 AM Questions', desc: "WiFi password? Checkout time? Guests don't wait for office hours. They want answers now." },
-              { icon: '🌐', bg: 'bg-[#E8F0FF]', title: 'Lost in Translation', desc: '74% of businesses lose customers without multilingual support.' },
-              { icon: '💸', bg: 'bg-[#E8F8F0]', title: 'Expensive Humans', desc: "24/7 multilingual staff costs €40-60K/year. Small hosts and boutique hotels can't afford it." },
-              { icon: '🔁', bg: 'bg-[#E8E4FF]', title: 'Same 20 Questions', desc: '80% of guest inquiries repeat. WiFi, taxi, restaurants — on loop forever.' },
-            ].map((p, i) => (
-              <div key={i} className="bg-white rounded-[20px] p-8 shadow-card flex gap-5 transition-all hover:-translate-y-1 hover:shadow-card-hover reveal">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0 ${p.bg}`}>{p.icon}</div>
-                <div>
-                  <h3 className="font-nunito text-[1.15rem] font-extrabold mb-1">{p.title}</h3>
-                  <p className="text-[0.9rem] text-muted leading-relaxed">{p.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 bg-dark rounded-full px-8 py-4 text-center text-yellow font-bold text-[0.95rem] reveal">
-            88% of guests say experience matters as much as the room itself 💡
-          </div>
-        </div>
-      </section>
-
-      {/* Solution Section */}
-      <section id="solution" className="relative z-[1] py-24 px-8 bg-bg">
-        <div className="max-w-[1100px] mx-auto">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.85rem] font-bold bg-[#E8E4FF] text-primary mb-4">✨ The Solution</span>
-          <h2 className="font-nunito text-[2.6rem] max-md:text-[2rem] font-black leading-[1.15] mb-4 reveal">Meet HeyConcierge!</h2>
-          <p className="text-[1.1rem] text-muted max-w-[600px] mb-12 reveal">A friendly AI that chats with your guests on Telegram, WhatsApp, or SMS. No app downloads. No fuss.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="flex flex-col gap-4">
-              {[
-                { icon: '💬', bg: 'bg-[#E8F8F0]', title: 'Multi-Channel', desc: 'Telegram, WhatsApp, or SMS. Guests just text. No downloads, no friction.' },
-                { icon: '🧠', bg: 'bg-[#E8E4FF]', title: 'Claude AI Brain', desc: 'Smart, safe, nuanced responses — powered by Anthropic.' },
-                { icon: '🌍', bg: 'bg-[#E8F0FF]', title: 'Auto-Multilingual', desc: 'Japanese guest? Japanese reply. Instantly. 50+ languages.' },
-                { icon: '⚙️', bg: 'bg-[#FFF5E8]', title: 'Simple Dashboard', desc: 'Add properties, sync calendars, configure AI. That\'s it.' },
-              ].map((f, i) => (
-                <div key={i} className="bg-white rounded-[20px] px-7 py-5 shadow-card flex items-center gap-5 transition-all feature-card-hover hover:shadow-card-hover reveal">
-                  <div className={`w-[50px] h-[50px] rounded-[14px] flex items-center justify-center text-[1.4rem] flex-shrink-0 ${f.bg}`}>{f.icon}</div>
-                  <div>
-                    <h4 className="font-nunito text-base font-extrabold mb-0.5">{f.title}</h4>
-                    <p className="text-[0.85rem] text-muted">{f.desc}</p>
+          {/* Right: Chat Mockup */}
+          <div className="animate-slide-in-right lg:order-none order-first flex justify-center">
+            <div className="chat-mockup-inner w-[320px] sm:w-[360px]">
+              {/* Phone frame — strong border so it doesn't blend */}
+              <div className="bg-white rounded-[2.5rem] shadow-saas-xl border-2 border-saas-dark/10 ring-1 ring-black/[0.04] overflow-hidden">
+                  {/* Status bar */}
+                  <div className="bg-saas-dark px-6 pt-3 pb-2 flex items-center justify-between">
+                    <span className="text-white/60 text-[10px] font-medium">9:41</span>
+                    <div className="flex gap-1">
+                      <div className="w-3.5 h-2 rounded-sm bg-white/60" />
+                      <div className="w-1 h-2 rounded-sm bg-white/40" />
+                    </div>
+                  </div>
+                  {/* Chat header */}
+                  <div className="bg-primary px-5 py-3 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+                      <MessageSquare className="text-white" size={16} />
+                    </div>
+                    <div>
+                      <p className="text-white text-sm font-semibold leading-tight">HeyConcierge</p>
+                      <p className="text-white/70 text-[10px]">Online · Typically replies instantly</p>
+                    </div>
+                  </div>
+                  {/* Messages */}
+                  <div className="bg-saas-bg px-4 py-5 space-y-3 min-h-[280px]">
+                    {/* Guest message */}
+                    <div className="flex justify-end">
+                      <div className="bg-primary text-white px-4 py-2.5 rounded-2xl rounded-br-md text-sm max-w-[75%] shadow-saas-sm">
+                        What&apos;s the WiFi password? 📶
+                      </div>
+                    </div>
+                    {/* AI reply */}
+                    <div className="flex justify-start">
+                      <div className="bg-white px-4 py-2.5 rounded-2xl rounded-bl-md text-sm max-w-[80%] text-saas-dark shadow-saas-sm border border-saas-border/40">
+                        The WiFi network is <strong>Villa_Guest</strong> and the password is <strong>sunshine2024</strong> ☀️
+                      </div>
+                    </div>
+                    {/* Guest message */}
+                    <div className="flex justify-end">
+                      <div className="bg-primary text-white px-4 py-2.5 rounded-2xl rounded-br-md text-sm max-w-[75%] shadow-saas-sm">
+                        Best restaurant nearby?
+                      </div>
+                    </div>
+                    {/* AI reply */}
+                    <div className="flex justify-start">
+                      <div className="bg-white px-4 py-2.5 rounded-2xl rounded-bl-md text-sm max-w-[80%] text-saas-dark shadow-saas-sm border border-saas-border/40">
+                        I recommend <strong>Sjømat</strong> — excellent seafood, 5 min walk. Shall I share the directions? 🍽️
+                      </div>
+                    </div>
+                    {/* Typing indicator */}
+                    <div className="flex justify-start">
+                      <div className="bg-white px-4 py-3 rounded-2xl rounded-bl-md shadow-saas-sm border border-saas-border/40 flex gap-1.5 items-center">
+                        <div className="w-2 h-2 bg-saas-light rounded-full animate-typing-1" />
+                        <div className="w-2 h-2 bg-saas-light rounded-full animate-typing-2" />
+                        <div className="w-2 h-2 bg-saas-light rounded-full animate-typing-3" />
+                      </div>
+                    </div>
+                  </div>
+                  {/* Input bar */}
+                  <div className="bg-white px-4 py-3 border-t border-saas-border/60 flex items-center gap-3">
+                    <div className="flex-1 bg-saas-bg rounded-full px-4 py-2 text-xs text-saas-light">Type a message...</div>
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                      <ArrowRight className="text-white" size={14} />
+                    </div>
                   </div>
                 </div>
-              ))}
             </div>
-            <div className="relative flex items-center justify-center reveal">
-              <div className="relative w-[300px] h-[300px]">
-                <div className="absolute -inset-5 bg-[radial-gradient(circle,rgba(108,92,231,0.15),transparent_65%)] rounded-full animate-float-slow" />
-                <MascotSVG className="relative w-full h-full z-[2] drop-shadow-[0_10px_30px_rgba(108,92,231,0.2)]" />
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Bar */}
+      <section className="border-y border-saas-border/60 bg-saas-bg py-8 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12">
+          <p className="text-sm font-medium text-saas-muted">Trusted by 500+ vacation rental hosts worldwide</p>
+          <div className="flex items-center gap-8">
+            {/* WhatsApp */}
+            <div className="flex items-center gap-2 text-saas-light">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span className="text-xs font-medium">WhatsApp</span>
+            </div>
+            {/* Telegram */}
+            <div className="flex items-center gap-2 text-saas-light">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              <span className="text-xs font-medium">Telegram</span>
+            </div>
+            {/* SMS */}
+            <div className="flex items-center gap-2 text-saas-light">
+              <Smartphone size={18} />
+              <span className="text-xs font-medium">SMS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section id="features" className="py-24 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.06] px-4 py-1.5 rounded-full text-xs font-semibold text-primary mb-4">
+              Features
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-saas-dark tracking-tight mb-4 reveal">
+              Everything you need to delight every guest
+            </h2>
+            <p className="text-lg text-saas-muted max-w-2xl mx-auto reveal">
+              From instant answers to multilingual support — HeyConcierge handles guest communication so you can focus on hospitality.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="bg-white border border-saas-border/60 rounded-xl p-7 transition-all hover:-translate-y-1 hover:shadow-saas-lg hover:border-primary/20 reveal group"
+              >
+                <div className="w-11 h-11 rounded-lg bg-primary/[0.08] flex items-center justify-center mb-4 group-hover:bg-primary/[0.12] transition-colors">
+                  <f.icon className="text-primary" size={20} />
+                </div>
+                <h3 className="text-base font-bold text-saas-dark mb-2">{f.title}</h3>
+                <p className="text-sm text-saas-muted leading-relaxed">{f.desc}</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section id="how" className="relative z-[1] py-24 px-8 bg-bg-alt">
-        <div className="max-w-[1100px] mx-auto">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.85rem] font-bold bg-[#E8F8F0] text-mint-dark mb-4">🛠 How It Works</span>
-          <h2 className="font-nunito text-[2.6rem] max-md:text-[2rem] font-black leading-[1.15] mb-4 reveal">Three steps. Five minutes. Done!</h2>
-          <p className="text-[1.1rem] text-muted max-w-[600px] mb-12 reveal">No developers, no integrations, no PMS required. Just a simple dashboard and a QR code.</p>
+      <section id="how" className="py-24 px-6 lg:px-8 bg-saas-bg">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.06] px-4 py-1.5 rounded-full text-xs font-semibold text-primary mb-4">
+              How It Works
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-saas-dark tracking-tight mb-4 reveal">
+              Three steps. Five minutes. Done.
+            </h2>
+            <p className="text-lg text-saas-muted max-w-2xl mx-auto reveal">
+              No developers, no complex integrations. Just a simple dashboard and a QR code.
+            </p>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {[
-              { num: '1', bg: 'bg-primary', emoji: '📝', title: 'Add Your Property', desc: 'Property details, WiFi password, local tips, house rules — all in a simple dashboard.', arrow: true },
-              { num: '2', bg: 'bg-accent', emoji: '📱', title: 'Share the Number', desc: 'QR code in the room, on the welcome card, or in the booking confirmation.', arrow: true },
-              { num: '3', bg: 'bg-mint-dark', emoji: '⚡', title: 'Guests Chat, AI Answers', desc: 'Guests message in any language. HeyConcierge replies instantly, 24/7, like a local friend.', arrow: false },
-            ].map((s, i) => (
-              <div key={i} className="bg-white rounded-3xl px-8 py-10 text-center shadow-card transition-all hover:-translate-y-1.5 hover:shadow-card-hover relative reveal">
-                <div className={`w-14 h-14 rounded-full flex items-center justify-center font-nunito text-2xl font-black text-white mx-auto mb-5 ${s.bg}`}>{s.num}</div>
-                <div className="text-[2.2rem] mb-4">{s.emoji}</div>
-                <h3 className="font-nunito text-[1.2rem] font-extrabold mb-2">{s.title}</h3>
-                <p className="text-[0.9rem] text-muted leading-relaxed">{s.desc}</p>
-                {s.arrow && <span className="absolute top-1/2 -right-5 -translate-y-1/2 text-2xl text-primary-light z-[2] hidden md:block">→</span>}
+            {/* Connecting line (desktop only) */}
+            <div className="hidden md:block absolute top-[72px] left-[20%] right-[20%] h-[2px] bg-saas-border z-0" />
+
+            {steps.map((s, i) => (
+              <div key={i} className="relative z-10 text-center reveal">
+                <div className="w-[72px] h-[72px] rounded-2xl bg-white border-2 border-primary/20 flex items-center justify-center mx-auto mb-6 shadow-saas-md">
+                  <div className="relative">
+                    <s.icon className="text-primary" size={28} />
+                    <span className="absolute -top-2 -right-3 w-5 h-5 rounded-full bg-primary text-white text-[10px] font-bold flex items-center justify-center">{s.num}</span>
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-saas-dark mb-2">{s.title}</h3>
+                <p className="text-sm text-saas-muted leading-relaxed max-w-xs mx-auto">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-14 reveal">
+            <Link
+              href="/signup"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5"
+            >
+              Get Started Free
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-24 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.06] px-4 py-1.5 rounded-full text-xs font-semibold text-primary mb-4">
+              Pricing
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-saas-dark tracking-tight mb-4 reveal">
+              Simple, transparent pricing
+            </h2>
+            <p className="text-lg text-saas-muted max-w-2xl mx-auto reveal">
+              Start free, scale as you grow. No hidden fees, no long-term contracts.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start max-w-4xl mx-auto">
+            {plans.map((plan, i) => (
+              <div
+                key={i}
+                className={`rounded-xl p-8 transition-all hover:-translate-y-1 reveal relative ${
+                  plan.featured
+                    ? 'bg-white border-2 border-primary shadow-saas-lg'
+                    : 'bg-white border border-saas-border/60 hover:shadow-saas-lg hover:border-primary/20'
+                }`}
+              >
+                {plan.featured && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-[11px] font-bold tracking-wide">
+                    MOST POPULAR
+                  </div>
+                )}
+                <div className="mb-6">
+                  <h3 className="text-sm font-bold text-saas-muted uppercase tracking-wider mb-1">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold text-saas-dark">{plan.price}</span>
+                    <span className="text-sm text-saas-muted">/month</span>
+                  </div>
+                  <p className="text-sm text-saas-muted mt-2">{plan.desc}</p>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-2.5 text-sm text-saas-text">
+                      <Check className="text-saas-success flex-shrink-0" size={16} />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className={`block w-full py-3 rounded-lg font-semibold text-sm text-center transition-all no-underline ${
+                    plan.featured
+                      ? 'bg-primary hover:bg-primary-dark text-white shadow-saas-primary hover:shadow-saas-primary-lg'
+                      : 'border border-saas-border text-saas-dark hover:border-primary hover:text-primary hover:bg-primary/[0.04]'
+                  }`}
+                >
+                  {plan.cta}
+                </Link>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="relative z-[1] py-24 px-8 bg-bg">
-        <div className="max-w-[1100px] mx-auto">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[0.85rem] font-bold bg-[#E8F8F0] text-mint-dark mb-4">💰 Pricing</span>
-          <h2 className="font-nunito text-[2.6rem] max-md:text-[2rem] font-black leading-[1.15] mb-4 reveal">Simple pricing. Happy customers.</h2>
-          <p className="text-[1.1rem] text-muted max-w-[600px] mb-12 reveal">Start small, scale big. No hidden fees, no contracts.</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-md:max-w-[400px] max-md:mx-auto">
-            {/* Starter */}
-            <div className="bg-white rounded-3xl px-8 py-10 text-center shadow-card relative transition-all hover:-translate-y-1.5 hover:shadow-card-hover overflow-hidden reveal">
-              <div className="h-1 rounded-sm mb-6 bg-blue" />
-              <div className="text-[2rem] mb-2">🌱</div>
-              <div className="text-[0.85rem] font-extrabold tracking-[0.15em] uppercase text-blue mb-3">Starter</div>
-              <div className="font-nunito text-[3rem] font-black text-dark">€49</div>
-              <div className="text-[0.9rem] text-muted mb-6">/month</div>
-              <ul className="list-none text-left mb-8 space-y-2">
-                {['1 property', '500 messages/mo', 'Basic analytics', 'Email support'].map((f, i) => (
-                  <li key={i} className="text-[0.9rem] text-muted flex items-center gap-2"><span className="text-mint-dark font-bold">✓</span>{f}</li>
-                ))}
-              </ul>
-              <Link href="/signup" className="block w-full py-3.5 rounded-full font-nunito text-[0.95rem] font-extrabold text-center transition-all border-2 border-primary-light text-primary bg-transparent hover:bg-primary hover:text-white hover:border-primary no-underline">Get Started</Link>
+      {/* FAQ */}
+      <section className="py-24 px-6 lg:px-8 bg-saas-bg">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 bg-primary/[0.06] px-4 py-1.5 rounded-full text-xs font-semibold text-primary mb-4">
+              FAQ
             </div>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-saas-dark tracking-tight mb-4 reveal">
+              Frequently asked questions
+            </h2>
+          </div>
 
-            {/* Pro */}
-            <div className="bg-white rounded-3xl px-8 py-10 text-center shadow-card relative transition-all hover:-translate-y-1.5 hover:shadow-card-hover overflow-hidden price-featured reveal">
-              <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-primary text-white px-5 py-1 rounded-b-xl text-[0.75rem] font-extrabold tracking-wider">⭐ MOST POPULAR</div>
-              <div className="h-1 rounded-sm mb-6 bg-primary" />
-              <div className="text-[2rem] mb-2">⚡</div>
-              <div className="text-[0.85rem] font-extrabold tracking-[0.15em] uppercase text-primary mb-3">Pro</div>
-              <div className="font-nunito text-[3rem] font-black text-dark">€99</div>
-              <div className="text-[0.9rem] text-muted mb-6">/month</div>
-              <ul className="list-none text-left mb-8 space-y-2">
-                {['3 properties', '2,000 messages/mo', 'Advanced analytics', 'Priority support', 'Custom branding'].map((f, i) => (
-                  <li key={i} className="text-[0.9rem] text-muted flex items-center gap-2"><span className="text-mint-dark font-bold">✓</span>{f}</li>
-                ))}
-              </ul>
-              <Link href="/signup" className="block w-full py-3.5 rounded-full font-nunito text-[0.95rem] font-extrabold text-center transition-all border-2 border-primary bg-primary text-white hover:bg-dark hover:border-dark no-underline">Get Started</Link>
-            </div>
-
-            {/* Enterprise */}
-            <div className="bg-white rounded-3xl px-8 py-10 text-center shadow-card relative transition-all hover:-translate-y-1.5 hover:shadow-card-hover overflow-hidden reveal">
-              <div className="h-1 rounded-sm mb-6 bg-accent" />
-              <div className="text-[2rem] mb-2">👑</div>
-              <div className="text-[0.85rem] font-extrabold tracking-[0.15em] uppercase text-accent mb-3">Enterprise</div>
-              <div className="font-nunito text-[3rem] font-black text-dark">€249</div>
-              <div className="text-[0.9rem] text-muted mb-6">/month</div>
-              <ul className="list-none text-left mb-8 space-y-2">
-                {['Unlimited properties', 'Unlimited messages', 'API access', 'Dedicated manager', 'White-label'].map((f, i) => (
-                  <li key={i} className="text-[0.9rem] text-muted flex items-center gap-2"><span className="text-mint-dark font-bold">✓</span>{f}</li>
-                ))}
-              </ul>
-              <Link href="/signup" className="block w-full py-3.5 rounded-full font-nunito text-[0.95rem] font-extrabold text-center transition-all border-2 border-primary-light text-primary bg-transparent hover:bg-primary hover:text-white hover:border-primary no-underline">Contact Us</Link>
-            </div>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white border border-saas-border/60 rounded-xl overflow-hidden reveal">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between px-6 py-5 text-left bg-transparent border-0 cursor-pointer"
+                >
+                  <span className="text-sm font-semibold text-saas-dark pr-4">{faq.q}</span>
+                  <ChevronDown
+                    size={18}
+                    className={`text-saas-muted flex-shrink-0 faq-chevron ${openFaq === i ? 'open' : ''}`}
+                  />
+                </button>
+                <div className={`faq-answer ${openFaq === i ? 'open' : ''}`}>
+                  <div className="px-6 pb-5">
+                    <p className="text-sm text-saas-muted leading-relaxed">{faq.a}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-dark text-center py-20 px-8 relative overflow-hidden cta-glow">
-        <div className="max-w-[1100px] mx-auto relative">
-          <h2 className="font-nunito text-[2.8rem] max-md:text-[2rem] font-black text-white mb-4 reveal">
-            Let&apos;s make every guest<br />feel like a VIP. ✨
+      {/* CTA Banner */}
+      <section className="py-20 px-6 lg:px-8 bg-saas-dark relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(108,92,231,0.15),transparent_70%)] pointer-events-none" />
+        <div className="max-w-3xl mx-auto text-center relative z-10">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 reveal">
+            Ready to transform your guest experience?
           </h2>
-          <p className="text-[1.1rem] text-text-light mb-8 reveal">Every property deserves a concierge. Every guest deserves an instant answer.</p>
-          <Link href="/signup" className="inline-flex items-center gap-2 bg-accent text-white px-10 py-5 rounded-full font-nunito text-[1.15rem] font-extrabold no-underline transition-all shadow-[0_6px_25px_rgba(255,107,107,0.4)] hover:-translate-y-1 hover:shadow-[0_10px_35px_rgba(255,107,107,0.5)] reveal">
-            Get Started Free →
+          <p className="text-lg text-saas-light mb-8 reveal">
+            Join hundreds of hosts who save hours every week with AI-powered guest communication.
+          </p>
+          <Link
+            href="/signup"
+            className="inline-flex items-center gap-2 bg-white hover:bg-saas-bg text-saas-dark px-8 py-4 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-lg hover:shadow-saas-xl hover:-translate-y-0.5 reveal"
+          >
+            Get Started Free
+            <ArrowRight size={16} />
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark border-t border-[rgba(255,255,255,0.05)] py-8 px-8 text-center text-text-light text-[0.85rem] relative z-[1]">
-        <p>Made with 💜 in the Arctic &nbsp;·&nbsp; Tromsø, Norway &nbsp;·&nbsp; <a href="mailto:hello@heyconcierge.io" className="text-primary-light no-underline">hello@heyconcierge.io</a></p>
-        <div className="mt-3 flex items-center justify-center gap-4 text-[0.8rem] opacity-60">
-          <a href="/legal/privacy" className="text-text-light hover:opacity-100 transition no-underline">Privacy Policy</a>
-          <span>·</span>
-          <a href="/legal/terms" className="text-text-light hover:opacity-100 transition no-underline">Terms of Service</a>
-          <span>·</span>
-          <a href="/legal/dpa" className="text-text-light hover:opacity-100 transition no-underline">DPA</a>
-          <span>·</span>
-          <a href="/legal/cookies" className="text-text-light hover:opacity-100 transition no-underline">Cookie Policy</a>
-          <span>·</span>
-          <CookieSettingsLink className="text-text-light hover:opacity-100 transition cursor-pointer bg-transparent border-0 p-0 font-[inherit] text-[inherit]" />
+      <footer className="bg-saas-dark border-t border-white/[0.06] py-16 px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            {/* Brand */}
+            <div className="sm:col-span-2 lg:col-span-1">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
+                  <MessageSquare className="text-white" size={14} />
+                </div>
+                <span className="text-white font-bold text-lg">HeyConcierge</span>
+              </div>
+              <p className="text-sm text-saas-light/70 leading-relaxed max-w-xs">
+                AI-powered guest communication for vacation rentals and boutique hotels.
+              </p>
+            </div>
+
+            {/* Product */}
+            <div>
+              <h4 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">Product</h4>
+              <ul className="space-y-2.5 list-none p-0">
+                <li><a href="#features" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Features</a></li>
+                <li><a href="#pricing" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Pricing</a></li>
+                <li><a href="#how" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">How It Works</a></li>
+                <li><Link href="/faq" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">FAQ</Link></li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h4 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">Company</h4>
+              <ul className="space-y-2.5 list-none p-0">
+                <li><a href="mailto:hello@heyconcierge.io" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Contact</a></li>
+                <li><Link href="/login" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Sign In</Link></li>
+                <li><Link href="/signup" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Sign Up</Link></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-xs font-bold text-white/40 uppercase tracking-wider mb-4">Legal</h4>
+              <ul className="space-y-2.5 list-none p-0">
+                <li><a href="/legal/privacy" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Privacy Policy</a></li>
+                <li><a href="/legal/terms" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Terms of Service</a></li>
+                <li><a href="/legal/dpa" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">DPA</a></li>
+                <li><a href="/legal/cookies" className="text-sm text-saas-light/70 hover:text-white transition-colors no-underline">Cookie Policy</a></li>
+                <li><CookieSettingsLink className="text-sm text-saas-light/70 hover:text-white transition-colors cursor-pointer bg-transparent border-0 p-0 font-[inherit]" /></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-white/[0.06] pt-8 text-center">
+            <p className="text-xs text-saas-light/50">
+              Made with 💜 in the Arctic &middot; Tromsø, Norway &middot;{' '}
+              <a href="mailto:hello@heyconcierge.io" className="text-saas-light/50 hover:text-white transition-colors no-underline">hello@heyconcierge.io</a>
+            </p>
+          </div>
         </div>
       </footer>
+
       <PWAInstallPrompt />
       <ChatWidget />
-    </>
+    </div>
   )
 }
