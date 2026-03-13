@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import Anthropic from '@anthropic-ai/sdk'
+import {
+  searchActivities,
+  formatActivitiesForPrompt,
+  logAffiliateClick,
+  ACTIVITY_SEARCH_TOOL,
+  ACTIVITY_DETAILS_TOOL,
+} from '@/lib/activities'
+import type {
+  Activity,
+  ActivitySearchParams,
+  PropertyOTAConfig,
+} from '@/lib/activities'
 
 export const maxDuration = 30
 
@@ -92,6 +104,142 @@ async function autoAttachImages(chatId: number, guestMessage: string, aiReply: s
   }
 }
 
+// --- Load OTA config for property ---
+
+async function loadOTAConfig(
+  supabase: ReturnType<typeof getSupabase>,
+  propertyId: string,
+): Promise<PropertyOTAConfig | null> {
+  const { data } = await supabase
+    .from('property_ota_configs')
+    .select('*')
+    .eq('property_id', propertyId)
+    .single()
+
+  if (!data) return null
+
+  return {
+    id: data.id,
+    propertyId: data.property_id,
+    getyourguideEnabled: data.getyourguide_enabled,
+    viatorEnabled: data.viator_enabled,
+    autoRecommend: data.auto_recommend,
+    maxRecommendations: data.max_recommendations,
+    minRating: data.min_rating,
+    maxPriceEur: data.max_price_eur,
+    preferredCategories: data.preferred_categories || [],
+    customMessage: data.custom_message,
+  }
+}
+
+// --- Handle Claude tool calls for activity search ---
+
+async function handleToolCall(
+  toolName: string,
+  toolInput: Record<string, unknown>,
+  property: any,
+  otaConfig: PropertyOTAConfig | null,
+  supabase: ReturnType<typeof getSupabase>,
+  lastSearchResults: Activity[],
+): Promise<{ result: string; activities: Activity[] }> {
+  if (toolName === 'search_activities') {
+    // Property must have location
+    if (!property.latitude || !property.longitude) {
+      return {
+        result: 'Activity search is not available — property location (lat/long) is not configured yet.',
+        activities: [],
+      }
+    }
+
+    const searchParams: ActivitySearchParams = {
+      query: (toolInput.query as string) || undefined,
+      latitude: Number(property.latitude),
+      longitude: Number(property.longitude),
+      radiusKm: 25,
+      currency: 'EUR',
+      startDate: (toolInput.date as string) || undefined,
+      participants: (toolInput.participants as number) || 2,
+      maxPriceAmount: (toolInput.max_price as number) || undefined,
+      limit: otaConfig?.maxRecommendations || 5,
+    }
+
+    const searchResult = await searchActivities(
+      searchParams,
+      otaConfig,
+      supabase,
+      property.id,
+    )
+
+    if (searchResult.activities.length === 0) {
+      return {
+        result: 'No activities found matching the search criteria near this property.',
+        activities: [],
+      }
+    }
+
+    // Log affiliate impressions for all recommended activities
+    for (const activity of searchResult.activities) {
+      await logAffiliateClick(supabase, property.id, activity)
+    }
+
+    const formatted = formatActivitiesForPrompt(
+      searchResult.activities,
+      otaConfig?.maxRecommendations || 5,
+    )
+
+    return {
+      result: `Found ${searchResult.totalCount} activities. Here are the top recommendations:\n\n${formatted}`,
+      activities: searchResult.activities,
+    }
+  }
+
+  if (toolName === 'get_activity_details') {
+    const activityNumber = (toolInput.activity_number as number) || 0
+    const idx = activityNumber - 1
+
+    if (idx < 0 || idx >= lastSearchResults.length) {
+      return {
+        result: `Activity #${activityNumber} not found. There are ${lastSearchResults.length} activities in the last search results.`,
+        activities: lastSearchResults,
+      }
+    }
+
+    const activity = lastSearchResults[idx]
+    const durationStr = activity.durationMinutes
+      ? activity.durationMinutes < 60
+        ? `${activity.durationMinutes} min`
+        : `${Math.floor(activity.durationMinutes / 60)}h${activity.durationMinutes % 60 > 0 ? ` ${activity.durationMinutes % 60}min` : ''}`
+      : null
+
+    const details = [
+      `Name: ${activity.name}`,
+      `Provider: ${activity.provider === 'getyourguide' ? 'GetYourGuide' : 'Viator'}`,
+      `Price: ${activity.price.formatted}`,
+      activity.rating ? `Rating: ${activity.rating}/5 (${activity.reviewCount} reviews)` : null,
+      durationStr ? `Duration: ${durationStr}` : null,
+      activity.description ? `\nDescription: ${activity.description.substring(0, 500)}` : null,
+      activity.highlights?.length ? `\nHighlights:\n${activity.highlights.map(h => `• ${h}`).join('\n')}` : null,
+      activity.cancellationPolicy ? `\nCancellation: ${activity.cancellationPolicy}` : null,
+      `\nBook here: ${activity.bookingUrl}`,
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    // Log the detail view click
+    await logAffiliateClick(supabase, property.id, activity)
+
+    return {
+      result: details,
+      activities: lastSearchResults,
+    }
+  }
+
+  return {
+    result: `Unknown tool: ${toolName}`,
+    activities: lastSearchResults,
+  }
+}
+
 // --- Main webhook handler ---
 
 export async function POST(request: NextRequest) {
@@ -160,6 +308,7 @@ export async function POST(request: NextRequest) {
         `I'm your AI concierge. Ask me anything about:\n` +
         `• WiFi & check-in instructions\n` +
         `• Local tips & recommendations\n` +
+        `• Activities, tours & experiences nearby\n` +
         `• House rules & amenities\n\n` +
         `How can I help you?`
       )
@@ -225,6 +374,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
+    // Load OTA config (for activity search feature)
+    const otaConfig = await loadOTAConfig(supabase, property.id)
+
     // Fetch conversation history (last 5 user+assistant pairs = 10 rows)
     const { data: history } = await supabase
       .from('goconcierge_messages')
@@ -235,7 +387,7 @@ export async function POST(request: NextRequest) {
       .limit(10)
 
     // Build Claude messages with history
-    const claudeMessages: { role: 'user' | 'assistant'; content: string }[] = []
+    const claudeMessages: Anthropic.MessageParam[] = []
     for (const h of (history || []).reverse()) {
       if (h.role === 'user' || h.role === 'assistant') {
         claudeMessages.push({ role: h.role, content: h.content })
@@ -246,6 +398,23 @@ export async function POST(request: NextRequest) {
     // Build context and call Claude
     const propertyContext = buildPropertyContext(property, config)
 
+    // Determine if activity tools should be available
+    const hasLocation = property.latitude && property.longitude
+    const activityToolsEnabled = hasLocation && (otaConfig?.autoRecommend !== false)
+
+    const activitySystemPromptSection = activityToolsEnabled
+      ? `
+
+ACTIVITIES & TOURS:
+When guests ask about activities, tours, things to do, experiences, sightseeing, excursions,
+or anything fun to do nearby — use the search_activities tool to find options.
+- Present the top 3-5 results naturally, with name, price, duration, rating, and the booking link.
+- Always include the booking link so the guest can book directly.
+- If a guest asks for more details about a specific option, use the get_activity_details tool.
+- Adapt recommendations to the guest's language, interests, and group size if mentioned.
+- If no activities are found, suggest checking GetYourGuide or Viator directly.`
+      : ''
+
     const systemPrompt = `You are a helpful, friendly AI concierge for ${property.name}.
 
 Your job is to assist guests with:
@@ -253,7 +422,7 @@ Your job is to assist guests with:
 - WiFi passwords and access codes
 - Local recommendations (restaurants, attractions, tips)
 - House rules and amenities
-- General property questions
+- General property questions${activityToolsEnabled ? '\n- Activities, tours, and experiences nearby' : ''}
 
 LANGUAGE BEHAVIOR:
 - Detect the language of each guest message.
@@ -271,6 +440,7 @@ RESPONSE GUIDELINES:
   https://www.google.com/maps/search/?api=1&query=<place+city>
 - If you do not know an answer, say so honestly and suggest contacting the host.
 - Never invent information about the property that is not in the profile data.
+${activitySystemPromptSection}
 
 Here's the property information you have access to:
 
@@ -285,13 +455,83 @@ ${propertyContext}`
     let reply: string
     try {
       const anthropic = new Anthropic({ apiKey })
-      const response = await anthropic.messages.create({
+
+      // Build tools array (only include activity tools if property has location)
+      const tools: Anthropic.Tool[] = []
+      if (activityToolsEnabled) {
+        tools.push(ACTIVITY_SEARCH_TOOL as unknown as Anthropic.Tool)
+        tools.push(ACTIVITY_DETAILS_TOOL as unknown as Anthropic.Tool)
+      }
+
+      // First Claude call — may return tool_use blocks
+      let response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 1024,
         system: systemPrompt,
         messages: claudeMessages,
+        ...(tools.length > 0 ? { tools } : {}),
       })
-      reply = response.content[0].type === 'text' ? response.content[0].text : ''
+
+      // Track search results for get_activity_details tool
+      let lastSearchResults: Activity[] = []
+
+      // Tool use loop — handle up to 3 rounds of tool calls
+      let toolRounds = 0
+      const maxToolRounds = 3
+
+      while (response.stop_reason === 'tool_use' && toolRounds < maxToolRounds) {
+        toolRounds++
+
+        // Extract tool use blocks
+        const toolUseBlocks = response.content.filter(
+          (block): block is Anthropic.ToolUseBlock =>
+            block.type === 'tool_use',
+        )
+
+        if (toolUseBlocks.length === 0) break
+
+        // Build tool results
+        const toolResults: Anthropic.ToolResultBlockParam[] = []
+
+        for (const toolUse of toolUseBlocks) {
+          const { result, activities } = await handleToolCall(
+            toolUse.name,
+            toolUse.input as Record<string, unknown>,
+            property,
+            otaConfig,
+            supabase,
+            lastSearchResults,
+          )
+          lastSearchResults = activities
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: toolUse.id,
+            content: result,
+          })
+        }
+
+        // Continue conversation with tool results
+        const continuationMessages: Anthropic.MessageParam[] = [
+          ...claudeMessages,
+          { role: 'assistant', content: response.content },
+          { role: 'user', content: toolResults },
+        ]
+
+        response = await anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages: continuationMessages,
+          ...(tools.length > 0 ? { tools } : {}),
+        })
+      }
+
+      // Extract the final text reply
+      const textBlocks = response.content.filter(
+        (block): block is Anthropic.TextBlock => block.type === 'text',
+      )
+      reply = textBlocks.map((b) => b.text).join('\n') || ''
+
     } catch (aiErr) {
       const msg = aiErr instanceof Error ? aiErr.message : String(aiErr)
       await sendMessage(chatId, `AI error: ${msg}`)
