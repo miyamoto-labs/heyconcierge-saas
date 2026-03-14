@@ -18,6 +18,9 @@ const { sendTelegram, resolveTelegramGuestProperty, setWebhook, getWebhookInfo }
 const { scanAndScheduleOffers, sendDueOffers, handleUpsellResponse, expireStaleOffers, getUpsellDashboard } = require('./upsell_service');
 const { scanAndScheduleRatings, sendDueRatings, handleRatingCallback, handleRatingComment, handleWhatsAppRatingResponse, expireStaleRatings } = require('../ratings/rating_service');
 
+// OTA Activity Provider (GetYourGuide + Viator)
+const { searchActivities, formatActivitiesForPrompt, logAffiliateClick, ACTIVITY_SEARCH_TOOL, ACTIVITY_DETAILS_TOOL } = require('./activity_provider');
+
 const TELEGRAM_API = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`;
 
 const app = express();
@@ -312,8 +315,8 @@ app.post('/webhook/whatsapp', async (req, res) => {
       console.log(`🌤️ Weather fetched: ${weather?.temperature}°C, ${weather?.description}`);
     }
 
-    // Call Claude
-    const response = await callClaude(Body, context, property.name, weather);
+    // Call Claude (with activity tool calling support)
+    const response = await callClaude(Body, context, property.name, weather, property);
 
     // Send response
     await sendMessage(From, response);
@@ -365,22 +368,37 @@ ${config.house_rules || 'Not provided'}`;
 
 /**
  * Call Claude API with guest message + property context + weather
+ * Supports tool calling for activity search (GetYourGuide + Viator)
  */
-async function callClaude(guestMessage, propertyContext, propertyName, weather = null) {
-  let systemPrompt = `You are a helpful, friendly AI concierge for ${propertyName}. 
+async function callClaude(guestMessage, propertyContext, propertyName, weather = null, property = null) {
+  // Check if activity tools should be available
+  const hasLocation = property && property.latitude && property.longitude;
+  const activitySection = hasLocation ? `
+- Activities, tours, and experiences nearby
+
+ACTIVITIES & TOURS:
+When guests ask about activities, tours, things to do, experiences, sightseeing, excursions,
+or anything fun to do nearby — use the search_activities tool to find options.
+- Present the top 3-5 results naturally, with name, price, duration, rating, and the booking link.
+- Always include the booking link so the guest can book directly.
+- If a guest asks for more details about a specific option, use the get_activity_details tool.
+- Adapt recommendations to the guest's language, interests, and group size if mentioned.
+- If no activities are found, suggest checking GetYourGuide or Viator directly.` : '';
+
+  let systemPrompt = `You are a helpful, friendly AI concierge for ${propertyName}.
 
 Your job is to assist guests with:
 - Check-in/check-out procedures
 - WiFi passwords and access codes
 - Local recommendations (restaurants, attractions, tips)
 - House rules and amenities
-- General property questions
+- General property questions${activitySection}
 
 LANGUAGE BEHAVIOR:
 - Detect the language of each guest message.
 - ALWAYS respond in the same language the guest used.
 - If the language is ambiguous, default to English.
-- You are fluent in all major languages including Norwegian, English, German, 
+- You are fluent in all major languages including Norwegian, English, German,
   French, Spanish, Swedish, Dutch, Italian, Japanese, Chinese, and Korean.
 - Do NOT mention that you are detecting their language. Just respond naturally.
 
@@ -400,24 +418,141 @@ ${propertyContext}`;
   // Add weather context if available
   systemPrompt = addWeatherContext(systemPrompt, weather);
 
+  // Build tools array
+  const tools = [];
+  if (hasLocation) {
+    tools.push(ACTIVITY_SEARCH_TOOL);
+    tools.push(ACTIVITY_DETAILS_TOOL);
+  }
+
   try {
-    const message = await anthropic.messages.create({
+    const messages = [{ role: 'user', content: guestMessage }];
+
+    let response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 1024,
       system: systemPrompt,
-      messages: [
-        {
-          role: 'user',
-          content: guestMessage
-        }
-      ]
+      messages,
+      ...(tools.length > 0 ? { tools } : {}),
     });
 
-    return message.content[0].text;
+    // Tool use loop — handle up to 3 rounds of tool calls
+    let lastSearchResults = [];
+    let toolRounds = 0;
+
+    while (response.stop_reason === 'tool_use' && toolRounds < 3) {
+      toolRounds++;
+
+      const toolUseBlocks = response.content.filter(b => b.type === 'tool_use');
+      if (toolUseBlocks.length === 0) break;
+
+      const toolResults = [];
+      for (const toolUse of toolUseBlocks) {
+        const { result, activities } = await handleActivityToolCall(
+          toolUse.name, toolUse.input, property, lastSearchResults
+        );
+        lastSearchResults = activities;
+        toolResults.push({
+          type: 'tool_result',
+          tool_use_id: toolUse.id,
+          content: result,
+        });
+      }
+
+      // Log affiliate clicks for search results
+      if (lastSearchResults.length > 0 && property) {
+        for (const activity of lastSearchResults) {
+          await logAffiliateClick(supabase, property.id, activity);
+        }
+      }
+
+      // Continue conversation with tool results
+      const continuationMessages = [
+        ...messages,
+        { role: 'assistant', content: response.content },
+        { role: 'user', content: toolResults },
+      ];
+
+      response = await anthropic.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1024,
+        system: systemPrompt,
+        messages: continuationMessages,
+        ...(tools.length > 0 ? { tools } : {}),
+      });
+    }
+
+    // Extract final text
+    const textBlocks = response.content.filter(b => b.type === 'text');
+    return textBlocks.map(b => b.text).join('\n') || '';
   } catch (error) {
     console.error('Claude API error:', error);
     return "I'm having trouble processing your request right now. Please try again in a moment.";
   }
+}
+
+/**
+ * Handle activity tool calls from Claude
+ */
+async function handleActivityToolCall(toolName, toolInput, property, lastSearchResults) {
+  if (toolName === 'search_activities') {
+    if (!property || !property.latitude || !property.longitude) {
+      return { result: 'Activity search not available — property location not configured.', activities: [] };
+    }
+
+    const activities = await searchActivities({
+      query: toolInput.query || undefined,
+      latitude: Number(property.latitude),
+      longitude: Number(property.longitude),
+      radiusKm: 25,
+      currency: 'EUR',
+      startDate: toolInput.date || undefined,
+      participants: toolInput.participants || 2,
+      maxPrice: toolInput.max_price || undefined,
+      limit: 5,
+      propertyId: property.id,
+    });
+
+    if (activities.length === 0) {
+      return { result: 'No activities found matching the search criteria near this property.', activities: [] };
+    }
+
+    const formatted = formatActivitiesForPrompt(activities, 5);
+    return {
+      result: `Found ${activities.length} activities. Here are the top recommendations:\n\n${formatted}`,
+      activities,
+    };
+  }
+
+  if (toolName === 'get_activity_details') {
+    const idx = (toolInput.activity_number || 0) - 1;
+    if (idx < 0 || idx >= lastSearchResults.length) {
+      return {
+        result: `Activity #${toolInput.activity_number} not found. There are ${lastSearchResults.length} activities in the last search.`,
+        activities: lastSearchResults,
+      };
+    }
+
+    const a = lastSearchResults[idx];
+    const dur = a.durationMinutes
+      ? (a.durationMinutes < 60 ? `${a.durationMinutes} min` : `${Math.floor(a.durationMinutes / 60)}h`)
+      : null;
+    const details = [
+      `Name: ${a.name}`,
+      `Provider: ${a.provider === 'getyourguide' ? 'GetYourGuide' : 'Viator'}`,
+      `Price: ${a.price.formatted}`,
+      a.rating ? `Rating: ${a.rating}/5 (${a.reviewCount} reviews)` : null,
+      dur ? `Duration: ${dur}` : null,
+      a.description ? `\nDescription: ${a.description.substring(0, 500)}` : null,
+      a.highlights?.length ? `\nHighlights:\n${a.highlights.map(h => '• ' + h).join('\n')}` : null,
+      a.cancellationPolicy ? `\nCancellation: ${a.cancellationPolicy}` : null,
+      `\nBook here: ${a.bookingUrl}`,
+    ].filter(Boolean).join('\n');
+
+    return { result: details, activities: lastSearchResults };
+  }
+
+  return { result: `Unknown tool: ${toolName}`, activities: lastSearchResults };
 }
 
 /**
@@ -969,7 +1104,7 @@ app.post('/webhook/telegram', async (req, res) => {
       weather = await getWeather(property.latitude, property.longitude);
     }
 
-    const response = await callClaude(text, context, property.name, weather);
+    const response = await callClaude(text, context, property.name, weather, property);
     await sendTelegram(chatId, response);
     await logConversation(property.id, guestPhone, text, response);
 
