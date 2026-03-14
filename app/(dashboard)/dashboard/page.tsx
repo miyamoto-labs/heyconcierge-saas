@@ -165,8 +165,8 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-[3px] border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
@@ -174,25 +174,31 @@ export default function DashboardPage() {
   // If no org, show signup completion
   if (!organization) {
     return (
-      <div className="min-h-screen bg-bg">
-        <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
-          <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-            <Link href="/dashboard" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-              <LogoSVG className="w-8 h-8" />
-              <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+      <div className="min-h-screen bg-[#FDFCFA]">
+        <header className="px-8 py-4 border-b border-slate-200/80 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <Link href="/dashboard" className="text-xl font-bold tracking-tight no-underline flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
+                  <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
+                  <rect x="5" y="17" width="22" height="4" rx="1.5" />
+                </svg>
+              </div>
+              <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
             </Link>
-            <button onClick={handleLogout} className="text-sm text-muted hover:text-dark font-bold">
+            <button onClick={handleLogout} className="text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors">
               Logout
             </button>
           </div>
         </header>
-        
+
         <div className="max-w-[600px] mx-auto px-8 py-24 text-center">
-          <h1 className="font-nunito text-4xl font-black mb-4">Welcome! 🎉</h1>
-          <p className="text-muted mb-8">Complete your setup to start using HeyConcierge</p>
+          <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-4">Welcome!</h1>
+          <p className="text-slate-500 mb-8">Complete your setup to start using HeyConcierge</p>
           <Link
             href="/signup"
-            className="inline-block bg-primary text-white px-8 py-4 rounded-full font-nunito font-extrabold text-lg no-underline hover:-translate-y-0.5 transition-all"
+            className="inline-block bg-primary hover:bg-primary-dark text-white px-8 py-3.5 rounded-lg font-semibold text-sm no-underline hover:-translate-y-0.5 transition-all shadow-saas-primary"
           >
             Complete Setup
           </Link>
@@ -202,64 +208,67 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Header */}
-      <header className="px-4 sm:px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-2">
-          <Link href="/" className="font-nunito text-lg sm:text-xl font-black no-underline flex items-center gap-2 flex-shrink-0">
-            <LogoSVG className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span className="text-accent hidden sm:inline">Hey</span><span className="text-dark hidden sm:inline">Concierge</span>
-            <span className="text-accent sm:hidden">heyc</span>
+      <header className="px-4 sm:px-8 py-4 border-b border-slate-200/80 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
+          <Link href="/" className="text-lg sm:text-xl font-bold tracking-tight no-underline flex items-center gap-2 flex-shrink-0">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
+                <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
+                <rect x="5" y="17" width="22" height="4" rx="1.5" />
+              </svg>
+            </div>
+            <span className="text-slate-800 hidden sm:inline">Hey<span className="text-primary">Concierge</span></span>
+            <span className="text-primary sm:hidden">HC</span>
           </Link>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/calendar" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
-              📅 <span className="hidden sm:inline">Calendar</span>
+          <div className="flex items-center gap-3 sm:gap-6">
+            <Link href="/calendar" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
+              Calendar
             </Link>
-            <Link href="/upselling" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
-              💰 <span className="hidden sm:inline">Upselling</span>
+            <Link href="/upselling" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
+              Upselling
             </Link>
-            <Link href="/billing" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
-              💳 <span className="hidden sm:inline">Billing</span>
+            <Link href="/billing" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
+              Billing
             </Link>
 
             {/* Organization Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="text-xs sm:text-sm font-bold text-dark hover:text-primary flex items-center gap-1 max-w-[120px] sm:max-w-none truncate"
+                className="text-xs sm:text-sm font-semibold text-slate-800 hover:text-primary flex items-center gap-1.5 max-w-[120px] sm:max-w-none truncate transition-colors"
               >
                 <span className="truncate">{organization?.name}</span>
-                <span className="text-xs flex-shrink-0">▼</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="currentColor" className="flex-shrink-0 opacity-50"><path d="M1 1l4 4 4-4"/></svg>
               </button>
-              
+
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-[rgba(108,92,231,0.1)] py-2 z-50">
-                  {/* Current Plan */}
-                  <div className="px-4 py-3 border-b border-[rgba(108,92,231,0.08)]">
-                    <div className="text-xs text-muted uppercase font-bold mb-1">Current Plan</div>
-                    <div className="text-sm font-bold text-primary">
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-1 z-50">
+                  <div className="px-4 py-3 border-b border-slate-100">
+                    <div className="text-[10px] text-slate-400 uppercase font-semibold tracking-wider mb-1">Current Plan</div>
+                    <div className="text-sm font-semibold text-primary">
                       {organization?.plan || 'FREE'}
                     </div>
                   </div>
-                  
-                  {/* Billing & Plan */}
+
                   <Link
                     href="/billing"
                     onClick={() => setDropdownOpen(false)}
-                    className="block w-full text-left px-4 py-3 text-sm hover:bg-[rgba(108,92,231,0.05)] transition-colors no-underline text-dark"
+                    className="block px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-colors no-underline"
                   >
-                    💳 Billing & Usage
+                    Billing & Usage
                   </Link>
-                  
-                  {/* Logout */}
+
                   <button
                     onClick={() => {
                       setDropdownOpen(false)
                       handleLogout()
                     }}
-                    className="w-full text-left px-4 py-3 text-sm text-muted hover:bg-[rgba(108,92,231,0.05)] transition-colors border-t border-[rgba(108,92,231,0.08)]"
+                    className="w-full text-left px-4 py-2.5 text-sm text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors border-t border-slate-100"
                   >
-                    🚪 Logout
+                    Sign out
                   </button>
                 </div>
               )}
@@ -268,16 +277,16 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="font-nunito text-2xl sm:text-4xl font-black mb-2">Your Properties</h1>
-            <p className="text-sm sm:text-base text-muted">Manage your AI concierges</p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight mb-1">Your Properties</h1>
+            <p className="text-sm text-slate-500">Manage your AI concierges</p>
           </div>
           <Link
             href="/property/new"
-            className="bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline text-center whitespace-nowrap self-start sm:self-auto"
+            className="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all no-underline text-center whitespace-nowrap self-start sm:self-auto shadow-saas-primary"
           >
             + Add Property
           </Link>
@@ -285,11 +294,11 @@ export default function DashboardPage() {
 
         {/* Platform Rating Prompt */}
         {showRatingPrompt && !ratingSubmitted && (
-          <div className="bg-white rounded-2xl shadow-card p-6 mb-8 border-2 border-[rgba(108,92,231,0.15)]">
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8">
             <div className="flex flex-col sm:flex-row sm:items-start gap-4">
               <div className="flex-1">
-                <h3 className="font-nunito text-lg font-black mb-1">How&apos;s your experience with HeyConcierge?</h3>
-                <p className="text-sm text-muted mb-4">Your feedback helps us improve the service for everyone.</p>
+                <h3 className="text-base font-bold text-slate-800 mb-1">How&apos;s your experience with HeyConcierge?</h3>
+                <p className="text-sm text-slate-500 mb-4">Your feedback helps us improve the service for everyone.</p>
                 <div className="flex items-center gap-1 mb-3">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -313,20 +322,20 @@ export default function DashboardPage() {
                       value={platformComment}
                       onChange={(e) => setPlatformComment(e.target.value)}
                       placeholder="Any thoughts you'd like to share? (optional)"
-                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:border-primary"
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm resize-none focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
                       rows={2}
                     />
                     <div className="flex gap-2">
                       <button
                         onClick={handlePlatformRatingSubmit}
                         disabled={submittingRating}
-                        className="bg-primary text-white px-5 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50"
+                        className="bg-primary hover:bg-primary-dark text-white px-5 py-2 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50"
                       >
                         {submittingRating ? 'Sending...' : 'Submit'}
                       </button>
                       <button
                         onClick={() => setShowRatingPrompt(false)}
-                        className="text-sm text-muted hover:text-dark font-bold px-3"
+                        className="text-sm text-slate-400 hover:text-slate-600 font-medium px-3"
                       >
                         Maybe later
                       </button>
@@ -339,20 +348,25 @@ export default function DashboardPage() {
         )}
 
         {ratingSubmitted && (
-          <div className="bg-white rounded-2xl shadow-card p-6 mb-8 text-center">
-            <p className="font-nunito text-lg font-black">Thank you for your feedback! 🙏</p>
+          <div className="bg-white rounded-xl border border-slate-200 p-6 mb-8 text-center">
+            <p className="text-base font-bold text-slate-800">Thank you for your feedback!</p>
           </div>
         )}
 
         {/* Properties Grid */}
         {properties.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-card p-12 text-center">
-            <div className="text-6xl mb-4">🏠</div>
-            <h2 className="font-nunito text-2xl font-black mb-2">No properties yet</h2>
-            <p className="text-muted mb-6">Add your first property to get started!</p>
+          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
+            <div className="w-16 h-16 bg-primary/[0.08] rounded-2xl flex items-center justify-center mx-auto mb-5">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-primary">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="9 22 9 12 15 12 15 22" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-slate-800 mb-2">No properties yet</h2>
+            <p className="text-sm text-slate-500 mb-6">Add your first property to get started</p>
             <Link
               href="/property/new"
-              className="inline-block bg-primary text-white px-8 py-4 rounded-full font-bold hover:-translate-y-0.5 transition-all no-underline"
+              className="inline-block bg-primary hover:bg-primary-dark text-white px-7 py-3 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all no-underline shadow-saas-primary"
             >
               Add Your First Property
             </Link>
@@ -360,50 +374,50 @@ export default function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {properties.map((property) => (
-              <div key={property.id} className="bg-white rounded-2xl shadow-card p-4 sm:p-6 hover:-translate-y-1 transition-all">
+              <div key={property.id} className="bg-white rounded-xl border-2 border-[#cbd5e1] p-4 sm:p-5 hover:-translate-y-0.5 hover:shadow-lg hover:border-primary/40 transition-all">
                 {property.images?.[0] && (
                   <Link href={`/property/${property.id}`}>
                     <img
                       src={property.images[0]}
                       alt={property.name}
-                      className="w-full h-48 object-cover rounded-xl mb-4 cursor-pointer hover:opacity-90 transition-opacity"
+                      className="w-full h-44 object-cover rounded-lg mb-4 cursor-pointer hover:opacity-90 transition-opacity"
                     />
                   </Link>
                 )}
-                <h3 className="font-nunito text-xl font-black mb-2">{property.name}</h3>
-                <p className="text-sm text-muted mb-4">{property.address}</p>
-                
+                <h3 className="text-lg font-bold text-slate-800 mb-1">{property.name}</h3>
+                <p className="text-sm text-slate-500 mb-3">{property.address}</p>
+
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-xs bg-accent-soft text-accent px-3 py-1 rounded-full font-bold">
+                  <span className="text-xs bg-primary/[0.08] text-primary px-2.5 py-1 rounded-md font-semibold">
                     {property.property_type}
                   </span>
                   {property.whatsapp_number && (
-                    <span className="text-xs bg-mint-soft text-mint-dark px-3 py-1 rounded-full font-bold">
-                      ✅ Active
+                    <span className="text-xs bg-emerald-50 text-emerald-600 px-2.5 py-1 rounded-md font-semibold">
+                      Active
                     </span>
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-[rgba(108,92,231,0.08)] space-y-2">
+                <div className="pt-4 border-t border-slate-100 space-y-2">
                   <div className="flex gap-2">
                     <Link
                       href={`/property/${property.id}`}
-                      className="flex-1 text-center bg-[rgba(108,92,231,0.1)] text-primary px-4 py-2 rounded-lg font-bold text-sm hover:bg-[rgba(108,92,231,0.2)] transition-all no-underline"
+                      className="flex-1 text-center bg-primary/[0.08] text-primary px-4 py-2 rounded-lg font-semibold text-sm hover:bg-primary/[0.14] transition-all no-underline"
                     >
                       View
                     </Link>
                     <Link
                       href={`/property/${property.id}/settings`}
-                      className="flex-1 text-center border-2 border-[rgba(108,92,231,0.1)] text-dark px-4 py-2 rounded-lg font-bold text-sm hover:border-primary transition-all no-underline"
+                      className="flex-1 text-center border border-slate-200 text-slate-700 px-4 py-2 rounded-lg font-semibold text-sm hover:border-primary hover:text-primary transition-all no-underline"
                     >
                       Settings
                     </Link>
                   </div>
                   <button
                     onClick={() => handleDeleteProperty(property.id, property.name)}
-                    className="w-full text-center border-2 border-red-200 text-red-600 px-4 py-2 rounded-lg font-bold text-sm hover:bg-red-50 hover:border-red-300 transition-all"
+                    className="w-full text-center border border-red-200 text-red-500 px-4 py-2 rounded-lg font-medium text-sm hover:bg-red-50 hover:border-red-300 transition-all"
                   >
-                    🗑️ Delete Property
+                    Delete Property
                   </button>
                 </div>
               </div>
