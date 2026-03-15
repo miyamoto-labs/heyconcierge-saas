@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 
 const PLANS = [
@@ -78,7 +77,7 @@ export default function BillingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
@@ -97,36 +96,36 @@ export default function BillingPage() {
   const propertyPercent = Math.min(100, Math.round((propertyUsed / propertyLimit) * 100))
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Header */}
-      <header className="px-4 sm:px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-2">
+      <header className="px-4 sm:px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
           <Link href="/dashboard" className="font-nunito text-lg sm:text-xl font-black no-underline flex items-center gap-2 flex-shrink-0">
-            <LogoSVG className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span className="text-accent hidden sm:inline">Hey</span><span className="text-dark hidden sm:inline">Concierge</span>
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800 hidden sm:inline">Hey<span className="text-primary">Concierge</span></span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/dashboard" className="text-xs sm:text-sm text-dark hover:text-primary font-bold">
+            <Link href="/dashboard" className="text-xs sm:text-sm text-slate-800 hover:text-primary font-bold">
               ← Dashboard
             </Link>
           </div>
         </div>
       </header>
 
-      <div className="max-w-[900px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
         <h1 className="font-nunito text-2xl sm:text-4xl font-black mb-2">Billing & Usage</h1>
-        <p className="text-sm sm:text-base text-muted mb-8">Manage your subscription and track usage</p>
+        <p className="text-sm sm:text-base text-slate-500 mb-8">Manage your subscription and track usage</p>
 
         {/* Current Plan Card */}
-        <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8 mb-6">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{currentPlan.emoji}</span>
-                <h2 className="font-nunito text-2xl font-black">{currentPlan.name}</h2>
+                <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{currentPlan.name}</h2>
                 <StatusBadge status={status} trialDays={trialDays} />
               </div>
-              <p className="text-muted">
+              <p className="text-slate-500">
                 {status === 'trialing'
                   ? `Free trial — ${trialDays} day${trialDays !== 1 ? 's' : ''} remaining`
                   : status === 'active'
@@ -137,11 +136,11 @@ export default function BillingPage() {
               </p>
             </div>
             <div className="text-right">
-              <div className="font-nunito text-3xl font-black text-dark">
-                {currentPlan.price}<span className="text-base text-muted font-normal">{currentPlan.period}</span>
+              <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800">
+                {currentPlan.price}<span className="text-base text-slate-500 font-normal">{currentPlan.period}</span>
               </div>
               {!billing?.org?.stripeConnected && status === 'trialing' && (
-                <p className="text-xs text-muted mt-1">No payment method added yet</p>
+                <p className="text-xs text-slate-500 mt-1">No payment method added yet</p>
               )}
             </div>
           </div>
@@ -164,7 +163,7 @@ export default function BillingPage() {
             {!billing?.org?.stripeConnected && (
               <button
                 onClick={() => alert('Stripe payment setup coming soon.')}
-                className="border-2 border-primary text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:bg-[rgba(108,92,231,0.05)] transition-all"
+                className="border-2 border-primary text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:bg-primary/[0.04] transition-all"
               >
                 Add Payment Method
               </button>
@@ -174,7 +173,7 @@ export default function BillingPage() {
           {/* Cancel Confirmation Dialog */}
           {showCancelConfirm && (
             <div className="mt-4 border-2 border-red-200 rounded-2xl p-5 bg-red-50">
-              <h4 className="font-nunito font-black text-lg text-red-700 mb-2">Are you sure?</h4>
+              <h4 className="font-bold text-slate-800 text-lg text-red-700 mb-2">Are you sure?</h4>
               <p className="text-sm text-red-600 mb-4">
                 {status === 'trialing'
                   ? 'Your trial will be cancelled immediately and you will lose access to all features.'
@@ -223,8 +222,8 @@ export default function BillingPage() {
 
         {/* Plan Selector */}
         {showPlans && (
-          <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8 mb-6 animate-slide-up">
-            <h3 className="font-nunito text-xl font-black mb-4">Available Plans</h3>
+          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 mb-6 animate-slide-up">
+            <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-4">Available Plans</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {PLANS.map(plan => {
                 const isCurrent = plan.id === currentPlan.id
@@ -234,20 +233,20 @@ export default function BillingPage() {
                     className={`rounded-2xl p-5 border-2 transition-all ${
                       isCurrent
                         ? 'border-primary bg-[rgba(108,92,231,0.03)]'
-                        : 'border-[#E8E4FF] hover:border-primary hover:-translate-y-0.5'
+                        : 'border-slate-200 hover:border-primary hover:-translate-y-0.5'
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-3">
                       <span className="text-2xl">{plan.emoji}</span>
-                      <span className="font-nunito font-extrabold text-lg">{plan.name}</span>
+                      <span className="font-semibold text-lg">{plan.name}</span>
                       {plan.popular && (
                         <span className="bg-primary text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>
                       )}
                     </div>
-                    <div className="font-nunito font-black text-2xl text-dark mb-3">
-                      {plan.price}<span className="text-sm text-muted font-normal">{plan.period}</span>
+                    <div className="font-bold text-slate-800 text-2xl text-slate-800 mb-3">
+                      {plan.price}<span className="text-sm text-slate-500 font-normal">{plan.period}</span>
                     </div>
-                    <ul className="space-y-1.5 text-sm text-muted mb-4">
+                    <ul className="space-y-1.5 text-sm text-slate-500 mb-4">
                       <li>Up to {plan.properties} properties</li>
                       <li>{plan.messages === -1 ? 'Unlimited' : plan.messages.toLocaleString()} messages/mo</li>
                     </ul>
@@ -256,7 +255,7 @@ export default function BillingPage() {
                     ) : (
                       <button
                         onClick={() => alert('Stripe integration coming soon. Contact support to change plans.')}
-                        className="w-full bg-[rgba(108,92,231,0.1)] text-primary py-2 rounded-lg font-bold text-sm hover:bg-[rgba(108,92,231,0.2)] transition-all"
+                        className="w-full bg-primary/[0.08] text-primary py-2 rounded-lg font-bold text-sm hover:bg-primary/[0.14] transition-all"
                       >
                         {PLANS.indexOf(plan) > PLANS.indexOf(currentPlan) ? 'Upgrade' : 'Downgrade'}
                       </button>
@@ -271,19 +270,19 @@ export default function BillingPage() {
         {/* Usage Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
           {/* Messages */}
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-muted">Messages</span>
+              <span className="text-sm font-bold text-slate-500">Messages</span>
               <span className="text-2xl">💬</span>
             </div>
-            <div className="font-nunito text-3xl font-black text-dark mb-1">
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
               {messageUsed.toLocaleString()}
             </div>
-            <div className="text-xs text-muted mb-3">
+            <div className="text-xs text-slate-500 mb-3">
               of {messageLimit === -1 ? 'unlimited' : messageLimit.toLocaleString()} this month
             </div>
             {messageLimit > 0 && (
-              <div className="h-2 bg-[#E8E4FF] rounded-full overflow-hidden">
+              <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${
                     messagePercent >= 90 ? 'bg-accent' : messagePercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
@@ -295,18 +294,18 @@ export default function BillingPage() {
           </div>
 
           {/* Properties */}
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-muted">Properties</span>
+              <span className="text-sm font-bold text-slate-500">Properties</span>
               <span className="text-2xl">🏠</span>
             </div>
-            <div className="font-nunito text-3xl font-black text-dark mb-1">
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
               {propertyUsed}
             </div>
-            <div className="text-xs text-muted mb-3">
+            <div className="text-xs text-slate-500 mb-3">
               of {propertyLimit} available
             </div>
-            <div className="h-2 bg-[#E8E4FF] rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
                   propertyPercent >= 90 ? 'bg-accent' : propertyPercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
@@ -317,36 +316,36 @@ export default function BillingPage() {
           </div>
 
           {/* Guests */}
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-muted">Guests</span>
+              <span className="text-sm font-bold text-slate-500">Guests</span>
               <span className="text-2xl">👤</span>
             </div>
-            <div className="font-nunito text-3xl font-black text-dark mb-1">
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
               {(usage?.guests || 0).toLocaleString()}
             </div>
-            <div className="text-xs text-muted mb-3">
+            <div className="text-xs text-slate-500 mb-3">
               unique guests this month
             </div>
-            <div className="text-xs text-muted">
+            <div className="text-xs text-slate-500">
               {usage?.period?.label || ''}
             </div>
           </div>
         </div>
 
         {/* Invoice History (Placeholder) */}
-        <div className="bg-white rounded-2xl shadow-card p-6 sm:p-8">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="font-nunito text-xl font-black">Invoice History</h3>
+            <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">Invoice History</h3>
           </div>
 
           {billing?.org?.stripeConnected ? (
-            <p className="text-muted text-sm">Invoice history will appear here once Stripe is connected.</p>
+            <p className="text-slate-500 text-sm">Invoice history will appear here once Stripe is connected.</p>
           ) : (
             <div className="text-center py-8">
               <div className="text-4xl mb-3">📄</div>
-              <p className="text-muted text-sm mb-1">No invoices yet</p>
-              <p className="text-xs text-muted">
+              <p className="text-slate-500 text-sm mb-1">No invoices yet</p>
+              <p className="text-xs text-slate-500">
                 Invoices will appear here after your trial ends and a payment method is added.
               </p>
             </div>
@@ -354,28 +353,28 @@ export default function BillingPage() {
         </div>
 
         {/* Account Info */}
-        <div className="mt-6 bg-white rounded-2xl shadow-card p-6 sm:p-8">
-          <h3 className="font-nunito text-xl font-black mb-4">Account Details</h3>
+        <div className="mt-6 bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
+          <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-4">Account Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-muted font-bold block mb-1">Organization</span>
-              <span className="text-dark">{billing?.org?.name || '—'}</span>
+              <span className="text-slate-500 font-bold block mb-1">Organization</span>
+              <span className="text-slate-800">{billing?.org?.name || '—'}</span>
             </div>
             <div>
-              <span className="text-muted font-bold block mb-1">Email</span>
-              <span className="text-dark">{billing?.org?.email || '—'}</span>
+              <span className="text-slate-500 font-bold block mb-1">Email</span>
+              <span className="text-slate-800">{billing?.org?.email || '—'}</span>
             </div>
             <div>
-              <span className="text-muted font-bold block mb-1">Member Since</span>
-              <span className="text-dark">
+              <span className="text-slate-500 font-bold block mb-1">Member Since</span>
+              <span className="text-slate-800">
                 {billing?.org?.createdAt
                   ? new Date(billing.org.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
                   : '—'}
               </span>
             </div>
             <div>
-              <span className="text-muted font-bold block mb-1">Payment Method</span>
-              <span className="text-dark">
+              <span className="text-slate-500 font-bold block mb-1">Payment Method</span>
+              <span className="text-slate-800">
                 {billing?.org?.stripeConnected ? 'Connected via Stripe' : 'Not connected'}
               </span>
             </div>

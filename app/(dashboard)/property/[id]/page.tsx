@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 
 export default function PropertyViewPage() {
@@ -90,7 +89,7 @@ export default function PropertyViewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
@@ -98,7 +97,7 @@ export default function PropertyViewPage() {
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-black mb-4">Property not found</h1>
           <Link href="/dashboard" className="text-primary font-bold">← Back to Dashboard</Link>
@@ -108,32 +107,32 @@ export default function PropertyViewPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px]">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px]">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-muted hover:text-dark font-bold">← Dashboard</Link>
-            <Link href="/upselling" className="text-sm text-dark hover:text-primary font-bold">💰 Upselling</Link>
-            <span className="text-sm text-muted">{userEmail}</span>
-            <button onClick={handleLogout} className="text-sm text-muted hover:text-dark font-bold">
+            <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-800 font-bold">← Dashboard</Link>
+            <Link href="/upselling" className="text-sm text-slate-800 hover:text-primary font-bold">💰 Upselling</Link>
+            <span className="text-sm text-slate-500">{userEmail}</span>
+            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">
               Logout
             </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-[1200px] mx-auto px-8 py-12">
+      <div className="max-w-6xl mx-auto px-8 py-12">
         {/* Property Header */}
         <div className="mb-8">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <h1 className="font-nunito text-4xl font-black mb-2">{property.name}</h1>
-              <p className="text-muted">{property.address}</p>
+              <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">{property.name}</h1>
+              <p className="text-slate-500">{property.address}</p>
             </div>
             <Link
               href={`/property/${propertyId}/settings`}
@@ -154,35 +153,35 @@ export default function PropertyViewPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">💬</div>
             <div className="text-3xl font-black">{messages.length}</div>
-            <div className="text-sm text-muted">Messages</div>
+            <div className="text-sm text-slate-500">Messages</div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">📅</div>
             <div className="text-3xl font-black">{bookings.length}</div>
-            <div className="text-sm text-muted">Bookings</div>
+            <div className="text-sm text-slate-500">Bookings</div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">{property.whatsapp_number ? '✅' : '⚠️'}</div>
             <div className="text-xl font-black">{property.whatsapp_number ? 'Active' : 'Setup Required'}</div>
-            <div className="text-sm text-muted">Messaging Status</div>
+            <div className="text-sm text-slate-500">Messaging Status</div>
           </div>
         </div>
 
         {/* QR Code */}
         {qrDataUrl && (
-          <div className="bg-white rounded-2xl shadow-card p-8 mb-8">
-            <h2 className="font-nunito text-2xl font-black mb-6">Guest QR Code</h2>
+          <div className="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight mb-6">Guest QR Code</h2>
             <div className="flex flex-col md:flex-row items-center gap-8">
-              <div className="bg-[rgba(108,92,231,0.05)] rounded-2xl p-6">
+              <div className="bg-primary/[0.04] rounded-2xl p-6">
                 <img src={qrDataUrl} alt="QR Code" className="w-[200px] h-[200px]" />
               </div>
               <div className="flex-1 text-center md:text-left">
-                <p className="text-muted mb-4">
+                <p className="text-slate-500 mb-4">
                   Print this QR code and place it in your property. Guests scan it to open Telegram and start chatting with your AI concierge instantly.
                 </p>
                 <div className="flex gap-3 flex-wrap justify-center md:justify-start">
@@ -220,11 +219,11 @@ export default function PropertyViewPage() {
         )}
 
         {/* Recent Messages */}
-        <div className="bg-white rounded-2xl shadow-card p-8 mb-8">
-          <h2 className="font-nunito text-2xl font-black mb-6">Recent Messages</h2>
+        <div className="bg-white rounded-xl border border-slate-200 p-8 mb-8">
+          <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight mb-6">Recent Messages</h2>
           
           {messages.length === 0 ? (
-            <div className="text-center py-12 text-muted">
+            <div className="text-center py-12 text-slate-500">
               <div className="text-6xl mb-4">💬</div>
               <p>No messages yet. Share the QR code and start chatting!</p>
             </div>
@@ -233,8 +232,8 @@ export default function PropertyViewPage() {
               {messages.map((msg) => (
                 <div key={msg.id} className="border-l-4 border-primary pl-4 py-2">
                   <div className="flex items-start justify-between mb-2">
-                    <span className="text-xs text-muted">{msg.guest_phone}</span>
-                    <span className="text-xs text-muted">
+                    <span className="text-xs text-slate-500">{msg.guest_phone}</span>
+                    <span className="text-xs text-slate-500">
                       {new Date(msg.timestamp).toLocaleString()}
                     </span>
                   </div>
@@ -251,21 +250,21 @@ export default function PropertyViewPage() {
         </div>
 
         {/* Upcoming Bookings */}
-        <div className="bg-white rounded-2xl shadow-card p-8">
-          <h2 className="font-nunito text-2xl font-black mb-6">Upcoming Bookings</h2>
+        <div className="bg-white rounded-xl border border-slate-200 p-8">
+          <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight mb-6">Upcoming Bookings</h2>
           
           {bookings.length === 0 ? (
-            <div className="text-center py-12 text-muted">
+            <div className="text-center py-12 text-slate-500">
               <div className="text-6xl mb-4">📅</div>
               <p>No bookings yet. Connect your iCal URL in settings.</p>
             </div>
           ) : (
             <div className="space-y-4">
               {bookings.map((booking) => (
-                <div key={booking.id} className="flex items-center justify-between p-4 bg-[rgba(108,92,231,0.05)] rounded-xl">
+                <div key={booking.id} className="flex items-center justify-between p-4 bg-primary/[0.04] rounded-xl">
                   <div>
                     <div className="font-bold">{booking.guest_name}</div>
-                    <div className="text-sm text-muted">
+                    <div className="text-sm text-slate-500">
                       {new Date(booking.check_in).toLocaleDateString()} - {new Date(booking.check_out).toLocaleDateString()}
                     </div>
                   </div>

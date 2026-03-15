@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
@@ -24,22 +23,22 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg flex items-center justify-center px-4">
-      <div className="bg-white rounded-3xl shadow-card p-12 max-w-[500px] w-full text-center">
+    <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center px-4">
+      <div className="bg-white rounded-xl border border-slate-200 p-12 max-w-[500px] w-full text-center">
         <div className="flex justify-center mb-6">
-          <LogoSVG className="w-16 h-16" />
+          <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center"><svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
         </div>
-        <h1 className="font-nunito text-4xl font-black mb-2">
-          <span className="text-accent">Hey</span>
-          <span className="text-dark">Concierge</span>
+        <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">
+          <span className="text-slate-800">Hey
+          <span className="text-primary">Concierge</span></span>
         </h1>
-        <p className="text-muted mb-8">Sign in to manage your properties</p>
+        <p className="text-slate-500 mb-8">Sign in to manage your properties</p>
 
         <div className="space-y-3">
           <button
             onClick={() => handleOAuthLogin('google')}
             disabled={!!loading}
-            className="w-full bg-white border-2 border-[#E8E4FF] text-dark px-8 py-4 rounded-full font-nunito font-extrabold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-white border-2 border-slate-200 text-slate-800 px-8 py-4 rounded-full font-semibold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -53,7 +52,7 @@ export default function LoginPage() {
           <button
             onClick={() => handleOAuthLogin('facebook')}
             disabled={!!loading}
-            className="w-full bg-[#1877F2] border-2 border-[#1877F2] text-white px-8 py-4 rounded-full font-nunito font-extrabold text-lg hover:bg-[#0C63D4] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-[#1877F2] border-2 border-[#1877F2] text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-[#0C63D4] hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="white">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -64,7 +63,7 @@ export default function LoginPage() {
           <button
             onClick={() => handleOAuthLogin('azure')}
             disabled={!!loading}
-            className="w-full bg-white border-2 border-[#E8E4FF] text-dark px-8 py-4 rounded-full font-nunito font-extrabold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-white border-2 border-slate-200 text-slate-800 px-8 py-4 rounded-full font-semibold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#F35325" d="M1 1h10v10H1z"/>
@@ -76,7 +75,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <p className="text-xs text-muted mt-6">
+        <p className="text-xs text-slate-500 mt-6">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>

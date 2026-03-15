@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
@@ -30,7 +29,7 @@ const COUNTRIES = [
 
 export default function NewPropertyPageWrapper() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-bg flex items-center justify-center"><div className="text-muted font-semibold">Loading...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center"><div className="text-slate-500 font-semibold">Loading...</div></div>}>
       <NewPropertyPage />
     </Suspense>
   )
@@ -308,22 +307,22 @@ function NewPropertyPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
+    <div className="min-h-screen bg-[#FDFCFA] flex flex-col">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
+      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
-          <Link href="/dashboard" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+          <Link href="/dashboard" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
-          <span className="text-sm text-muted font-semibold">
+          <span className="text-sm text-slate-500 font-semibold">
             Step {Math.min(step, totalSteps)} of {totalSteps}
           </span>
         </div>
@@ -334,11 +333,11 @@ function NewPropertyPage() {
         <div className="flex items-center gap-2 mb-2">
           {steps.map((_, i) => (
             <div key={i} className="flex-1 flex items-center gap-2">
-              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-[#E8E4FF]'}`} />
+              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-slate-200'}`} />
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-xs text-muted font-semibold mb-8">
+        <div className="flex justify-between text-xs text-slate-500 font-semibold mb-8">
           {steps.map((s, i) => (
             <span key={i} className={i + 1 <= step ? 'text-primary' : ''}>{s}</span>
           ))}
@@ -352,20 +351,20 @@ function NewPropertyPage() {
           <div className="animate-slide-up">
             <div className="flex items-start justify-between mb-8">
               <div>
-                <h2 className="font-nunito text-3xl font-black mb-2">Add a property</h2>
-                <p className="text-muted">Tell us about your property.</p>
+                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Add a property</h2>
+                <p className="text-slate-500">Tell us about your property.</p>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+              <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3">
                 <div className="relative w-11 h-11">
                   <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{step}/{totalSteps}</span>
                 </div>
                 <div className="text-xs">
-                  <p className="font-bold text-dark">Step {step}: Property</p>
-                  <p className="text-muted">{steps.slice(step).join(' \u2192 ')}</p>
+                  <p className="font-bold text-slate-800">Step {step}: Property</p>
+                  <p className="text-slate-500">{steps.slice(step).join(' \u2192 ')}</p>
                 </div>
               </div>
             </div>
@@ -393,11 +392,11 @@ function NewPropertyPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-1.5">Country *</label>
+                <label className="block text-sm font-bold text-slate-800 mb-1.5">Country *</label>
                 <select
                   value={form.propertyCountry}
                   onChange={e => update('propertyCountry', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium focus:border-primary focus:outline-none transition-colors"
                 >
                   {COUNTRIES.map(c => (
                     <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
@@ -406,18 +405,18 @@ function NewPropertyPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-1.5">Property Type</label>
+                <label className="block text-sm font-bold text-slate-800 mb-1.5">Property Type</label>
                 <select
                   value={form.propertyType}
                   onChange={e => update('propertyType', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium focus:border-primary focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium focus:border-primary focus:outline-none transition-colors"
                 >
                   {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-dark mb-1.5">Property Photos (Optional)</label>
+                <label className="block text-sm font-bold text-slate-800 mb-1.5">Property Photos (Optional)</label>
                 <PhotoUpload
                   onPhotosUploaded={(urls) => update('propertyImages', urls)}
                   existingPhotos={form.propertyImages}
@@ -433,27 +432,27 @@ function NewPropertyPage() {
           <div className="animate-slide-up">
             <div className="flex items-start justify-between mb-8">
               <div>
-                <h2 className="font-nunito text-3xl font-black mb-2">Guest Knowledge</h2>
-                <p className="text-muted">What should HeyConcierge know about your property?</p>
+                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Guest Knowledge</h2>
+                <p className="text-slate-500">What should HeyConcierge know about your property?</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+                <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3">
                   <div className="relative w-11 h-11">
                     <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
                     </svg>
-                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{step}/{totalSteps}</span>
                   </div>
                   <div className="text-xs">
-                    <p className="font-bold text-dark">Step {step}: Config</p>
-                    <p className="text-muted">{steps.slice(step).join(' \u2192 ')}</p>
+                    <p className="font-bold text-slate-800">Step {step}: Config</p>
+                    <p className="text-slate-500">{steps.slice(step).join(' \u2192 ')}</p>
                   </div>
                 </div>
                 {hasGuestKnowledge && (
                   <button
                     onClick={() => setShowTestChat(true)}
-                    className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:shadow-card-hover transition-all group"
+                    className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:border-primary shadow-md transition-all group"
                   >
                     <AnimatedMascot mood="happy" size={24} />
                     <span>Test Concierge</span>
@@ -464,15 +463,15 @@ function NewPropertyPage() {
             </div>
             <div className="space-y-5">
               {/* Calendar Sync */}
-              <div className="bg-[#F5F3FF] border-2 border-[#E8E4FF] rounded-xl p-4">
-                <p className="text-sm font-bold text-dark mb-2">Calendar Sync (Optional)</p>
+              <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4">
+                <p className="text-sm font-bold text-slate-800 mb-2">Calendar Sync (Optional)</p>
                 <Input
                   label="iCal URL"
                   value={form.icalUrl}
                   onChange={v => update('icalUrl', v)}
                   placeholder="https://www.airbnb.com/calendar/ical/..."
                 />
-                <p className="text-xs text-muted mt-2">
+                <p className="text-xs text-slate-500 mt-2">
                   Airbnb: Calendar &gt; Export | Booking.com: Extranet &gt; Calendar &gt; Export
                 </p>
               </div>
@@ -480,7 +479,7 @@ function NewPropertyPage() {
               {/* PDF Upload Zone */}
               <div
                 className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
-                  form.pdfDragActive ? 'border-primary bg-[rgba(108,92,231,0.05)]'
+                  form.pdfDragActive ? 'border-primary bg-primary/[0.04]'
                   : form.pdfExtractError ? 'border-red-300 bg-red-50'
                   : form.pdfExtractedFile ? 'border-green-300 bg-green-50'
                   : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-[rgba(108,92,231,0.02)]'
@@ -510,7 +509,7 @@ function NewPropertyPage() {
                 {form.pdfExtracting ? (
                   <div className="flex items-center justify-center gap-3 py-2">
                     <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                    <span className="text-dark font-bold text-sm">Reading your document and filling in the fields below...</span>
+                    <span className="text-slate-800 font-bold text-sm">Reading your document and filling in the fields below...</span>
                   </div>
                 ) : form.pdfExtractError ? (
                   <div className="flex items-center gap-3 py-1">
@@ -541,8 +540,8 @@ function NewPropertyPage() {
                 ) : (
                   <div className="text-center py-2">
                     <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    <p className="text-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
-                    <p className="text-xs text-muted mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
+                    <p className="text-slate-800 font-bold text-sm">Drop your property guide here (PDF or Word)</p>
+                    <p className="text-xs text-slate-500 mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
                   </div>
                 )}
               </div>
@@ -551,9 +550,9 @@ function NewPropertyPage() {
               <button
                 type="button"
                 onClick={() => update('showManualFields', !form.showManualFields)}
-                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-muted hover:text-dark transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors"
               >
-                <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+                <div className="flex-1 h-px bg-primary/[0.08]"></div>
                 <span className="flex items-center gap-2">
                   {form.showManualFields ? (
                     <>
@@ -567,7 +566,7 @@ function NewPropertyPage() {
                     </>
                   )}
                 </span>
-                <div className="flex-1 h-px bg-[rgba(108,92,231,0.1)]"></div>
+                <div className="flex-1 h-px bg-primary/[0.08]"></div>
               </button>
 
               {/* Manual fields (collapsible) */}
@@ -598,8 +597,8 @@ function NewPropertyPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-dark">Property Images (Optional)</p>
-                    <p className="text-xs text-muted">Photos sent to guests when they ask about check-in, parking, etc.</p>
+                    <p className="text-sm font-bold text-slate-800">Property Images (Optional)</p>
+                    <p className="text-xs text-slate-500">Photos sent to guests when they ask about check-in, parking, etc.</p>
                   </div>
                 </div>
                 <PendingImageUpload
@@ -635,26 +634,26 @@ function NewPropertyPage() {
         {step === 3 && (
           <div className="animate-slide-up text-center">
             <div className="text-6xl mb-4">&#127881;</div>
-            <h2 className="font-nunito text-3xl font-black mb-2">Property added!</h2>
-            <p className="text-muted mb-8">Your AI concierge is ready. Place this QR code in your property &mdash; guests scan it to open Telegram and start chatting.</p>
+            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Property added!</h2>
+            <p className="text-slate-500 mb-8">Your AI concierge is ready. Place this QR code in your property &mdash; guests scan it to open Telegram and start chatting.</p>
             {qrDataUrl && (
-              <div className="inline-block bg-white rounded-3xl p-8 shadow-card mb-8">
+              <div className="inline-block bg-white rounded-3xl p-8 border border-slate-200 shadow-sm mb-8">
                 <img src={qrDataUrl} alt="QR Code" className="w-[250px] h-[250px] mx-auto" />
-                <p className="mt-4 font-nunito font-bold text-dark">{form.propertyName}</p>
-                <p className="text-sm text-muted">Scan to chat with HeyConcierge</p>
+                <p className="mt-4 font-nunito font-bold text-slate-800">{form.propertyName}</p>
+                <p className="text-sm text-slate-500">Scan to chat with HeyConcierge</p>
               </div>
             )}
             <div className="flex gap-4 justify-center flex-wrap">
-              <Link href="/dashboard" className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-nunito font-extrabold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
+              <Link href="/dashboard" className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
                 Go to Dashboard &#8594;
               </Link>
               {createdPropertyId && (
-                <Link href={`/property/${createdPropertyId}/settings`} className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-3 rounded-full font-nunito font-extrabold no-underline transition-all hover:-translate-y-0.5">
+                <Link href={`/property/${createdPropertyId}/settings`} className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5">
                   Property Settings
                 </Link>
               )}
               {qrDataUrl && (
-                <a href={qrDataUrl} download={`heyconcierge-qr-${form.propertyName}.png`} className="inline-flex items-center gap-2 border-2 border-[#E8E4FF] text-dark px-8 py-3 rounded-full font-nunito font-extrabold no-underline transition-all hover:-translate-y-0.5">
+                <a href={qrDataUrl} download={`heyconcierge-qr-${form.propertyName}.png`} className="inline-flex items-center gap-2 border-2 border-slate-200 text-slate-800 px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5">
                   Download QR Code
                 </a>
               )}
@@ -666,16 +665,16 @@ function NewPropertyPage() {
         {step < 3 && (
           <div className="flex justify-between mt-10">
             {step === 1 ? (
-              <Link href="/dashboard" className="text-muted font-bold no-underline hover:text-primary transition-colors">&#8592; Dashboard</Link>
+              <Link href="/dashboard" className="text-slate-500 font-bold no-underline hover:text-primary transition-colors">&#8592; Dashboard</Link>
             ) : (
-              <button onClick={() => setStep(s => s - 1)} className="text-muted font-bold hover:text-primary transition-colors">
+              <button onClick={() => setStep(s => s - 1)} className="text-slate-500 font-bold hover:text-primary transition-colors">
                 &#8592; Back
               </button>
             )}
             <button
               onClick={handleNext}
               disabled={!canNext() || loading}
-              className={`px-8 py-3 rounded-full font-nunito font-extrabold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-[#C4BFFF] cursor-not-allowed'}`}
+              className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
             >
               {loading ? 'Creating...' : step === 2 ? 'Create Property' : 'Next \u2192'}
             </button>
@@ -711,13 +710,13 @@ function NewPropertyPage() {
 function Input({ label, value, onChange, placeholder, type = 'text' }: { label: string; value: string; onChange: (v: string) => void; placeholder: string; type?: string }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-dark mb-1.5">{label}</label>
+      <label className="block text-sm font-bold text-slate-800 mb-1.5">{label}</label>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium placeholder:text-[#C4BFFF] focus:border-primary focus:outline-none transition-colors"
+        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium placeholder:text-slate-300 focus:border-primary focus:outline-none transition-colors"
       />
     </div>
   )
@@ -730,7 +729,7 @@ function TextArea({ value, onChange, placeholder }: { value: string; onChange: (
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
       rows={3}
-      className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium placeholder:text-[#C4BFFF] focus:border-primary focus:outline-none transition-colors resize-none"
+      className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium placeholder:text-slate-300 focus:border-primary focus:outline-none transition-colors resize-none"
     />
   )
 }
@@ -760,7 +759,7 @@ function AIField({ label, icon, color, children }: {
         <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${iconBg[color] || iconBg.primary}`}>
           {icon}
         </div>
-        <label className="text-sm font-bold text-dark">{label}</label>
+        <label className="text-sm font-bold text-slate-800">{label}</label>
       </div>
       <div className="space-y-2">
         {children}
@@ -811,8 +810,8 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
           }}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
         />
-        <p className="text-dark font-bold text-sm">Drop images here or click to browse</p>
-        <p className="text-xs text-muted">PNG, JPG up to 10MB each</p>
+        <p className="text-slate-800 font-bold text-sm">Drop images here or click to browse</p>
+        <p className="text-xs text-slate-500">PNG, JPG up to 10MB each</p>
       </div>
 
       {/* Selected files */}
@@ -821,7 +820,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
           <div className="bg-white rounded-lg p-3">
             <p className="text-sm font-bold mb-1">Selected: {selectedFiles.length} file(s)</p>
             {selectedFiles.map((file, i) => (
-              <p key={i} className="text-xs text-muted truncate">{'\u2022'} {file.name}</p>
+              <p key={i} className="text-xs text-slate-500 truncate">{'\u2022'} {file.name}</p>
             ))}
           </div>
 
@@ -838,7 +837,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
                   className={`px-3 py-1.5 rounded-full font-bold text-xs transition-all ${
                     selectedTags.includes(tag.id)
                       ? 'bg-primary text-white'
-                      : 'bg-[rgba(108,92,231,0.1)] text-dark hover:bg-[rgba(108,92,231,0.2)]'
+                      : 'bg-primary/[0.08] text-slate-800 hover:bg-primary/[0.14]'
                   }`}
                 >
                   {tag.emoji} {tag.label}
@@ -869,7 +868,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
                 <img src={img.url} alt={`Pending ${i + 1}`} className="w-full h-24 object-cover rounded-lg" />
                 <div className="flex flex-wrap gap-0.5 mt-1">
                   {img.tags.map(tag => (
-                    <span key={tag} className="text-[9px] bg-[rgba(108,92,231,0.1)] px-1 py-0.5 rounded-full">
+                    <span key={tag} className="text-[9px] bg-primary/[0.08] px-1 py-0.5 rounded-full">
                       {AVAILABLE_TAGS.find(t => t.id === tag)?.emoji} {tag}
                     </span>
                   ))}

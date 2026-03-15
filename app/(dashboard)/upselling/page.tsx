@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { ToastProvider, useToast } from '@/components/ui/Toast'
 import { createClient } from '@/lib/supabase/client'
 
@@ -90,7 +89,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
   sent: { bg: 'bg-primary/10', text: 'text-primary' },
   accepted: { bg: 'bg-mint/20', text: 'text-mint-dark' },
   declined: { bg: 'bg-accent/10', text: 'text-accent' },
-  expired: { bg: 'bg-muted/10', text: 'text-muted' },
+  expired: { bg: 'bg-muted/10', text: 'text-slate-500' },
 }
 
 function UpsellPage() {
@@ -374,13 +373,13 @@ function UpsellPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
-  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none transition-all bg-white text-sm"
+  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-primary outline-none transition-all bg-white text-sm"
   const toggleClass = (enabled: boolean) =>
     `relative inline-flex h-7 w-12 items-center rounded-full transition-colors cursor-pointer ${
       enabled ? 'bg-primary' : 'bg-[rgba(108,92,231,0.15)]'
@@ -391,10 +390,10 @@ function UpsellPage() {
     }`
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Unsaved changes bar */}
       {hasUnsavedChanges && (
-        <div className="sticky top-0 z-40 bg-gradient-to-r from-[#FDCB6E] to-[#F9CA24] px-4 py-2 text-center text-sm font-bold text-dark">
+        <div className="sticky top-0 z-40 bg-gradient-to-r from-[#FDCB6E] to-[#F9CA24] px-4 py-2 text-center text-sm font-bold text-slate-800">
           You have unsaved changes —{' '}
           <button
             onClick={handleSave}
@@ -406,18 +405,18 @@ function UpsellPage() {
       )}
 
       {/* Header */}
-      <header className={`px-4 sm:px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky ${hasUnsavedChanges ? 'top-[36px]' : 'top-0'} z-30`}>
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-2">
+      <header className={`px-4 sm:px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky ${hasUnsavedChanges ? 'top-[36px]' : 'top-0'} z-30`}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
           <Link href="/" className="font-nunito text-lg sm:text-xl font-black no-underline flex items-center gap-2 flex-shrink-0">
-            <LogoSVG className="w-6 h-6 sm:w-8 sm:h-8" />
-            <span className="text-accent hidden sm:inline">Hey</span><span className="text-dark hidden sm:inline">Concierge</span>
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800 hidden sm:inline">Hey<span className="text-primary">Concierge</span></span>
             <span className="text-accent sm:hidden">heyc</span>
           </Link>
           <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/dashboard" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+            <Link href="/dashboard" className="text-xs sm:text-sm text-slate-800 hover:text-primary font-bold whitespace-nowrap">
               🏠 <span className="hidden sm:inline">Dashboard</span>
             </Link>
-            <Link href="/calendar" className="text-xs sm:text-sm text-dark hover:text-primary font-bold whitespace-nowrap">
+            <Link href="/calendar" className="text-xs sm:text-sm text-slate-800 hover:text-primary font-bold whitespace-nowrap">
               📅 <span className="hidden sm:inline">Calendar</span>
             </Link>
             <span className="text-xs sm:text-sm text-primary font-bold whitespace-nowrap">
@@ -428,21 +427,21 @@ function UpsellPage() {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="text-xs sm:text-sm font-bold text-dark hover:text-primary flex items-center gap-1 max-w-[120px] sm:max-w-none truncate"
+                className="text-xs sm:text-sm font-bold text-slate-800 hover:text-primary flex items-center gap-1 max-w-[120px] sm:max-w-none truncate"
               >
                 <span className="truncate">{organization?.name}</span>
                 <span className="text-xs flex-shrink-0">▼</span>
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-[rgba(108,92,231,0.1)] py-2 z-50">
-                  <div className="px-4 py-3 border-b border-[rgba(108,92,231,0.08)]">
-                    <div className="text-xs text-muted uppercase font-bold mb-1">Current Plan</div>
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
+                  <div className="px-4 py-3 border-b border-slate-200">
+                    <div className="text-xs text-slate-500 uppercase font-bold mb-1">Current Plan</div>
                     <div className="text-sm font-bold text-primary">{organization?.plan || 'FREE'}</div>
                   </div>
                   <button
                     onClick={() => { setDropdownOpen(false); handleLogout() }}
-                    className="w-full text-left px-4 py-3 text-sm text-muted hover:bg-[rgba(108,92,231,0.05)] transition-colors border-t border-[rgba(108,92,231,0.08)]"
+                    className="w-full text-left px-4 py-3 text-sm text-slate-500 hover:bg-primary/[0.04] transition-colors border-t border-slate-200"
                   >
                     🚪 Logout
                   </button>
@@ -453,12 +452,12 @@ function UpsellPage() {
         </div>
       </header>
 
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8 py-8 sm:py-12">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <h1 className="font-nunito text-2xl sm:text-4xl font-black mb-2">Upselling</h1>
-            <p className="text-sm sm:text-base text-muted">Boost revenue with automated offers to your guests</p>
+            <p className="text-sm sm:text-base text-slate-500">Boost revenue with automated offers to your guests</p>
           </div>
 
           {/* Property Selector */}
@@ -466,7 +465,7 @@ function UpsellPage() {
             <select
               value={selectedPropertyId || ''}
               onChange={(e) => setSelectedPropertyId(e.target.value)}
-              className="bg-white px-4 py-3 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none font-bold text-sm"
+              className="bg-white px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-primary outline-none font-bold text-sm"
             >
               {properties.map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -476,10 +475,10 @@ function UpsellPage() {
         </div>
 
         {properties.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-card p-12 text-center">
+          <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
             <div className="text-6xl mb-4">💰</div>
-            <h2 className="font-nunito text-2xl font-black mb-2">No properties yet</h2>
-            <p className="text-muted mb-6">Add a property first to start upselling</p>
+            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight mb-2">No properties yet</h2>
+            <p className="text-slate-500 mb-6">Add a property first to start upselling</p>
             <Link href="/property/new" className="bg-primary text-white px-6 py-3 rounded-full font-bold no-underline hover:-translate-y-0.5 transition-all">
               + Add Property
             </Link>
@@ -493,7 +492,7 @@ function UpsellPage() {
                 className={`px-6 py-3 rounded-full font-bold text-sm transition-all ${
                   activeTab === 'dashboard'
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-white text-dark hover:bg-[rgba(108,92,231,0.05)] border-2 border-[rgba(108,92,231,0.1)]'
+                    : 'bg-white text-slate-800 hover:bg-primary/[0.04] border-2 border-slate-200'
                 }`}
               >
                 📊 Dashboard
@@ -503,7 +502,7 @@ function UpsellPage() {
                 className={`px-6 py-3 rounded-full font-bold text-sm transition-all ${
                   activeTab === 'settings'
                     ? 'bg-primary text-white shadow-md'
-                    : 'bg-white text-dark hover:bg-[rgba(108,92,231,0.05)] border-2 border-[rgba(108,92,231,0.1)]'
+                    : 'bg-white text-slate-800 hover:bg-primary/[0.04] border-2 border-slate-200'
                 }`}
               >
                 ⚙️ Settings
@@ -560,8 +559,8 @@ function DashboardView({
         <div className="bg-yellow/10 border-2 border-yellow/30 rounded-2xl px-6 py-4 flex items-center gap-3">
           <span className="text-2xl">⚠️</span>
           <div>
-            <p className="font-bold text-dark text-sm">Upselling is paused for {selectedProperty?.name}</p>
-            <p className="text-xs text-muted">Go to Settings to enable automated offers</p>
+            <p className="font-bold text-slate-800 text-sm">Upselling is paused for {selectedProperty?.name}</p>
+            <p className="text-xs text-slate-500">Go to Settings to enable automated offers</p>
           </div>
         </div>
       )}
@@ -590,9 +589,9 @@ function DashboardView({
       )}
 
       {/* Breakdown by Type */}
-      <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="px-6 sm:px-8 py-5 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent">
-          <h2 className="font-nunito font-black text-lg">📋 Offer Breakdown</h2>
+          <h2 className="font-bold text-slate-800 text-lg">📋 Offer Breakdown</h2>
         </div>
         <div className="px-6 sm:px-8 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -606,20 +605,20 @@ function DashboardView({
                 <div key={type} className="bg-[rgba(108,92,231,0.03)] rounded-2xl p-4 border border-[rgba(108,92,231,0.06)]">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-xl">{emoji}</span>
-                    <span className="font-bold text-sm text-dark">{label}</span>
+                    <span className="font-bold text-sm text-slate-800">{label}</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div>
-                      <div className="text-lg font-black text-dark">{sent}</div>
-                      <div className="text-[10px] text-muted uppercase font-bold">Sent</div>
+                      <div className="text-lg font-black text-slate-800">{sent}</div>
+                      <div className="text-[10px] text-slate-500 uppercase font-bold">Sent</div>
                     </div>
                     <div>
                       <div className="text-lg font-black text-mint-dark">{accepted}</div>
-                      <div className="text-[10px] text-muted uppercase font-bold">Accepted</div>
+                      <div className="text-[10px] text-slate-500 uppercase font-bold">Accepted</div>
                     </div>
                     <div>
                       <div className="text-lg font-black text-primary">€{revenue}</div>
-                      <div className="text-[10px] text-muted uppercase font-bold">Revenue</div>
+                      <div className="text-[10px] text-slate-500 uppercase font-bold">Revenue</div>
                     </div>
                   </div>
                 </div>
@@ -630,29 +629,29 @@ function DashboardView({
       </div>
 
       {/* Recent Offers Table */}
-      <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="px-6 sm:px-8 py-5 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent flex items-center justify-between">
-          <h2 className="font-nunito font-black text-lg">📬 Recent Offers</h2>
-          <span className="text-xs text-muted font-bold">{offers.length} total</span>
+          <h2 className="font-bold text-slate-800 text-lg">📬 Recent Offers</h2>
+          <span className="text-xs text-slate-500 font-bold">{offers.length} total</span>
         </div>
 
         {offers.length === 0 ? (
           <div className="px-8 py-12 text-center">
             <div className="text-4xl mb-3">📭</div>
-            <p className="text-muted font-bold">No offers yet</p>
-            <p className="text-xs text-muted mt-1">Offers will appear here once upselling is enabled and bookings are synced</p>
+            <p className="text-slate-500 font-bold">No offers yet</p>
+            <p className="text-xs text-slate-500 mt-1">Offers will appear here once upselling is enabled and bookings are synced</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[rgba(108,92,231,0.08)]">
-                  <th className="text-left px-6 py-3 text-xs text-muted font-bold uppercase">Type</th>
-                  <th className="text-left px-4 py-3 text-xs text-muted font-bold uppercase">Guest</th>
-                  <th className="text-left px-4 py-3 text-xs text-muted font-bold uppercase">Channel</th>
-                  <th className="text-left px-4 py-3 text-xs text-muted font-bold uppercase">Price</th>
-                  <th className="text-left px-4 py-3 text-xs text-muted font-bold uppercase">Status</th>
-                  <th className="text-left px-4 py-3 text-xs text-muted font-bold uppercase">Date</th>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left px-6 py-3 text-xs text-slate-500 font-bold uppercase">Type</th>
+                  <th className="text-left px-4 py-3 text-xs text-slate-500 font-bold uppercase">Guest</th>
+                  <th className="text-left px-4 py-3 text-xs text-slate-500 font-bold uppercase">Channel</th>
+                  <th className="text-left px-4 py-3 text-xs text-slate-500 font-bold uppercase">Price</th>
+                  <th className="text-left px-4 py-3 text-xs text-slate-500 font-bold uppercase">Status</th>
+                  <th className="text-left px-4 py-3 text-xs text-slate-500 font-bold uppercase">Date</th>
                 </tr>
               </thead>
               <tbody>
@@ -668,7 +667,7 @@ function DashboardView({
                           <span className="font-bold">{type.label}</span>
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-muted">
+                      <td className="px-4 py-3 text-slate-500">
                         {offer.guest_phone?.startsWith('tg:') ? '📱 Telegram' : '📱 WhatsApp'}
                       </td>
                       <td className="px-4 py-3">
@@ -686,7 +685,7 @@ function DashboardView({
                           {offer.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-muted text-xs">
+                      <td className="px-4 py-3 text-slate-500 text-xs">
                         {offer.sent_at
                           ? new Date(offer.sent_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
                           : offer.scheduled_at
@@ -710,12 +709,12 @@ function StatCard({ emoji, value, label, color, large }: {
   emoji: string; value: string | number; label: string; color?: string; large?: boolean
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-card p-5 sm:p-6">
+    <div className="bg-white rounded-xl border border-slate-200 p-5 sm:p-6">
       <div className="text-2xl sm:text-3xl mb-2">{emoji}</div>
-      <div className={`${large ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'} font-black ${color || 'text-dark'}`}>
+      <div className={`${large ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'} font-black ${color || 'text-slate-800'}`}>
         {value}
       </div>
-      <div className="text-[11px] text-muted font-bold uppercase mt-1">{label}</div>
+      <div className="text-[11px] text-slate-500 font-bold uppercase mt-1">{label}</div>
     </div>
   )
 }
@@ -746,13 +745,13 @@ function SettingsView({
   return (
     <div className="space-y-6">
       {/* Master Toggle */}
-      <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="px-6 sm:px-8 py-6 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <span className="text-3xl">💰</span>
             <div>
-              <h2 className="font-nunito font-black text-lg">Automated Upselling</h2>
-              <p className="text-xs text-muted mt-0.5">When enabled, offers will be sent to guests automatically</p>
+              <h2 className="font-bold text-slate-800 text-lg">Automated Upselling</h2>
+              <p className="text-xs text-slate-500 mt-0.5">When enabled, offers will be sent to guests automatically</p>
             </div>
           </div>
           <button
@@ -765,30 +764,30 @@ function SettingsView({
       </div>
 
       {/* Auto-send mode */}
-      <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="px-6 sm:px-8 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-xl">🤖</span>
             <div>
               <span className="font-bold text-sm">Autopilot Mode</span>
-              <p className="text-[11px] text-muted">Send offers automatically, or require your approval first</p>
+              <p className="text-[11px] text-slate-500">Send offers automatically, or require your approval first</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className={`text-xs font-bold ${!config.auto_send ? 'text-primary' : 'text-muted'}`}>Draft</span>
+            <span className={`text-xs font-bold ${!config.auto_send ? 'text-primary' : 'text-slate-500'}`}>Draft</span>
             <button
               onClick={() => updateConfig({ auto_send: !config.auto_send })}
               className={toggleClass(config.auto_send)}
             >
               <span className={toggleDot(config.auto_send)} />
             </button>
-            <span className={`text-xs font-bold ${config.auto_send ? 'text-primary' : 'text-muted'}`}>Auto</span>
+            <span className={`text-xs font-bold ${config.auto_send ? 'text-primary' : 'text-slate-500'}`}>Auto</span>
           </div>
         </div>
       </div>
 
       {/* Language */}
-      <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <div className="px-6 sm:px-8 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-xl">🌍</span>
@@ -797,7 +796,7 @@ function SettingsView({
           <select
             value={config.message_language}
             onChange={e => updateConfig({ message_language: e.target.value })}
-            className="px-4 py-2 rounded-xl border-2 border-[rgba(108,92,231,0.1)] focus:border-primary outline-none text-sm font-bold bg-white"
+            className="px-4 py-2 rounded-xl border-2 border-slate-200 focus:border-primary outline-none text-sm font-bold bg-white"
           >
             <option value="en">English</option>
             <option value="no">Norsk</option>
@@ -824,7 +823,7 @@ function SettingsView({
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Price per hour (€)</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Price per hour (€)</label>
             <input
               type="number"
               value={config.late_checkout_price_per_hour}
@@ -834,7 +833,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Max extra hours</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Max extra hours</label>
             <input
               type="number"
               value={config.late_checkout_max_hours}
@@ -845,7 +844,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Standard checkout time</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Standard checkout time</label>
             <input
               type="time"
               value={config.late_checkout_standard_time}
@@ -854,7 +853,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send offer X hours before checkout</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Send offer X hours before checkout</label>
             <input
               type="number"
               value={config.late_checkout_send_hours_before}
@@ -885,7 +884,7 @@ function SettingsView({
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Price per hour (€)</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Price per hour (€)</label>
             <input
               type="number"
               value={config.early_checkin_price_per_hour}
@@ -895,7 +894,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Max early hours</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Max early hours</label>
             <input
               type="number"
               value={config.early_checkin_max_hours}
@@ -906,7 +905,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Standard check-in time</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Standard check-in time</label>
             <input
               type="time"
               value={config.early_checkin_standard_time}
@@ -915,7 +914,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send offer X hours before check-in</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Send offer X hours before check-in</label>
             <input
               type="number"
               value={config.early_checkin_send_hours_before}
@@ -946,7 +945,7 @@ function SettingsView({
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Base price per night (€)</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Base price per night (€)</label>
             <input
               type="number"
               value={config.gap_night_base_price}
@@ -956,7 +955,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Discount (%)</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Discount (%)</label>
             <input
               type="number"
               value={config.gap_night_discount_pct}
@@ -967,7 +966,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Max gap nights</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Max gap nights</label>
             <input
               type="number"
               value={config.gap_night_max_gap}
@@ -978,7 +977,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send X days before checkout</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Send X days before checkout</label>
             <input
               type="number"
               value={config.gap_night_send_days_before}
@@ -1008,7 +1007,7 @@ function SettingsView({
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Discount (%)</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Discount (%)</label>
             <input
               type="number"
               value={config.stay_extension_discount_pct}
@@ -1019,7 +1018,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send X hours before checkout</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Send X hours before checkout</label>
             <input
               type="number"
               value={config.stay_extension_send_hours_before}
@@ -1049,7 +1048,7 @@ function SettingsView({
       >
         <div className="grid grid-cols-1 gap-4">
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send X hours after checkout</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Send X hours after checkout</label>
             <input
               type="number"
               value={config.review_request_send_hours_after}
@@ -1060,7 +1059,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Google Review URL</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Google Review URL</label>
             <input
               type="url"
               value={config.review_request_platform_urls?.google || ''}
@@ -1075,7 +1074,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">Airbnb Review URL</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">Airbnb Review URL</label>
             <input
               type="url"
               value={config.review_request_platform_urls?.airbnb || ''}
@@ -1090,7 +1089,7 @@ function SettingsView({
             />
           </div>
           <div>
-            <label className="text-xs font-bold text-muted uppercase mb-1 block">TripAdvisor Review URL</label>
+            <label className="text-xs font-bold text-slate-500 uppercase mb-1 block">TripAdvisor Review URL</label>
             <input
               type="url"
               value={config.review_request_platform_urls?.tripadvisor || ''}
@@ -1189,7 +1188,7 @@ function SettingsView({
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-primary text-white px-8 py-4 rounded-full font-nunito font-extrabold text-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+          className="bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
           {saving ? 'Saving...' : '💾 Save Settings'}
         </button>
@@ -1222,14 +1221,14 @@ function OfferSection({
   children: React.ReactNode
 }) {
   return (
-    <div className={`bg-white rounded-3xl shadow-card overflow-hidden transition-all ${!enabled ? 'opacity-75' : ''}`}>
+    <div className={`bg-white rounded-xl border border-slate-200 overflow-hidden transition-all ${!enabled ? 'opacity-75' : ''}`}>
       {/* Header with toggle */}
       <div className="px-6 sm:px-8 py-5 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="text-2xl">{emoji}</span>
           <div>
-            <h3 className="font-nunito font-black text-base">{title}</h3>
-            <p className="text-[11px] text-muted">{description}</p>
+            <h3 className="font-bold text-slate-800 text-base">{title}</h3>
+            <p className="text-[11px] text-slate-500">{description}</p>
           </div>
         </div>
         <button onClick={onToggle} className={toggleClass(enabled)}>
@@ -1250,8 +1249,8 @@ function OfferSection({
 function OfferPreview({ children }: { children: React.ReactNode }) {
   return (
     <div className="mt-4 bg-[rgba(108,92,231,0.04)] rounded-xl p-4 border border-dashed border-[rgba(108,92,231,0.15)]">
-      <div className="text-[10px] text-muted font-bold uppercase mb-2">Message Preview</div>
-      <div className="text-sm text-dark leading-relaxed">
+      <div className="text-[10px] text-slate-500 font-bold uppercase mb-2">Message Preview</div>
+      <div className="text-sm text-slate-800 leading-relaxed">
         {children}
       </div>
     </div>

@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 
 const PLANS = [
@@ -14,7 +13,7 @@ const PLANS = [
 
 export default function SignupPageWrapper() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-bg flex items-center justify-center"><div className="text-muted font-semibold">Loading...</div></div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center"><div className="text-slate-500 font-semibold">Loading...</div></div>}>
       <SignupPage />
     </Suspense>
   )
@@ -234,15 +233,15 @@ function SignupPage() {
   const totalSteps = steps.length
 
   return (
-    <div className="min-h-screen bg-bg flex flex-col">
+    <div className="min-h-screen bg-[#FDFCFA] flex flex-col">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
+      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
-          <span className="text-sm text-muted font-semibold">
+          <span className="text-sm text-slate-500 font-semibold">
             Step {Math.min(step, totalSteps)} of {totalSteps}
           </span>
         </div>
@@ -253,11 +252,11 @@ function SignupPage() {
         <div className="flex items-center gap-2 mb-2">
           {steps.map((_, i) => (
             <div key={i} className="flex-1 flex items-center gap-2">
-              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-[#E8E4FF]'}`} />
+              <div className={`h-2 rounded-full flex-1 transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-slate-200'}`} />
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-xs text-muted font-semibold mb-8">
+        <div className="flex justify-between text-xs text-slate-500 font-semibold mb-8">
           {steps.map((s, i) => (
             <span key={i} className={i + 1 <= step ? 'text-primary' : ''}>{s}</span>
           ))}
@@ -271,20 +270,20 @@ function SignupPage() {
           <div className="animate-slide-up">
             <div className="flex items-start justify-between mb-8">
               <div>
-                <h2 className="font-nunito text-3xl font-black mb-2">Let&apos;s get started!</h2>
-                <p className="text-muted">Tell us about yourself.</p>
+                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Let&apos;s get started!</h2>
+                <p className="text-slate-500">Tell us about yourself.</p>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+              <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3">
                 <div className="relative w-11 h-11">
                   <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{step}/{totalSteps}</span>
                 </div>
                 <div className="text-xs">
-                  <p className="font-bold text-dark">Step {step}: Account</p>
-                  <p className="text-muted">{steps.slice(step).join(' \u2192 ')}</p>
+                  <p className="font-bold text-slate-800">Step {step}: Account</p>
+                  <p className="text-slate-500">{steps.slice(step).join(' \u2192 ')}</p>
                 </div>
               </div>
             </div>
@@ -318,7 +317,7 @@ function SignupPage() {
 
               {/* Company or Private toggle */}
               <div>
-                <label className="block text-sm font-bold text-dark mb-2">Account Type</label>
+                <label className="block text-sm font-bold text-slate-800 mb-2">Account Type</label>
                 <div className="flex gap-3">
                   <button
                     type="button"
@@ -326,7 +325,7 @@ function SignupPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
                       !form.isCompany
                         ? 'bg-primary text-white shadow-md'
-                        : 'bg-white text-muted border-2 border-[#E8E4FF]'
+                        : 'bg-white text-slate-500 border-2 border-slate-200'
                     }`}
                   >
                     Private
@@ -337,7 +336,7 @@ function SignupPage() {
                     className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${
                       form.isCompany
                         ? 'bg-primary text-white shadow-md'
-                        : 'bg-white text-muted border-2 border-[#E8E4FF]'
+                        : 'bg-white text-slate-500 border-2 border-slate-200'
                     }`}
                   >
                     Company
@@ -364,20 +363,20 @@ function SignupPage() {
           <div className="animate-slide-up">
             <div className="flex items-start justify-between mb-8">
               <div>
-                <h2 className="font-nunito text-3xl font-black mb-2">Choose your plan</h2>
-                <p className="text-muted">All plans include a 14-day free trial. Payment starts after trial.</p>
+                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Choose your plan</h2>
+                <p className="text-slate-500">All plans include a 14-day free trial. Payment starts after trial.</p>
               </div>
-              <div className="flex items-center gap-3 bg-white rounded-2xl shadow-card px-5 py-3">
+              <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3">
                 <div className="relative w-11 h-11">
                   <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
                     <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-dark">{step}/{totalSteps}</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{step}/{totalSteps}</span>
                 </div>
                 <div className="text-xs">
-                  <p className="font-bold text-dark">Step {step}: Plan & Pay</p>
-                  <p className="text-muted">{steps.slice(step).join(' \u2192 ')}</p>
+                  <p className="font-bold text-slate-800">Step {step}: Plan & Pay</p>
+                  <p className="text-slate-500">{steps.slice(step).join(' \u2192 ')}</p>
                 </div>
               </div>
             </div>
@@ -389,18 +388,18 @@ function SignupPage() {
                   disabled={creatingCheckout}
                   className={`w-full text-left rounded-2xl p-6 border-2 transition-all ${
                     form.plan === p.id
-                      ? `${p.border} shadow-card-hover`
-                      : 'border-transparent shadow-card'
+                      ? `${p.border} border-primary shadow-md`
+                      : 'border-transparent border border-slate-200 shadow-sm'
                   } bg-white hover:-translate-y-0.5 ${creatingCheckout ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{p.emoji}</span>
-                      <span className={`font-nunito font-extrabold text-lg ${p.color}`}>{p.name}</span>
+                      <span className={`font-semibold text-lg ${p.color}`}>{p.name}</span>
                       {p.popular && <span className="bg-primary text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="font-nunito font-black text-2xl text-dark">{p.price}<span className="text-sm text-muted font-normal">{p.period}</span></div>
+                      <div className="font-bold text-slate-800 text-2xl text-slate-800">{p.price}<span className="text-sm text-slate-500 font-normal">{p.period}</span></div>
                       {form.plan === p.id && (
                         <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
@@ -410,7 +409,7 @@ function SignupPage() {
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {p.features.map((f, i) => (
-                      <span key={i} className="text-xs text-muted bg-[#F5F3FF] px-2.5 py-1 rounded-full">{'\u2713'} {f}</span>
+                      <span key={i} className="text-xs text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full">{'\u2713'} {f}</span>
                     ))}
                   </div>
                 </button>
@@ -418,20 +417,20 @@ function SignupPage() {
             </div>
 
             {form.plan && (
-              <div className="mt-6 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent rounded-2xl p-5 border-2 border-[#E8E4FF]">
+              <div className="mt-6 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent rounded-2xl p-5 border-2 border-slate-200">
                 <div className="flex items-start gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-bold text-dark text-sm mb-1">14-day free trial included</p>
-                    <p className="text-xs text-muted">You won&apos;t be charged until your trial ends. Cancel anytime.</p>
+                    <p className="font-bold text-slate-800 text-sm mb-1">14-day free trial included</p>
+                    <p className="text-xs text-slate-500">You won&apos;t be charged until your trial ends. Cancel anytime.</p>
                   </div>
                 </div>
                 <button
                   onClick={handleStripeCheckout}
                   disabled={creatingCheckout}
-                  className="w-full mt-4 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-8 py-4 rounded-full font-nunito font-extrabold text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full mt-4 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-8 py-4 rounded-full font-semibold text-base transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {creatingCheckout ? (
                     <>
@@ -445,7 +444,7 @@ function SignupPage() {
                     </>
                   )}
                 </button>
-                <p className="text-xs text-center text-muted mt-3">
+                <p className="text-xs text-center text-slate-500 mt-3">
                   Secure payment powered by Stripe
                 </p>
               </div>
@@ -457,11 +456,11 @@ function SignupPage() {
         {step === 3 && (
           <div className="animate-slide-up text-center">
             <div className="text-6xl mb-4">&#127881;</div>
-            <h2 className="font-nunito text-3xl font-black mb-2">Welcome aboard!</h2>
-            <p className="text-muted mb-8">Your account is all set. Head to your dashboard to add your first property.</p>
+            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Welcome aboard!</h2>
+            <p className="text-slate-500 mb-8">Your account is all set. Head to your dashboard to add your first property.</p>
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-nunito font-extrabold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]"
+              className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]"
             >
               Go to Dashboard &#8594;
             </Link>
@@ -471,11 +470,11 @@ function SignupPage() {
         {/* Navigation Buttons */}
         {step === 1 && (
           <div className="flex justify-between mt-10">
-            <Link href="/" className="text-muted font-bold no-underline hover:text-primary transition-colors">&#8592; Home</Link>
+            <Link href="/" className="text-slate-500 font-bold no-underline hover:text-primary transition-colors">&#8592; Home</Link>
             <button
               onClick={handleNext}
               disabled={!canNext() || loading}
-              className={`px-8 py-3 rounded-full font-nunito font-extrabold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-[#C4BFFF] cursor-not-allowed'}`}
+              className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNext() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
             >
               Next &#8594;
             </button>
@@ -485,7 +484,7 @@ function SignupPage() {
         {/* Back button for step 2 (Plan & Pay) */}
         {step === 2 && (
           <div className="flex justify-start mt-10">
-            <button onClick={() => setStep(1)} className="text-muted font-bold hover:text-primary transition-colors">
+            <button onClick={() => setStep(1)} className="text-slate-500 font-bold hover:text-primary transition-colors">
               &#8592; Back
             </button>
           </div>
@@ -498,13 +497,13 @@ function SignupPage() {
 function Input({ label, value, onChange, placeholder, type = 'text' }: { label: string; value: string; onChange: (v: string) => void; placeholder: string; type?: string }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-dark mb-1.5">{label}</label>
+      <label className="block text-sm font-bold text-slate-800 mb-1.5">{label}</label>
       <input
         type={type}
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl border-2 border-[#E8E4FF] bg-white text-dark font-medium placeholder:text-[#C4BFFF] focus:border-primary focus:outline-none transition-colors"
+        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium placeholder:text-slate-300 focus:border-primary focus:outline-none transition-colors"
       />
     </div>
   )

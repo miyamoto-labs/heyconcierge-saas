@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import LogoSVG from '@/components/brand/LogoSVG'
 import { createClient } from '@/lib/supabase/client'
 
 interface Booking {
@@ -168,45 +167,45 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-bg flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
         <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-muted hover:text-dark font-bold">← Dashboard</Link>
-            <Link href="/upselling" className="text-sm text-dark hover:text-primary font-bold">💰 Upselling</Link>
-            <span className="text-sm text-muted">{userEmail}</span>
-            <button onClick={handleLogout} className="text-sm text-muted hover:text-dark font-bold">
+            <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-800 font-bold">← Dashboard</Link>
+            <Link href="/upselling" className="text-sm text-slate-800 hover:text-primary font-bold">💰 Upselling</Link>
+            <span className="text-sm text-slate-500">{userEmail}</span>
+            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">
               Logout
             </button>
           </div>
         </div>
       </header>
 
-      <div className="max-w-[1400px] mx-auto px-8 py-12">
+      <div className="max-w-6xl mx-auto px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-nunito text-4xl font-black mb-2">📅 Calendar</h1>
-            <p className="text-muted">View and sync your bookings</p>
+            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">📅 Calendar</h1>
+            <p className="text-slate-500">View and sync your bookings</p>
           </div>
           
           <div className="flex gap-4">
             <select
               value={selectedProperty}
               onChange={(e) => setSelectedProperty(e.target.value)}
-              className="px-4 py-2 rounded-full border-2 border-[rgba(108,92,231,0.1)] font-bold text-sm hover:border-primary transition-all outline-none"
+              className="px-4 py-2 rounded-full border-2 border-slate-200 font-bold text-sm hover:border-primary transition-all outline-none"
             >
               <option value="all">All Properties</option>
               {properties.map(prop => (
@@ -225,19 +224,19 @@ export default function CalendarPage() {
         </div>
 
         {/* Calendar */}
-        <div className="bg-white rounded-3xl shadow-card p-8">
+        <div className="bg-white rounded-xl border border-slate-200 p-8">
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6">
             <button
               onClick={previousMonth}
-              className="w-10 h-10 rounded-full bg-[rgba(108,92,231,0.1)] hover:bg-[rgba(108,92,231,0.2)] font-bold text-xl transition-all"
+              className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all"
             >
               ←
             </button>
-            <h2 className="font-nunito text-2xl font-black">{monthName}</h2>
+            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{monthName}</h2>
             <button
               onClick={nextMonth}
-              className="w-10 h-10 rounded-full bg-[rgba(108,92,231,0.1)] hover:bg-[rgba(108,92,231,0.2)] font-bold text-xl transition-all"
+              className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all"
             >
               →
             </button>
@@ -246,7 +245,7 @@ export default function CalendarPage() {
           {/* Day Headers */}
           <div className="grid grid-cols-7 gap-2 mb-2">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center font-bold text-sm text-muted py-2">
+              <div key={day} className="text-center font-bold text-sm text-slate-500 py-2">
                 {day}
               </div>
             ))}
@@ -266,13 +265,13 @@ export default function CalendarPage() {
                   key={idx}
                   className={`min-h-[100px] p-2 rounded-xl border-2 transition-all ${
                     day 
-                      ? 'bg-white border-[rgba(108,92,231,0.1)] hover:border-primary cursor-pointer' 
+                      ? 'bg-white border-slate-200 hover:border-primary cursor-pointer' 
                       : 'bg-transparent border-transparent'
                   } ${isToday ? 'border-accent bg-accent-soft' : ''}`}
                 >
                   {day && (
                     <>
-                      <div className={`text-sm font-bold mb-1 ${isToday ? 'text-accent' : 'text-dark'}`}>
+                      <div className={`text-sm font-bold mb-1 ${isToday ? 'text-accent' : 'text-slate-800'}`}>
                         {day}
                       </div>
                       <div className="space-y-1">
@@ -286,7 +285,7 @@ export default function CalendarPage() {
                           </div>
                         ))}
                         {dayBookings.length > 2 && (
-                          <div className="text-xs text-muted font-bold">
+                          <div className="text-xs text-slate-500 font-bold">
                             +{dayBookings.length - 2} more
                           </div>
                         )}
@@ -301,24 +300,24 @@ export default function CalendarPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-6 mt-8">
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">📊</div>
             <div className="text-3xl font-black">{bookings.length}</div>
-            <div className="text-sm text-muted">Total Bookings</div>
+            <div className="text-sm text-slate-500">Total Bookings</div>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">📅</div>
             <div className="text-3xl font-black">
               {bookings.filter(b => b.status === 'confirmed').length}
             </div>
-            <div className="text-sm text-muted">Upcoming</div>
+            <div className="text-sm text-slate-500">Upcoming</div>
           </div>
           
-          <div className="bg-white rounded-2xl shadow-card p-6">
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="text-4xl mb-2">🏠</div>
             <div className="text-3xl font-black">{properties.length}</div>
-            <div className="text-sm text-muted">Properties</div>
+            <div className="text-sm text-slate-500">Properties</div>
           </div>
         </div>
       </div>

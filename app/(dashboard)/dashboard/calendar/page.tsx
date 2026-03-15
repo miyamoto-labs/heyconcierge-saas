@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import LogoSVG from '@/components/brand/LogoSVG'
 
 // Mock bookings data for presentation
 const MOCK_BOOKINGS = [
@@ -80,63 +79,63 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-[#FDFCFA]">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px]">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between">
-          <Link href="/dashboard" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px]">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Link href="/dashboard" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm font-bold text-muted hover:text-primary transition-colors no-underline">
+            <Link href="/dashboard" className="text-sm font-bold text-slate-500 hover:text-primary transition-colors no-underline">
               ← Back to Properties
             </Link>
           </div>
         </div>
       </header>
 
-      <div className="max-w-[1200px] mx-auto px-8 py-12">
+      <div className="max-w-6xl mx-auto px-8 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-nunito text-4xl font-black mb-2">Calendar & Bookings</h1>
-          <p className="text-muted">Manage your upcoming reservations</p>
+          <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">Calendar & Bookings</h1>
+          <p className="text-slate-500">Manage your upcoming reservations</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-card">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-2xl">
                 📅
               </div>
               <div>
-                <div className="text-3xl font-black text-dark">{todayCheckIns.length}</div>
-                <div className="text-sm text-muted font-semibold">Check-ins Today</div>
+                <div className="text-3xl font-black text-slate-800">{todayCheckIns.length}</div>
+                <div className="text-sm text-slate-500 font-semibold">Check-ins Today</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-card">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-2xl">
                 🏠
               </div>
               <div>
-                <div className="text-3xl font-black text-dark">{upcomingBookings.length}</div>
-                <div className="text-sm text-muted font-semibold">Next 7 Days</div>
+                <div className="text-3xl font-black text-slate-800">{upcomingBookings.length}</div>
+                <div className="text-sm text-slate-500 font-semibold">Next 7 Days</div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-card">
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-mint-dark/10 flex items-center justify-center text-2xl">
                 💬
               </div>
               <div>
-                <div className="text-3xl font-black text-dark">{MOCK_BOOKINGS.length}</div>
-                <div className="text-sm text-muted font-semibold">Total Bookings</div>
+                <div className="text-3xl font-black text-slate-800">{MOCK_BOOKINGS.length}</div>
+                <div className="text-sm text-slate-500 font-semibold">Total Bookings</div>
               </div>
             </div>
           </div>
@@ -151,7 +150,7 @@ export default function CalendarPage() {
               className={`px-4 py-2 rounded-full font-bold text-sm transition-all ${
                 selectedFilter === filter
                   ? 'bg-primary text-white shadow-[0_4px_15px_rgba(108,92,231,0.3)]'
-                  : 'bg-white text-muted border-2 border-[#E8E4FF] hover:border-primary'
+                  : 'bg-white text-slate-500 border-2 border-slate-200 hover:border-primary'
               }`}
             >
               {filter === 'all' ? 'All Platforms' : filter.charAt(0).toUpperCase() + filter.slice(1)}
@@ -160,40 +159,40 @@ export default function CalendarPage() {
         </div>
 
         {/* Bookings Table */}
-        <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[#F5F3FF]">
+              <thead className="bg-slate-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Guest</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Property</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Check-in</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Check-out</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Nights</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Platform</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-black text-dark">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Guest</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Property</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Check-in</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Check-out</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Nights</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Platform</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-black text-slate-800">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {MOCK_BOOKINGS
                   .filter(b => selectedFilter === 'all' || b.platform === selectedFilter)
                   .map((booking, idx) => (
-                  <tr key={booking.id} className="border-b border-[#E8E4FF] hover:bg-[#F5F3FF] transition-colors">
+                  <tr key={booking.id} className="border-b border-slate-200 hover:bg-slate-50 transition-colors">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-dark">{booking.guest_name}</div>
+                      <div className="font-bold text-slate-800">{booking.guest_name}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-dark">{booking.property}</div>
+                      <div className="text-sm text-slate-800">{booking.property}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-dark">{booking.check_in}</div>
+                      <div className="text-sm font-semibold text-slate-800">{booking.check_in}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-semibold text-dark">{booking.check_out}</div>
+                      <div className="text-sm font-semibold text-slate-800">{booking.check_out}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-muted">{booking.nights} nights</div>
+                      <div className="text-sm text-slate-500">{booking.nights} nights</div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`text-xs font-bold px-3 py-1 rounded-full ${platformColors[booking.platform] || platformColors.other}`}>
@@ -219,8 +218,8 @@ export default function CalendarPage() {
 
         {/* Today's Check-ins Highlight */}
         {todayCheckIns.length > 0 && (
-          <div className="mt-8 bg-gradient-to-br from-primary to-accent rounded-2xl p-8 text-white shadow-card-hover">
-            <h2 className="font-nunito text-2xl font-black mb-4">🎉 Check-ins Today</h2>
+          <div className="mt-8 bg-gradient-to-br from-primary to-accent rounded-2xl p-8 text-white border-primary shadow-md">
+            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight mb-4">🎉 Check-ins Today</h2>
             <div className="space-y-3">
               {todayCheckIns.map(booking => (
                 <div key={booking.id} className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
