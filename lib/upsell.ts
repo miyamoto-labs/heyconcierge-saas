@@ -3,7 +3,7 @@
  * Ported from backend/whatsapp/upsell_service.js to TypeScript for Vercel/Next.js
  *
  * Scans bookings, schedules offers, sends via Telegram, handles YES/NO responses
- * Offer types: late_checkout, early_checkin, gap_night, stay_extension, review_request
+ * Offer types: late_checkout, early_checkin, gap_night, stay_extension, review_request, activity_recommendation
  * Lifecycle: scheduled → sent → accepted/declined/expired
  */
 
@@ -35,6 +35,11 @@ interface UpsellConfig {
   review_request_enabled: boolean
   review_request_send_hours_after: number
   review_request_platform_urls: Record<string, string>
+  activity_recommendation_enabled: boolean
+  activity_recommendation_send_hours_after_checkin: number
+  activity_recommendation_max_activities: number
+  activity_recommendation_category_preference: string | null
+  activity_recommendation_radius_km: number
   auto_send: boolean
   message_language: string
   properties?: { id: string; name: string; property_code: string }
@@ -216,6 +221,29 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
             scheduled_at: sendAt.toISOString(),
             offer_details: {
               platform_urls: config.review_request_platform_urls,
+            },
+          })
+          if (scheduled) totalScheduled++
+        }
+      }
+
+      // Activity recommendation (after check-in)
+      if (config.activity_recommendation_enabled) {
+        const sendAt = new Date(booking.check_in)
+        sendAt.setHours(sendAt.getHours() + (config.activity_recommendation_send_hours_after_checkin || 24))
+        if (sendAt > new Date()) {
+          const scheduled = await scheduleOffer(supabase, {
+            property_id: propertyId,
+            booking_id: booking.id,
+            offer_type: 'activity_recommendation',
+            price: 0,
+            guest_phone: booking.guest_phone,
+            channel,
+            scheduled_at: sendAt.toISOString(),
+            offer_details: {
+              max_activities: config.activity_recommendation_max_activities || 3,
+              category_preference: config.activity_recommendation_category_preference || null,
+              radius_km: config.activity_recommendation_radius_km || 25,
             },
           })
           if (scheduled) totalScheduled++
@@ -437,6 +465,23 @@ export function formatOfferMessage(offer: UpsellOffer): string {
       )
     }
 
+    case 'activity_recommendation': {
+      const storedActivities = details.activities_sent || []
+      if (storedActivities.length === 0) {
+        return `*Things To Do Near ${propertyName}!*\n\nAsk me about local activities and I'll find great options for you!`
+      }
+      let msg = `*Things To Do Near ${propertyName}!*\n\n`
+      storedActivities.forEach((a: any, i: number) => {
+        const price = a.price?.formatted || `EUR ${a.price?.amount || 0}`
+        msg += `${i + 1}. *${a.name}*\n`
+        if (a.rating) msg += `   ${a.rating}/5 (${a.review_count || 0} reviews)\n`
+        msg += `   From ${price}\n`
+        msg += `   ${a.booking_url}\n\n`
+      })
+      msg += `Tap any link to book directly!`
+      return msg
+    }
+
     default:
       return `You have a new offer from ${propertyName}. Reply YES or NO.`
   }
@@ -478,6 +523,9 @@ export async function handleUpsellResponse(
 
   if (error || !offer) return null // No pending offer
 
+  // Activity recommendations don't have an accept/decline flow
+  if (offer.offer_type === 'activity_recommendation') return null
+
   const newStatus = isAccept ? 'accepted' : 'declined'
 
   await supabase
@@ -497,6 +545,7 @@ export async function handleUpsellResponse(
     gap_night: 'extra night(s)',
     stay_extension: 'stay extension',
     review_request: 'review request',
+    activity_recommendation: 'activity recommendations',
   }
   const offerLabel = offerTypeLabels[offer.offer_type] || offer.offer_type
 

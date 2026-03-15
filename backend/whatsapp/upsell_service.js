@@ -2,12 +2,13 @@
  * Upsell Service for HeyConcierge
  * Scans bookings, schedules offers, sends via WhatsApp/Telegram, handles responses
  *
- * Offer types: late_checkout, early_checkin, gap_night, stay_extension, review_request
+ * Offer types: late_checkout, early_checkin, gap_night, stay_extension, review_request, activity_recommendation
  * Lifecycle: scheduled → draft → sent → accepted/declined/expired
  */
 
 const { createClient } = require('@supabase/supabase-js');
 const { sendTelegram } = require('./telegram_service');
+const { searchActivities, logAffiliateClick } = require('./activity_provider');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
@@ -146,6 +147,29 @@ async function scanAndScheduleOffers() {
           totalScheduled++;
         }
       }
+
+      // Activity recommendation (after check-in)
+      if (config.activity_recommendation_enabled) {
+        const sendAt = new Date(booking.check_in);
+        sendAt.setHours(sendAt.getHours() + (config.activity_recommendation_send_hours_after_checkin || 24));
+        if (sendAt > new Date()) {
+          await scheduleOffer({
+            property_id: propertyId,
+            booking_id: booking.id,
+            offer_type: 'activity_recommendation',
+            price: 0,
+            guest_phone: booking.guest_phone,
+            channel,
+            scheduled_at: sendAt.toISOString(),
+            offer_details: {
+              max_activities: config.activity_recommendation_max_activities || 3,
+              category_preference: config.activity_recommendation_category_preference || null,
+              radius_km: config.activity_recommendation_radius_km || 25,
+            }
+          });
+          totalScheduled++;
+        }
+      }
     }
 
     // Gap night offers — check for gaps between bookings
@@ -264,7 +288,65 @@ async function sendDueOffers() {
   let sent = 0;
 
   for (const offer of offers) {
-    const message = formatOfferMessage(offer);
+    let message;
+
+    // Activity recommendations require a live search at send-time
+    if (offer.offer_type === 'activity_recommendation') {
+      const { data: property } = await supabase
+        .from('properties')
+        .select('latitude, longitude, name')
+        .eq('id', offer.property_id)
+        .single();
+
+      if (!property?.latitude || !property?.longitude) {
+        console.log(`Skipping activity recommendation - no coordinates for property ${offer.property_id}`);
+        await supabase.from('upsell_offers').update({ status: 'expired' }).eq('id', offer.id);
+        continue;
+      }
+
+      const details = offer.offer_details || {};
+      const activities = await searchActivities({
+        latitude: Number(property.latitude),
+        longitude: Number(property.longitude),
+        radiusKm: details.radius_km || 25,
+        currency: 'EUR',
+        startDate: new Date().toISOString().split('T')[0],
+        limit: details.max_activities || 3,
+        query: details.category_preference || '',
+        propertyId: offer.property_id,
+      });
+
+      if (!activities || activities.length === 0) {
+        console.log(`No activities found near property ${offer.property_id} - skipping`);
+        await supabase.from('upsell_offers').update({ status: 'expired' }).eq('id', offer.id);
+        continue;
+      }
+
+      message = formatActivityRecommendationMessage(activities, property.name);
+
+      // Store activities in offer_details for tracking
+      await supabase.from('upsell_offers').update({
+        offer_details: {
+          ...details,
+          activities_sent: activities.map(a => ({
+            name: a.name,
+            provider: a.provider,
+            external_id: a.externalId,
+            price: a.price,
+            rating: a.rating,
+            review_count: a.reviewCount,
+            booking_url: a.bookingUrl,
+          }))
+        }
+      }).eq('id', offer.id);
+
+      // Log affiliate clicks for tracking
+      for (const activity of activities) {
+        await logAffiliateClick(supabase, offer.property_id, activity, offer.guest_phone);
+      }
+    } else {
+      message = formatOfferMessage(offer);
+    }
 
     let success = false;
     if (offer.channel === 'telegram') {
@@ -335,9 +417,59 @@ function formatOfferMessage(offer) {
         (reviewLinks ? `\n${reviewLinks}` : '') +
         `\n\nThank you! 🙏`;
 
+    case 'activity_recommendation':
+      // Activities are formatted at send-time via formatActivityRecommendationMessage.
+      // This fallback handles re-formatting from stored data.
+      const storedActivities = details.activities_sent || [];
+      if (storedActivities.length === 0) {
+        return `🎯 *Things To Do Near ${propertyName}!*\n\nAsk me about local activities and I'll find great options for you!`;
+      }
+      return formatActivityRecommendationFromStored(storedActivities, propertyName);
+
     default:
       return `You have a new offer from ${propertyName}. Reply YES or NO.`;
   }
+}
+
+/**
+ * Format a proactive activity recommendation message (used at send-time)
+ */
+function formatActivityRecommendationMessage(activities, propertyName) {
+  let message = `🎯 *Things To Do Near ${propertyName}!*\n\n`;
+  message += `Here are some top-rated activities nearby:\n\n`;
+
+  activities.forEach((a, i) => {
+    const price = a.price?.formatted || `€${a.price?.amount || 0}`;
+    message += `${i + 1}. *${a.name}*\n`;
+    if (a.rating) message += `   ⭐ ${a.rating}/5 (${a.reviewCount || 0} reviews)\n`;
+    message += `   💰 From ${price}\n`;
+    if (a.durationMinutes) {
+      const dur = a.durationMinutes < 60 ? `${a.durationMinutes} min` : `${Math.floor(a.durationMinutes / 60)}h`;
+      message += `   ⏱️ ${dur}\n`;
+    }
+    message += `   🔗 ${a.bookingUrl}\n\n`;
+  });
+
+  message += `Tap any link to book directly! Feel free to ask me for more suggestions. 😊`;
+  return message;
+}
+
+/**
+ * Re-format activity recommendations from stored offer_details data
+ */
+function formatActivityRecommendationFromStored(activities, propertyName) {
+  let message = `🎯 *Things To Do Near ${propertyName}!*\n\n`;
+
+  activities.forEach((a, i) => {
+    const price = a.price?.formatted || `€${a.price?.amount || 0}`;
+    message += `${i + 1}. *${a.name}*\n`;
+    if (a.rating) message += `   ⭐ ${a.rating}/5 (${a.review_count || 0} reviews)\n`;
+    message += `   💰 From ${price}\n`;
+    message += `   🔗 ${a.booking_url}\n\n`;
+  });
+
+  message += `Tap any link to book directly!`;
+  return message;
 }
 
 /**
@@ -390,6 +522,9 @@ async function handleUpsellResponse(guestPhone, responseText) {
 
   if (error || !offer) return null;
 
+  // Activity recommendations don't have an accept/decline flow
+  if (offer.offer_type === 'activity_recommendation') return null;
+
   const newStatus = isAccept ? 'accepted' : 'declined';
 
   await supabase
@@ -422,7 +557,8 @@ function formatOfferType(type) {
     early_checkin: 'early check-in',
     gap_night: 'extra night(s)',
     stay_extension: 'stay extension',
-    review_request: 'review request'
+    review_request: 'review request',
+    activity_recommendation: 'activity recommendations'
   };
   return labels[type] || type;
 }
@@ -475,7 +611,18 @@ async function getUpsellDashboard(propertyId) {
     stats.conversionRate = Math.round((stats.accepted / stats.sent) * 100);
   }
 
-  return { config, offers, stats };
+  // Activity recommendation stats
+  const { data: activityClicks } = await supabase
+    .from('activity_clicks')
+    .select('*')
+    .eq('property_id', propertyId);
+
+  const activityStats = {
+    totalClicks: activityClicks?.length || 0,
+    uniqueGuests: new Set((activityClicks || []).map(c => c.guest_phone).filter(Boolean)).size,
+  };
+
+  return { config, offers, stats, activityStats };
 }
 
 module.exports = {

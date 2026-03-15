@@ -41,6 +41,11 @@ interface UpsellConfig {
   review_request_enabled: boolean
   review_request_send_hours_after: number
   review_request_platform_urls: any
+  activity_recommendation_enabled: boolean
+  activity_recommendation_send_hours_after_checkin: number
+  activity_recommendation_max_activities: number
+  activity_recommendation_category_preference: string | null
+  activity_recommendation_radius_km: number
   auto_send: boolean
   message_language: string
 }
@@ -76,6 +81,7 @@ const OFFER_TYPE_LABELS: Record<string, { emoji: string; label: string }> = {
   gap_night: { emoji: '🌙', label: 'Gap Night' },
   stay_extension: { emoji: '✨', label: 'Stay Extension' },
   review_request: { emoji: '⭐', label: 'Review Request' },
+  activity_recommendation: { emoji: '🎯', label: 'Activity Tips' },
 }
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
@@ -102,6 +108,9 @@ function UpsellPage() {
   const [offers, setOffers] = useState<UpsellOffer[]>([])
   const [stats, setStats] = useState({
     total: 0, sent: 0, accepted: 0, declined: 0, revenue: 0, conversionRate: 0
+  })
+  const [activityStats, setActivityStats] = useState({
+    totalClicks: 0, uniqueGuests: 0
   })
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'dashboard' | 'settings'>('dashboard')
@@ -238,6 +247,11 @@ function UpsellPage() {
           review_request_enabled: false,
           review_request_send_hours_after: 6,
           review_request_platform_urls: {},
+          activity_recommendation_enabled: false,
+          activity_recommendation_send_hours_after_checkin: 24,
+          activity_recommendation_max_activities: 3,
+          activity_recommendation_category_preference: null,
+          activity_recommendation_radius_km: 25,
           auto_send: true,
           message_language: 'en',
         }
@@ -276,6 +290,17 @@ function UpsellPage() {
         declined: declined.length,
         revenue,
         conversionRate: sentOffers.length > 0 ? Math.round((accepted.length / sentOffers.length) * 100) : 0,
+      })
+
+      // Load activity click stats
+      const { data: clicksData } = await supabase
+        .from('activity_clicks')
+        .select('guest_phone')
+        .eq('property_id', selectedPropertyId)
+
+      setActivityStats({
+        totalClicks: clicksData?.length || 0,
+        uniqueGuests: new Set((clicksData || []).map((c: any) => c.guest_phone).filter(Boolean)).size,
       })
     } catch (err) {
       console.error('Load upsell data error:', err)
@@ -318,6 +343,11 @@ function UpsellPage() {
           review_request_enabled: config.review_request_enabled,
           review_request_send_hours_after: config.review_request_send_hours_after,
           review_request_platform_urls: config.review_request_platform_urls,
+          activity_recommendation_enabled: config.activity_recommendation_enabled,
+          activity_recommendation_send_hours_after_checkin: config.activity_recommendation_send_hours_after_checkin,
+          activity_recommendation_max_activities: config.activity_recommendation_max_activities,
+          activity_recommendation_category_preference: config.activity_recommendation_category_preference,
+          activity_recommendation_radius_km: config.activity_recommendation_radius_km,
           auto_send: config.auto_send,
           message_language: config.message_language,
         })
@@ -486,6 +516,7 @@ function UpsellPage() {
                 offers={offers}
                 selectedProperty={selectedProperty}
                 config={config}
+                activityStats={activityStats}
               />
             ) : (
               <SettingsView
@@ -514,11 +545,13 @@ function DashboardView({
   offers,
   selectedProperty,
   config,
+  activityStats,
 }: {
   stats: any
   offers: UpsellOffer[]
   selectedProperty?: Property
   config: UpsellConfig | null
+  activityStats: { totalClicks: number; uniqueGuests: number }
 }) {
   return (
     <div className="space-y-8">
@@ -540,6 +573,21 @@ function DashboardView({
         <StatCard emoji="📈" value={`${stats.conversionRate}%`} label="Conversion" />
         <StatCard emoji="💰" value={`€${stats.revenue}`} label="Revenue" color="text-primary" large />
       </div>
+
+      {/* Activity Recommendation Stats */}
+      {activityStats.totalClicks > 0 && (
+        <div className="bg-white rounded-3xl shadow-card overflow-hidden">
+          <div className="px-6 sm:px-8 py-5 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent">
+            <h2 className="font-nunito font-black text-lg">🎯 Activity Recommendations</h2>
+          </div>
+          <div className="px-6 sm:px-8 py-6">
+            <div className="grid grid-cols-2 gap-4">
+              <StatCard emoji="🔗" value={activityStats.totalClicks} label="Link Clicks" />
+              <StatCard emoji="👥" value={activityStats.uniqueGuests} label="Unique Guests" />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Breakdown by Type */}
       <div className="bg-white rounded-3xl shadow-card overflow-hidden">
@@ -1060,6 +1108,79 @@ function SettingsView({
         <OfferPreview>
           ⭐ <strong>How was your stay?</strong><br />
           We hope you had a wonderful time! A review would mean the world to us. 🙏
+        </OfferPreview>
+      </OfferSection>
+
+      {/* Activity Recommendations */}
+      <OfferSection
+        emoji="🎯"
+        title="Activity Recommendations"
+        description="Proactively suggest local tours and experiences to guests after check-in"
+        enabled={config.activity_recommendation_enabled}
+        onToggle={() => updateConfig({ activity_recommendation_enabled: !config.activity_recommendation_enabled })}
+        toggleClass={toggleClass}
+        toggleDot={toggleDot}
+      >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs font-bold text-muted uppercase mb-1 block">Send X hours after check-in</label>
+            <input
+              type="number"
+              value={config.activity_recommendation_send_hours_after_checkin}
+              onChange={e => updateConfig({ activity_recommendation_send_hours_after_checkin: Number(e.target.value) })}
+              className={inputClass}
+              min={1}
+              max={72}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-muted uppercase mb-1 block">Max activities to show</label>
+            <input
+              type="number"
+              value={config.activity_recommendation_max_activities}
+              onChange={e => updateConfig({ activity_recommendation_max_activities: Number(e.target.value) })}
+              className={inputClass}
+              min={1}
+              max={5}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-muted uppercase mb-1 block">Search radius (km)</label>
+            <input
+              type="number"
+              value={config.activity_recommendation_radius_km}
+              onChange={e => updateConfig({ activity_recommendation_radius_km: Number(e.target.value) })}
+              className={inputClass}
+              min={5}
+              max={100}
+            />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-muted uppercase mb-1 block">Category preference</label>
+            <select
+              value={config.activity_recommendation_category_preference || ''}
+              onChange={e => updateConfig({ activity_recommendation_category_preference: e.target.value || null })}
+              className={inputClass}
+            >
+              <option value="">All categories</option>
+              <option value="tours">Tours & Sightseeing</option>
+              <option value="outdoor">Outdoor & Nature</option>
+              <option value="food_and_drink">Food & Drink</option>
+              <option value="water_sports">Water Sports</option>
+              <option value="cultural">Cultural & Museum</option>
+              <option value="northern lights">Northern Lights</option>
+            </select>
+          </div>
+        </div>
+        <OfferPreview>
+          🎯 <strong>Things To Do Nearby!</strong><br /><br />
+          1. <strong>City Walking Tour</strong><br />
+          ⭐ 4.8/5 (234 reviews) · From €25<br /><br />
+          2. <strong>Northern Lights Chase</strong><br />
+          ⭐ 4.9/5 (512 reviews) · From €85<br /><br />
+          3. <strong>Fjord Cruise</strong><br />
+          ⭐ 4.7/5 (189 reviews) · From €45<br /><br />
+          Tap any link to book directly! 😊
         </OfferPreview>
       </OfferSection>
 
