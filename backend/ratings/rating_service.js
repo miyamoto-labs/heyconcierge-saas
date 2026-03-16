@@ -151,8 +151,8 @@ async function sendTelegramRatingRequest(chatId, propertyName, ratingId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         chat_id: chatId,
-        text: `⭐ *How well did your concierge take care of you during your stay at ${propertyName}?*\n\nTap a rating below:`,
-        parse_mode: 'Markdown',
+        text: `⭐ <b>How well did your concierge take care of you during your stay at ${propertyName}?</b>\n\nTap a rating below:`,
+        parse_mode: 'HTML',
         reply_markup: {
           inline_keyboard: [
             [

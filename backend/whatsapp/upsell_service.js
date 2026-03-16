@@ -383,28 +383,28 @@ function formatOfferMessage(offer) {
 
   switch (offer.offer_type) {
     case 'late_checkout':
-      return `🕐 *Late Checkout Available!*\n\nEnjoy a relaxed morning at ${propertyName}! ` +
+      return `🕐 <b>Late Checkout Available!</b>\n\nEnjoy a relaxed morning at ${propertyName}! ` +
         `Check out up to ${details.max_hours}h later (until ${formatTime(details.standard_time, details.max_hours)}) ` +
         `for just €${offer.price}.\n\n` +
-        `Reply *YES* to book or *NO* to decline.`;
+        `Reply <b>YES</b> to book or <b>NO</b> to decline.`;
 
     case 'early_checkin':
-      return `🌅 *Early Check-in Available!*\n\nArrive early at ${propertyName}! ` +
+      return `🌅 <b>Early Check-in Available!</b>\n\nArrive early at ${propertyName}! ` +
         `Check in up to ${details.max_hours}h earlier (from ${formatTime(details.standard_time, -details.max_hours)}) ` +
         `for just €${offer.price}.\n\n` +
-        `Reply *YES* to book or *NO* to decline.`;
+        `Reply <b>YES</b> to book or <b>NO</b> to decline.`;
 
     case 'gap_night':
-      return `🌙 *Special Offer: Extra Night(s)!*\n\nWe have ${details.gap_nights} night(s) available ` +
+      return `🌙 <b>Special Offer: Extra Night(s)!</b>\n\nWe have ${details.gap_nights} night(s) available ` +
         `right after your stay at ${propertyName}. ` +
         `Get ${details.discount_pct}% off at just €${details.price_per_night}/night ` +
         `(total: €${offer.price}).\n\n` +
-        `Reply *YES* to extend your stay or *NO* to decline.`;
+        `Reply <b>YES</b> to extend your stay or <b>NO</b> to decline.`;
 
     case 'stay_extension':
-      return `✨ *Extend Your Stay?*\n\nLoving ${propertyName}? ` +
+      return `✨ <b>Extend Your Stay?</b>\n\nLoving ${propertyName}? ` +
         `We can offer you ${details.discount_pct}% off extra nights. ` +
-        `Reply *YES* if you're interested or *NO* to decline.`;
+        `Reply <b>YES</b> if you're interested or <b>NO</b> to decline.`;
 
     case 'review_request':
       const urls = details.platform_urls || {};
@@ -412,7 +412,7 @@ function formatOfferMessage(offer) {
       if (urls.google) reviewLinks += `\n📍 Google: ${urls.google}`;
       if (urls.airbnb) reviewLinks += `\n🏠 Airbnb: ${urls.airbnb}`;
       if (urls.tripadvisor) reviewLinks += `\n✈️ TripAdvisor: ${urls.tripadvisor}`;
-      return `⭐ *How was your stay at ${propertyName}?*\n\n` +
+      return `⭐ <b>How was your stay at ${propertyName}?</b>\n\n` +
         `We hope you had a wonderful time! A review would mean the world to us.` +
         (reviewLinks ? `\n${reviewLinks}` : '') +
         `\n\nThank you! 🙏`;
@@ -422,7 +422,7 @@ function formatOfferMessage(offer) {
       // This fallback handles re-formatting from stored data.
       const storedActivities = details.activities_sent || [];
       if (storedActivities.length === 0) {
-        return `🎯 *Things To Do Near ${propertyName}!*\n\nAsk me about local activities and I'll find great options for you!`;
+        return `🎯 <b>Things To Do Near ${propertyName}!</b>\n\nAsk me about local activities and I'll find great options for you!`;
       }
       return formatActivityRecommendationFromStored(storedActivities, propertyName);
 
@@ -435,12 +435,12 @@ function formatOfferMessage(offer) {
  * Format a proactive activity recommendation message (used at send-time)
  */
 function formatActivityRecommendationMessage(activities, propertyName) {
-  let message = `🎯 *Things To Do Near ${propertyName}!*\n\n`;
+  let message = `🎯 <b>Things To Do Near ${propertyName}!</b>\n\n`;
   message += `Here are some top-rated activities nearby:\n\n`;
 
   activities.forEach((a, i) => {
     const price = a.price?.formatted || `€${a.price?.amount || 0}`;
-    message += `${i + 1}. *${a.name}*\n`;
+    message += `${i + 1}. <b>${a.name}</b>\n`;
     if (a.rating) message += `   ⭐ ${a.rating}/5 (${a.reviewCount || 0} reviews)\n`;
     message += `   💰 From ${price}\n`;
     if (a.durationMinutes) {
@@ -458,11 +458,11 @@ function formatActivityRecommendationMessage(activities, propertyName) {
  * Re-format activity recommendations from stored offer_details data
  */
 function formatActivityRecommendationFromStored(activities, propertyName) {
-  let message = `🎯 *Things To Do Near ${propertyName}!*\n\n`;
+  let message = `🎯 <b>Things To Do Near ${propertyName}!</b>\n\n`;
 
   activities.forEach((a, i) => {
     const price = a.price?.formatted || `€${a.price?.amount || 0}`;
-    message += `${i + 1}. *${a.name}*\n`;
+    message += `${i + 1}. <b>${a.name}</b>\n`;
     if (a.rating) message += `   ⭐ ${a.rating}/5 (${a.review_count || 0} reviews)\n`;
     message += `   💰 From ${price}\n`;
     message += `   🔗 ${a.booking_url}\n\n`;
@@ -582,7 +582,9 @@ async function expireStaleOffers() {
 }
 
 /**
- * Get upsell dashboard data for a property
+ * Get upsell dashboard data for a property, including affiliate revenue estimates
+ * @param {string} propertyId - UUID of the property
+ * @returns {Promise<Object>} Dashboard data with config, offers, stats, activityStats, and revenueEstimate
  */
 async function getUpsellDashboard(propertyId) {
   const { data: config } = await supabase
@@ -617,12 +619,141 @@ async function getUpsellDashboard(propertyId) {
     .select('*')
     .eq('property_id', propertyId);
 
+  const clicks = activityClicks || [];
   const activityStats = {
-    totalClicks: activityClicks?.length || 0,
-    uniqueGuests: new Set((activityClicks || []).map(c => c.guest_phone).filter(Boolean)).size,
+    totalClicks: clicks.length,
+    uniqueGuests: new Set(clicks.map(c => c.guest_phone).filter(Boolean)).size,
   };
 
-  return { config, offers, stats, activityStats };
+  // Revenue config (with defaults)
+  const revShareHostPct = config?.affiliate_revenue_share_host_pct ?? 40;
+  const avgCommissionPct = config?.affiliate_avg_commission_pct ?? 8;
+  const estConversionPct = config?.affiliate_estimated_conversion_pct ?? 3;
+
+  // Per-provider breakdown
+  const viatorClicks = clicks.filter(c => c.activity_provider === 'viator');
+  const gygClicks = clicks.filter(c => c.activity_provider === 'getyourguide');
+
+  // Estimated avg booking value (€50 default — reasonable for tours/activities)
+  const AVG_BOOKING_VALUE = 50;
+
+  /**
+   * Estimate affiliate revenue from clicks
+   * Formula: clicks × conversion_rate × avg_booking_value × commission_rate
+   */
+  function estimateRevenue(clickCount) {
+    return clickCount * (estConversionPct / 100) * AVG_BOOKING_VALUE * (avgCommissionPct / 100);
+  }
+
+  const totalEstimatedRevenue = estimateRevenue(clicks.length);
+  const hostShare = totalEstimatedRevenue * (revShareHostPct / 100);
+  const hcShare = totalEstimatedRevenue * ((100 - revShareHostPct) / 100);
+
+  // Monthly breakdown (current month + last 3 months)
+  const now = new Date();
+  const monthlyRevenue = [];
+  for (let i = 0; i < 4; i++) {
+    const monthStart = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+    const monthLabel = monthStart.toISOString().slice(0, 7); // YYYY-MM
+
+    const monthClicks = clicks.filter(c => {
+      const d = new Date(c.created_at);
+      return d >= monthStart && d <= monthEnd;
+    });
+
+    const monthOffers = (offers || []).filter(o => {
+      if (o.status !== 'accepted') return false;
+      const d = new Date(o.responded_at || o.created_at);
+      return d >= monthStart && d <= monthEnd;
+    });
+
+    const affiliateEst = estimateRevenue(monthClicks.length);
+    const upsellRev = monthOffers.reduce((sum, o) => sum + (o.price || 0), 0);
+
+    monthlyRevenue.push({
+      month: monthLabel,
+      affiliateClicks: monthClicks.length,
+      affiliateRevenueEstimate: Math.round(affiliateEst * 100) / 100,
+      upsellRevenue: upsellRev,
+      totalEstimate: Math.round((affiliateEst + upsellRev) * 100) / 100,
+    });
+  }
+
+  const revenueEstimate = {
+    config: {
+      revShareHostPct,
+      avgCommissionPct,
+      estConversionPct,
+      avgBookingValue: AVG_BOOKING_VALUE,
+    },
+    affiliate: {
+      totalClicks: clicks.length,
+      estimatedRevenue: Math.round(totalEstimatedRevenue * 100) / 100,
+      hostPayout: Math.round(hostShare * 100) / 100,
+      hcRevenue: Math.round(hcShare * 100) / 100,
+      byProvider: {
+        viator: {
+          clicks: viatorClicks.length,
+          estimatedRevenue: Math.round(estimateRevenue(viatorClicks.length) * 100) / 100,
+        },
+        getyourguide: {
+          clicks: gygClicks.length,
+          estimatedRevenue: Math.round(estimateRevenue(gygClicks.length) * 100) / 100,
+        },
+      },
+    },
+    upsell: {
+      acceptedOffers: stats.accepted,
+      revenue: stats.revenue,
+    },
+    monthly: monthlyRevenue,
+  };
+
+  return { config, offers, stats, activityStats, revenueEstimate };
+}
+
+/**
+ * Get full revenue breakdown for a property
+ * @param {string} propertyId - UUID of the property
+ * @returns {Promise<Object>} Complete revenue data including subscription, upsell, affiliate, and host payout
+ */
+async function getRevenueBreakdown(propertyId) {
+  const dashboard = await getUpsellDashboard(propertyId);
+
+  // Get property info for subscription status
+  const { data: property } = await supabase
+    .from('properties')
+    .select('id, name, created_at')
+    .eq('id', propertyId)
+    .single();
+
+  const rev = dashboard.revenueEstimate;
+  const totalValueGenerated = rev.upsell.revenue + rev.affiliate.estimatedRevenue;
+
+  return {
+    property: {
+      id: property?.id,
+      name: property?.name,
+    },
+    subscription: {
+      status: 'active', // TODO: integrate with Stripe/payment provider
+      plan: 'standard',
+    },
+    upsellRevenue: {
+      acceptedOffers: rev.upsell.acceptedOffers,
+      total: rev.upsell.revenue,
+    },
+    affiliateRevenue: rev.affiliate,
+    totalValueGenerated: Math.round(totalValueGenerated * 100) / 100,
+    hostPayoutEstimate: {
+      upsellPayout: rev.upsell.revenue, // Host keeps 100% of upsell
+      affiliatePayout: rev.affiliate.hostPayout,
+      total: Math.round((rev.upsell.revenue + rev.affiliate.hostPayout) * 100) / 100,
+    },
+    monthly: rev.monthly,
+    revenueConfig: rev.config,
+  };
 }
 
 module.exports = {
@@ -630,5 +761,6 @@ module.exports = {
   sendDueOffers,
   handleUpsellResponse,
   expireStaleOffers,
-  getUpsellDashboard
+  getUpsellDashboard,
+  getRevenueBreakdown
 };

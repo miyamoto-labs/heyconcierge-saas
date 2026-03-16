@@ -25,7 +25,7 @@ async function sendTelegram(chatId, text) {
       body: JSON.stringify({
         chat_id: chatId,
         text,
-        parse_mode: 'Markdown'
+        parse_mode: 'HTML'
       })
     });
     const data = await res.json();

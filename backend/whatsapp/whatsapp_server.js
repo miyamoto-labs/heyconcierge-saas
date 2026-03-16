@@ -15,7 +15,8 @@ require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: t
 
 // Telegram + Upselling services
 const { sendTelegram, resolveTelegramGuestProperty, setWebhook, getWebhookInfo } = require('./telegram_service');
-const { scanAndScheduleOffers, sendDueOffers, handleUpsellResponse, expireStaleOffers, getUpsellDashboard } = require('./upsell_service');
+const { scanAndScheduleOffers, sendDueOffers, handleUpsellResponse, expireStaleOffers, getUpsellDashboard, getRevenueBreakdown } = require('./upsell_service');
+const { requireApiKey } = require('../middleware/auth');
 const { scanAndScheduleRatings, sendDueRatings, handleRatingCallback, handleRatingComment, handleWhatsAppRatingResponse, expireStaleRatings } = require('../ratings/rating_service');
 
 // OTA Activity Provider (GetYourGuide + Viator)
@@ -790,7 +791,7 @@ app.post('/sync/property/:id', async (req, res) => {
 });
 
 // Sync all properties
-app.post('/sync/all', async (req, res) => {
+app.post('/sync/all', requireApiKey, async (req, res) => {
   try {
     const results = await syncAllProperties();
     res.json({ success: true, results });
@@ -800,7 +801,7 @@ app.post('/sync/all', async (req, res) => {
 });
 
 // Send check-in reminders
-app.post('/reminders/send', async (req, res) => {
+app.post('/reminders/send', requireApiKey, async (req, res) => {
   try {
     const results = await sendCheckinReminders();
     res.json({ success: true, ...results });
@@ -893,7 +894,7 @@ app.get('/api/property/:id/qr', async (req, res) => {
 /**
  * DELETE /api/properties/:id — Delete property and all related data
  */
-app.delete('/api/properties/:id', async (req, res) => {
+app.delete('/api/properties/:id', requireApiKey, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -1078,7 +1079,7 @@ app.post('/webhook/telegram', async (req, res) => {
 
     if (isNew) {
       await sendTelegram(chatId,
-        `✅ Connected to *${property.name}*!\n\nI'm your AI concierge. Ask me anything about your stay.`
+        `✅ Connected to <b>${property.name}</b>!\n\nI'm your AI concierge. Ask me anything about your stay.`
       );
       return res.status(200).send('OK');
     }
@@ -1150,7 +1151,7 @@ app.get('/telegram/webhook-info', async (req, res) => {
 // ==========================================
 
 // Scan and schedule new offers
-app.post('/upsell/scan', async (req, res) => {
+app.post('/upsell/scan', requireApiKey, async (req, res) => {
   try {
     const result = await scanAndScheduleOffers();
     res.json({ success: true, ...result });
@@ -1160,7 +1161,7 @@ app.post('/upsell/scan', async (req, res) => {
 });
 
 // Send all due offers
-app.post('/upsell/send', async (req, res) => {
+app.post('/upsell/send', requireApiKey, async (req, res) => {
   try {
     const result = await sendDueOffers();
     res.json({ success: true, ...result });
@@ -1170,7 +1171,7 @@ app.post('/upsell/send', async (req, res) => {
 });
 
 // Expire stale offers
-app.post('/upsell/expire', async (req, res) => {
+app.post('/upsell/expire', requireApiKey, async (req, res) => {
   try {
     const result = await expireStaleOffers();
     res.json({ success: true, ...result });
@@ -1185,6 +1186,29 @@ app.get('/upsell/dashboard/:propertyId', async (req, res) => {
     const result = await getUpsellDashboard(req.params.propertyId);
     res.json(result);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ==========================================
+// Revenue Dashboard API
+// ==========================================
+
+/**
+ * GET /api/properties/:id/revenue — Full revenue breakdown
+ * Returns subscription status, upsell revenue, affiliate revenue estimate,
+ * total value generated, and host payout estimate.
+ */
+app.get('/api/properties/:id/revenue', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await getRevenueBreakdown(id);
+    if (!result.property?.id) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+    res.json(result);
+  } catch (error) {
+    console.error('Revenue API error:', error);
     res.status(500).json({ error: error.message });
   }
 });
