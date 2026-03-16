@@ -17,11 +17,17 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Twilio for WhatsApp
-const twilioClient = require('twilio')(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// Twilio for WhatsApp (optional — activate after Brønnøysund registration)
+let twilioClient = null;
+try {
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+    twilioClient = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+  } else {
+    console.log('⚠️ Twilio not configured — WhatsApp disabled');
+  }
+} catch (e) {
+  console.log('⚠️ Twilio init failed:', e.message);
+}
 
 /**
  * Scan bookings and schedule upsell offers based on property configs

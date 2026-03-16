@@ -56,10 +56,19 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Twilio setup (for WhatsApp)
+// Twilio setup (for WhatsApp — optional until Brønnøysund registration)
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
-const twilioClient = require('twilio')(accountSid, authToken);
+let twilioClient = null;
+try {
+  if (accountSid && authToken) {
+    twilioClient = require('twilio')(accountSid, authToken);
+  } else {
+    console.log('⚠️ Twilio not configured — WhatsApp endpoints disabled');
+  }
+} catch (e) {
+  console.log('⚠️ Twilio init failed:', e.message);
+}
 
 // Weather service with caching (Open-Meteo API - free, no key needed)
 const WEATHER_CACHE_TTL = 30 * 60 * 1000; // 30 min

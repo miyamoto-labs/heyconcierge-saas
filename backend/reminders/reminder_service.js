@@ -13,10 +13,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+let twilioClient = null;
+try {
+  if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+    twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+  } else {
+    console.log('⚠️ Twilio not configured — WhatsApp reminders disabled');
+  }
+} catch (e) {
+  console.log('⚠️ Twilio init failed:', e.message);
+}
 
 /**
  * Get tomorrow's date in YYYY-MM-DD format
