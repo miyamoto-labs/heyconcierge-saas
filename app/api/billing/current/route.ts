@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
         status: org.subscription_status || 'trialing',
         trialDaysLeft,
         stripeConnected: !!org.stripe_customer_id,
-        hasSubscription: !!org.stripe_subscription_id,
+        hasSubscription: !!org.stripe_subscription_id && !['cancelled', 'canceled'].includes(org.subscription_status),
         stripeCustomerId: org.stripe_customer_id || null,
         cancelAtPeriodEnd: org.cancel_at_period_end || false,
         currentPeriodEnd: org.current_period_end_at || null,
