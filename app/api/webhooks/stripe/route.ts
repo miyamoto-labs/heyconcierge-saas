@@ -6,11 +6,6 @@ import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
-// Stripe sends raw body — we need to disable Next.js body parsing
-export const config = {
-  api: { bodyParser: false },
-}
-
 async function getOrgByStripeCustomerId(customerId: string) {
   const supabase = createAdminClient()
   // First try by stored customer ID
