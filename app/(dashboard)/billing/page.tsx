@@ -2,67 +2,27 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
-
-const PLANS = [
-  { id: 'starter', name: 'Starter', emoji: '🌱', price: '$49', period: '/mo', properties: 5, messages: 500 },
-  { id: 'professional', name: 'Professional', emoji: '⚡', price: '$149', period: '/mo', properties: 20, messages: 2000, popular: true },
-  { id: 'premium', name: 'Premium', emoji: '👑', price: '$299', period: '/mo', properties: 40, messages: -1 },
+const PLAN_LIST = [
+  { id: 'starter', name: 'Starter', emoji: '🌱', price: '$9', period: '/property/mo' },
+  { id: 'professional', name: 'Professional', emoji: '⚡', price: '$19', period: '/property/mo', popular: true },
+  { id: 'premium', name: 'Premium', emoji: '👑', price: '$25', period: '/property/mo' },
 ]
 
 export default function BillingPage() {
-  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [billing, setBilling] = useState<any>(null)
   const [usage, setUsage] = useState<any>(null)
-  const [orgId, setOrgId] = useState<string | null>(null)
   const [showPlans, setShowPlans] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
-
-  const supabase = createClient()
-
-  useEffect(() => {
-    const loadOrg = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push('/login')
-        return
-      }
-
-      let { data: orgs } = await supabase
-        .from('organizations')
-        .select('id')
-        .eq('auth_user_id', user.id)
-        .limit(1)
-
-      if (!orgs?.length && user.email) {
-        const { data: orgsByEmail } = await supabase
-          .from('organizations')
-          .select('id')
-          .eq('email', user.email)
-          .limit(1)
-        orgs = orgsByEmail
-      }
-
-      if (orgs?.[0]) {
-        setOrgId(orgs[0].id)
-      } else {
-        setLoading(false)
-      }
-    }
-    loadOrg()
-  }, [router])
+  const [changingPlan, setChangingPlan] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!orgId) return
-
     const loadBilling = async () => {
       try {
         const [billingRes, usageRes] = await Promise.all([
-          fetch(`/api/billing/current?orgId=${orgId}`),
-          fetch(`/api/billing/usage?orgId=${orgId}`),
+          fetch('/api/billing/current'),
+          fetch('/api/billing/usage'),
         ])
 
         if (billingRes.ok) setBilling(await billingRes.json())
@@ -73,7 +33,7 @@ export default function BillingPage() {
       setLoading(false)
     }
     loadBilling()
-  }, [orgId])
+  }, [])
 
   if (loading) {
     return (
@@ -83,17 +43,85 @@ export default function BillingPage() {
     )
   }
 
-  const currentPlan = PLANS.find(p => p.id === billing?.org?.plan) || PLANS[0]
+  const currentPlanId = billing?.org?.plan || 'starter'
+  const currentPlan = PLAN_LIST.find(p => p.id === currentPlanId) || PLAN_LIST[0]
   const status = billing?.org?.status || 'trialing'
   const trialDays = billing?.org?.trialDaysLeft || 0
+  const quantity = billing?.billing?.quantity || 0
+  const monthlyTotal = billing?.billing?.displayMonthlyTotal || '$0'
+  const cancelAtPeriodEnd = billing?.org?.cancelAtPeriodEnd || false
 
-  const messageLimit = currentPlan.messages
   const messageUsed = usage?.messages || 0
-  const messagePercent = messageLimit > 0 ? Math.min(100, Math.round((messageUsed / messageLimit) * 100)) : 0
+  const propertyCount = usage?.properties || 0
+  const guestCount = usage?.guests || 0
 
-  const propertyLimit = currentPlan.properties
-  const propertyUsed = usage?.properties || 0
-  const propertyPercent = Math.min(100, Math.round((propertyUsed / propertyLimit) * 100))
+  // Has an actual Stripe subscription (not just a customer ID from a past attempt)
+  const hasSubscription = !!billing?.org?.hasSubscription
+
+  const handleChoosePlan = async (plan: string) => {
+    setChangingPlan(plan)
+    try {
+      const res = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan, propertyCount: Math.max(1, quantity), returnUrl: '/billing' }),
+      })
+      const data = await res.json()
+      if (res.ok && data.url) {
+        window.location.href = data.url
+      } else {
+        alert(data.error || 'Failed to start checkout')
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.')
+    }
+    setChangingPlan(null)
+  }
+
+  const handleChangePlan = async (newPlan: string) => {
+    if (newPlan === currentPlanId) return
+    setChangingPlan(newPlan)
+    try {
+      const res = await fetch('/api/billing/change-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPlan }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert(data.message)
+        window.location.reload()
+      } else {
+        alert(data.error || 'Failed to change plan')
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.')
+    }
+    setChangingPlan(null)
+  }
+
+  const handleCancel = async () => {
+    setCancelling(true)
+    try {
+      const res = await fetch('/api/cancel-subscription', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setShowCancelConfirm(false)
+        if (data.accessUntil) {
+          alert(`Subscription cancelled. You have access until ${new Date(data.accessUntil).toLocaleDateString()}.`)
+        }
+        window.location.reload()
+      } else {
+        alert(data.error || 'Failed to cancel subscription')
+      }
+    } catch (err) {
+      alert('Something went wrong. Please try again.')
+    }
+    setCancelling(false)
+  }
 
   return (
     <div className="min-h-screen bg-[#FDFCFA]">
@@ -123,24 +151,30 @@ export default function BillingPage() {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl">{currentPlan.emoji}</span>
                 <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{currentPlan.name}</h2>
-                <StatusBadge status={status} trialDays={trialDays} />
+                <StatusBadge status={status} trialDays={trialDays} cancelAtPeriodEnd={cancelAtPeriodEnd} />
               </div>
               <p className="text-slate-500">
-                {status === 'trialing'
+                {!hasSubscription
+                  ? 'No active subscription — choose a plan to get started'
+                  : cancelAtPeriodEnd
+                  ? `Cancels ${billing?.org?.currentPeriodEnd ? new Date(billing.org.currentPeriodEnd).toLocaleDateString() : 'at period end'}`
+                  : status === 'trialing'
                   ? `Free trial — ${trialDays} day${trialDays !== 1 ? 's' : ''} remaining`
                   : status === 'active'
-                  ? 'Your subscription is active'
-                  : status === 'cancelled'
-                  ? 'Your subscription has been cancelled'
+                  ? `${quantity} ${quantity === 1 ? 'property' : 'properties'} active`
+                  : status === 'past_due'
+                  ? 'Payment failed — please update your payment method'
                   : 'Subscription inactive'}
               </p>
             </div>
             <div className="text-right">
-              <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800">
+              <div className="text-3xl font-extrabold text-slate-800 tracking-tight">
                 {currentPlan.price}<span className="text-base text-slate-500 font-normal">{currentPlan.period}</span>
               </div>
-              {!billing?.org?.stripeConnected && status === 'trialing' && (
-                <p className="text-xs text-slate-500 mt-1">No payment method added yet</p>
+              {quantity > 0 && (
+                <p className="text-sm text-slate-500 mt-1">
+                  {quantity} {quantity === 1 ? 'property' : 'properties'} = <span className="font-bold text-slate-700">{monthlyTotal}/mo</span>
+                </p>
               )}
             </div>
           </div>
@@ -150,9 +184,9 @@ export default function BillingPage() {
               onClick={() => setShowPlans(!showPlans)}
               className="bg-primary text-white px-6 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all"
             >
-              {showPlans ? 'Hide Plans' : 'Change Plan'}
+              {showPlans ? 'Hide Plans' : hasSubscription ? 'Change Plan' : 'Choose a Plan'}
             </button>
-            {(status === 'active' || status === 'trialing') && status !== 'cancelled' && (
+            {hasSubscription && !cancelAtPeriodEnd && (
               <button
                 onClick={() => setShowCancelConfirm(true)}
                 className="border-2 border-red-200 text-red-600 px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-50 transition-all"
@@ -160,50 +194,20 @@ export default function BillingPage() {
                 Cancel Subscription
               </button>
             )}
-            {!billing?.org?.stripeConnected && (
-              <button
-                onClick={() => alert('Stripe payment setup coming soon.')}
-                className="border-2 border-primary text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:bg-primary/[0.04] transition-all"
-              >
-                Add Payment Method
-              </button>
-            )}
           </div>
 
           {/* Cancel Confirmation Dialog */}
           {showCancelConfirm && (
             <div className="mt-4 border-2 border-red-200 rounded-2xl p-5 bg-red-50">
-              <h4 className="font-bold text-slate-800 text-lg text-red-700 mb-2">Are you sure?</h4>
+              <h4 className="font-bold text-red-700 text-lg mb-2">Are you sure?</h4>
               <p className="text-sm text-red-600 mb-4">
                 {status === 'trialing'
-                  ? 'Your trial will be cancelled immediately and you will lose access to all features.'
-                  : 'Your subscription will be cancelled at the end of the current billing period. You will keep access until then.'}
+                  ? 'Your trial will be cancelled immediately and you will lose access.'
+                  : 'Your subscription will be cancelled at the end of the current billing period. You keep access until then. No refunds for time already paid.'}
               </p>
               <div className="flex gap-3">
                 <button
-                  onClick={async () => {
-                    setCancelling(true)
-                    try {
-                      const res = await fetch('/api/cancel-subscription', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          organizationId: orgId,
-                          customerId: billing?.org?.stripeCustomerId,
-                        }),
-                      })
-                      const data = await res.json()
-                      if (res.ok) {
-                        setShowCancelConfirm(false)
-                        window.location.reload()
-                      } else {
-                        alert(data.error || 'Failed to cancel subscription')
-                      }
-                    } catch (err) {
-                      alert('Something went wrong. Please try again.')
-                    }
-                    setCancelling(false)
-                  }}
+                  onClick={handleCancel}
                   disabled={cancelling}
                   className="bg-red-600 text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-red-700 transition-all disabled:opacity-50"
                 >
@@ -223,10 +227,15 @@ export default function BillingPage() {
         {/* Plan Selector */}
         {showPlans && (
           <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 mb-6 animate-slide-up">
-            <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-4">Available Plans</h3>
+            <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-2">Available Plans</h3>
+            <p className="text-sm text-slate-500 mb-4">
+              Price is per property per month. You currently have {quantity} {quantity === 1 ? 'property' : 'properties'}.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {PLANS.map(plan => {
-                const isCurrent = plan.id === currentPlan.id
+              {PLAN_LIST.map((plan, idx) => {
+                const isCurrent = plan.id === currentPlanId
+                const isUpgrade = idx > PLAN_LIST.findIndex(p => p.id === currentPlanId)
+                const estimatedTotal = parseInt(plan.price.replace('$', '')) * Math.max(1, quantity)
                 return (
                   <div
                     key={plan.id}
@@ -243,21 +252,27 @@ export default function BillingPage() {
                         <span className="bg-primary text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>
                       )}
                     </div>
-                    <div className="font-bold text-slate-800 text-2xl text-slate-800 mb-3">
+                    <div className="font-bold text-slate-800 text-2xl mb-1">
                       {plan.price}<span className="text-sm text-slate-500 font-normal">{plan.period}</span>
                     </div>
-                    <ul className="space-y-1.5 text-sm text-slate-500 mb-4">
-                      <li>Up to {plan.properties} properties</li>
-                      <li>{plan.messages === -1 ? 'Unlimited' : plan.messages.toLocaleString()} messages/mo</li>
-                    </ul>
-                    {isCurrent ? (
+                    {quantity > 0 && (
+                      <p className="text-xs text-slate-500 mb-3">
+                        {quantity} {quantity === 1 ? 'property' : 'properties'} = ${estimatedTotal}/mo
+                      </p>
+                    )}
+                    {hasSubscription && isCurrent ? (
                       <div className="text-center text-sm font-bold text-primary py-2">Current Plan</div>
                     ) : (
                       <button
-                        onClick={() => alert('Stripe integration coming soon. Contact support to change plans.')}
-                        className="w-full bg-primary/[0.08] text-primary py-2 rounded-lg font-bold text-sm hover:bg-primary/[0.14] transition-all"
+                        onClick={() => hasSubscription ? handleChangePlan(plan.id) : handleChoosePlan(plan.id)}
+                        disabled={changingPlan === plan.id}
+                        className="w-full bg-primary/[0.08] text-primary py-2 rounded-lg font-bold text-sm hover:bg-primary/[0.14] transition-all disabled:opacity-50"
                       >
-                        {PLANS.indexOf(plan) > PLANS.indexOf(currentPlan) ? 'Upgrade' : 'Downgrade'}
+                        {changingPlan === plan.id
+                          ? hasSubscription ? 'Changing...' : 'Redirecting...'
+                          : hasSubscription
+                            ? (isUpgrade ? 'Upgrade' : 'Downgrade')
+                            : 'Choose Plan'}
                       </button>
                     )}
                   </div>
@@ -269,91 +284,90 @@ export default function BillingPage() {
 
         {/* Usage Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6">
-          {/* Messages */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-sm font-bold text-slate-500">Messages</span>
-              <span className="text-2xl">💬</span>
-            </div>
-            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
-              {messageUsed.toLocaleString()}
-            </div>
-            <div className="text-xs text-slate-500 mb-3">
-              of {messageLimit === -1 ? 'unlimited' : messageLimit.toLocaleString()} this month
-            </div>
-            {messageLimit > 0 && (
-              <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    messagePercent >= 90 ? 'bg-accent' : messagePercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
-                  }`}
-                  style={{ width: `${messagePercent}%` }}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Properties */}
           <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-bold text-slate-500">Properties</span>
               <span className="text-2xl">🏠</span>
             </div>
-            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
-              {propertyUsed}
-            </div>
-            <div className="text-xs text-slate-500 mb-3">
-              of {propertyLimit} available
-            </div>
-            <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${
-                  propertyPercent >= 90 ? 'bg-accent' : propertyPercent >= 70 ? 'bg-[#FDCB6E]' : 'bg-primary'
-                }`}
-                style={{ width: `${propertyPercent}%` }}
-              />
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight mb-1">{propertyCount}</div>
+            <div className="text-xs text-slate-500">
+              billable {propertyCount === 1 ? 'property' : 'properties'}
             </div>
           </div>
 
-          {/* Guests */}
+          <div className="bg-white rounded-xl border border-slate-200 p-6">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-bold text-slate-500">Messages</span>
+              <span className="text-2xl">💬</span>
+            </div>
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight mb-1">{messageUsed.toLocaleString()}</div>
+            <div className="text-xs text-slate-500">AI responses this month</div>
+          </div>
+
           <div className="bg-white rounded-xl border border-slate-200 p-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-sm font-bold text-slate-500">Guests</span>
               <span className="text-2xl">👤</span>
             </div>
-            <div className="text-3xl font-extrabold text-slate-800 tracking-tight text-slate-800 mb-1">
-              {(usage?.guests || 0).toLocaleString()}
-            </div>
-            <div className="text-xs text-slate-500 mb-3">
-              unique guests this month
-            </div>
-            <div className="text-xs text-slate-500">
-              {usage?.period?.label || ''}
-            </div>
+            <div className="text-3xl font-extrabold text-slate-800 tracking-tight mb-1">{guestCount.toLocaleString()}</div>
+            <div className="text-xs text-slate-500">unique guests this month</div>
           </div>
         </div>
 
-        {/* Invoice History (Placeholder) */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-extrabold text-slate-800 tracking-tight">Invoice History</h3>
-          </div>
+        {/* Invoice History */}
+        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 mb-6">
+          <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-4">Invoice History</h3>
 
-          {billing?.org?.stripeConnected ? (
-            <p className="text-slate-500 text-sm">Invoice history will appear here once Stripe is connected.</p>
+          {billing?.invoices?.length > 0 ? (
+            <div className="divide-y divide-slate-100">
+              {billing.invoices.map((inv: any) => (
+                <div key={inv.id} className="flex items-center justify-between py-3">
+                  <div>
+                    <span className="font-medium text-slate-800 text-sm">{inv.number || inv.id}</span>
+                    <span className="text-xs text-slate-500 ml-3">
+                      {new Date(inv.created * 1000).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                      inv.status === 'paid' ? 'bg-green-100 text-green-700'
+                        : inv.status === 'open' ? 'bg-yellow-100 text-yellow-700'
+                        : 'bg-slate-100 text-slate-500'
+                    }`}>
+                      {inv.status?.toUpperCase()}
+                    </span>
+                    <span className="font-bold text-slate-800 text-sm">
+                      ${(inv.amount / 100).toFixed(2)} {inv.currency?.toUpperCase()}
+                    </span>
+                    {inv.hostedUrl && (
+                      <a
+                        href={inv.hostedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary text-xs font-bold hover:underline"
+                      >
+                        View
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="text-center py-8">
-              <div className="text-4xl mb-3">📄</div>
-              <p className="text-slate-500 text-sm mb-1">No invoices yet</p>
-              <p className="text-xs text-slate-500">
-                Invoices will appear here after your trial ends and a payment method is added.
+            <div className="text-center py-6">
+              <div className="text-3xl mb-2">📄</div>
+              <p className="text-slate-500 text-sm">No invoices yet</p>
+              <p className="text-xs text-slate-400 mt-1">
+                {status === 'trialing'
+                  ? 'Your first invoice will be generated when the trial ends.'
+                  : 'Invoices will appear here after payments are processed.'}
               </p>
             </div>
           )}
         </div>
 
         {/* Account Info */}
-        <div className="mt-6 bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
           <h3 className="text-xl font-extrabold text-slate-800 tracking-tight mb-4">Account Details</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
@@ -385,7 +399,10 @@ export default function BillingPage() {
   )
 }
 
-function StatusBadge({ status, trialDays }: { status: string; trialDays: number }) {
+function StatusBadge({ status, trialDays, cancelAtPeriodEnd }: { status: string; trialDays: number; cancelAtPeriodEnd: boolean }) {
+  if (cancelAtPeriodEnd) {
+    return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-orange-100 text-orange-600">CANCELLING</span>
+  }
   if (status === 'trialing') {
     return (
       <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
@@ -397,6 +414,9 @@ function StatusBadge({ status, trialDays }: { status: string; trialDays: number 
   }
   if (status === 'active') {
     return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-mint-soft text-mint-dark">ACTIVE</span>
+  }
+  if (status === 'past_due') {
+    return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-600">PAST DUE</span>
   }
   if (status === 'cancelled') {
     return <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-600">CANCELLED</span>

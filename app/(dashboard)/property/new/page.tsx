@@ -278,6 +278,13 @@ function NewPropertyPage() {
       setPendingImages([])
       setPendingImagePreviews([])
 
+      // Sync Stripe subscription quantity after adding property
+      try {
+        await fetch('/api/billing/sync-quantity', { method: 'POST' })
+      } catch (err) {
+        console.error('Failed to sync subscription quantity:', err)
+      }
+
       // Generate QR code
       const QRCode = (await import('qrcode')).default
       const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'HeyConciergeBot'

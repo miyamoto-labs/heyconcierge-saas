@@ -1,27 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
 import { requireAuth } from '@/lib/auth/require-auth'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { getStripe } from '@/lib/stripe'
+import { PLANS, TRIAL_PERIOD_DAYS, getStripePriceId, type PlanCode } from '@/lib/stripe/plans'
 
 export const dynamic = 'force-dynamic'
-
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-01-28.clover' as any,
-  })
-}
-
-// Plan pricing (in cents)
-const PLAN_PRICES = {
-  starter: 4900, // $49
-  professional: 14900, // $149
-  premium: 29900, // $299
-}
-
-const PLAN_NAMES = {
-  starter: 'HeyConcierge Starter',
-  professional: 'HeyConcierge Professional',
-  premium: 'HeyConcierge Premium',
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -30,45 +13,61 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { plan } = await request.json()
+    const { plan, propertyCount, returnUrl } = await request.json()
 
-    if (!plan || !PLAN_PRICES[plan as keyof typeof PLAN_PRICES]) {
+    if (!plan || !PLANS[plan as PlanCode]) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 })
     }
 
-    const priceInCents = PLAN_PRICES[plan as keyof typeof PLAN_PRICES]
-    const planName = PLAN_NAMES[plan as keyof typeof PLAN_NAMES]
+    const priceId = getStripePriceId(plan as PlanCode)
 
-    // Create Stripe Checkout Session
-    const session = await getStripe().checkout.sessions.create({
-      customer_email: user.email || undefined,
+    // Quantity = number of billable properties (minimum 1)
+    const quantity = Math.max(1, propertyCount || 1)
+
+    // Check if user already has a Stripe customer ID
+    const supabase = createAdminClient()
+    const { data: org } = await supabase
+      .from('organizations')
+      .select('stripe_customer_id')
+      .eq('auth_user_id', user.id)
+      .single()
+
+    // Build checkout session options
+    const sessionParams: any = {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: planName,
-              description: '14-day free trial included',
-            },
-            recurring: {
-              interval: 'month',
-            },
-            unit_amount: priceInCents,
-          },
-          quantity: 1,
+          price: priceId,
+          quantity,
         },
       ],
       mode: 'subscription',
       subscription_data: {
-        trial_period_days: 14,
+        trial_period_days: TRIAL_PERIOD_DAYS,
+        metadata: {
+          plan,
+          initial_quantity: String(quantity),
+        },
       },
-      success_url: `${request.headers.get('origin')}/signup?step=3&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${request.headers.get('origin')}/signup?step=2`,
+      success_url: returnUrl
+        ? `${request.headers.get('origin')}${returnUrl}?session_id={CHECKOUT_SESSION_ID}`
+        : `${request.headers.get('origin')}/signup?step=3&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: returnUrl
+        ? `${request.headers.get('origin')}${returnUrl}`
+        : `${request.headers.get('origin')}/signup?step=2`,
       metadata: {
         plan,
       },
-    })
+    }
+
+    // Reuse existing Stripe customer or set email for new customer
+    if (org?.stripe_customer_id) {
+      sessionParams.customer = org.stripe_customer_id
+    } else {
+      sessionParams.customer_email = user.email || undefined
+    }
+
+    const session = await getStripe().checkout.sessions.create(sessionParams)
 
     return NextResponse.json({ sessionId: session.id, url: session.url })
   } catch (error) {

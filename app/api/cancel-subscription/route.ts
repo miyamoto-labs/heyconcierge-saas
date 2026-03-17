@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
 import { requireAuth } from '@/lib/auth/require-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getStripe } from '@/lib/stripe'
 
 export const dynamic = 'force-dynamic'
-
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-01-28.clover' as any,
-  })
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,82 +12,87 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const supabase = createAdminClient()
-    const { organizationId, customerId } = await request.json()
-
-    if (!organizationId || !customerId) {
-      return NextResponse.json(
-        { error: 'Missing organizationId or customerId' },
-        { status: 400 }
-      )
-    }
-
-    // Get all active subscriptions for this customer
-    const subscriptions = await getStripe().subscriptions.list({
-      customer: customerId,
-      status: 'active',
-      limit: 10,
-    })
-
-    if (subscriptions.data.length === 0) {
-      // Also check for trialing subscriptions
-      const trialingSubscriptions = await getStripe().subscriptions.list({
-        customer: customerId,
-        status: 'trialing',
-        limit: 10,
-      })
-
-      if (trialingSubscriptions.data.length === 0) {
-        return NextResponse.json(
-          { error: 'No active subscription found' },
-          { status: 404 }
-        )
+    if (!org.stripe_subscription_id) {
+      // Fallback: try to find subscription via customer ID
+      if (!org.stripe_customer_id) {
+        return NextResponse.json({ error: 'No subscription found' }, { status: 404 })
       }
 
-      // Cancel trialing subscription
-      const subscription = trialingSubscriptions.data[0]
-      await getStripe().subscriptions.cancel(subscription.id)
+      const stripe = getStripe()
+      const subs = await stripe.subscriptions.list({
+        customer: org.stripe_customer_id,
+        status: 'all',
+        limit: 5,
+      })
 
-      // Update organization status
+      const activeSub = subs.data.find(s =>
+        ['active', 'trialing'].includes(s.status)
+      )
+
+      if (!activeSub) {
+        return NextResponse.json({ error: 'No active subscription found' }, { status: 404 })
+      }
+
+      // Use this subscription
+      org.stripe_subscription_id = activeSub.id
+    }
+
+    const stripe = getStripe()
+    const subscription = await stripe.subscriptions.retrieve(org.stripe_subscription_id)
+
+    if (['canceled', 'incomplete_expired'].includes(subscription.status)) {
+      return NextResponse.json({ error: 'Subscription is already cancelled' }, { status: 400 })
+    }
+
+    const supabase = createAdminClient()
+
+    if (subscription.status === 'trialing') {
+      // Trial: cancel immediately
+      await stripe.subscriptions.cancel(subscription.id)
+
       await supabase
         .from('organizations')
         .update({
           subscription_status: 'cancelled',
           churned_at: new Date().toISOString(),
+          cancel_at_period_end: false,
         })
-        .eq('id', organizationId)
+        .eq('id', org.id)
 
       return NextResponse.json({
         success: true,
-        message: 'Trial subscription cancelled',
+        message: 'Trial subscription cancelled immediately.',
+        immediate: true,
       })
     }
 
-    // Cancel the subscription at period end (user keeps access until paid period ends)
-    const subscription = subscriptions.data[0]
-    const cancelledSubscription = await getStripe().subscriptions.update(subscription.id, {
+    // Active subscription: cancel at period end (no refund, paid is paid)
+    const updated = await stripe.subscriptions.update(subscription.id, {
       cancel_at_period_end: true,
-    })
+    }) as any
 
-    // Update organization status
+    // Update local state — webhook will confirm final cancellation
     await supabase
       .from('organizations')
       .update({
-        subscription_status: 'cancelled',
-        churned_at: new Date().toISOString(),
+        cancel_at_period_end: true,
       })
-      .eq('id', organizationId)
+      .eq('id', org.id)
+
+    const periodEnd = updated.current_period_end
+      ? new Date(updated.current_period_end * 1000).toISOString()
+      : null
 
     return NextResponse.json({
       success: true,
-      message: 'Subscription will be cancelled at the end of the billing period',
+      message: 'Subscription will be cancelled at the end of the billing period.',
+      immediate: false,
+      accessUntil: periodEnd,
     })
   } catch (error) {
     console.error('Cancel subscription error:', error)
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Failed to cancel subscription',
-      },
+      { error: error instanceof Error ? error.message : 'Failed to cancel subscription' },
       { status: 500 }
     )
   }

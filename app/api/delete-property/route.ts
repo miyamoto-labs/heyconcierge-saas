@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/require-auth'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { syncSubscriptionQuantity } from '@/lib/stripe/sync-quantity'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,6 +66,16 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.from('properties').delete().eq('id', propertyId)
 
     if (error) throw error
+
+    // Sync Stripe subscription quantity after property deletion
+    if (org?.id) {
+      try {
+        await syncSubscriptionQuantity(org.id)
+      } catch (syncErr) {
+        console.error('Failed to sync subscription quantity after delete:', syncErr)
+        // Don't fail the delete — property is already gone
+      }
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {
