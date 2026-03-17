@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
 import { requireAuth } from '@/lib/auth/require-auth'
+import { getStripe } from '@/lib/stripe'
+import { getPlanFromPriceId } from '@/lib/stripe/plans'
 
 export const dynamic = 'force-dynamic'
-
-function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2026-01-28.clover' as any,
-  })
-}
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,9 +31,26 @@ export async function POST(request: NextRequest) {
       ? session.subscription
       : session.subscription?.id ?? null
 
+    // Extract plan and quantity from subscription
+    let plan: string | null = session.metadata?.plan || null
+    let quantity = 1
+    if (typeof session.subscription === 'object' && session.subscription) {
+      const sub = session.subscription
+      const item = sub.items?.data?.[0]
+      if (item) {
+        quantity = item.quantity || 1
+        const priceId = typeof item.price === 'string' ? item.price : item.price?.id
+        if (priceId && !plan) {
+          plan = getPlanFromPriceId(priceId)
+        }
+      }
+    }
+
     return NextResponse.json({
       customerId,
       subscriptionId,
+      plan,
+      quantity,
       status: session.status,
       paymentStatus: session.payment_status,
     })

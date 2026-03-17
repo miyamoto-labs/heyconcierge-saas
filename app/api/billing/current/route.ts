@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/require-auth'
+import { getStripe } from '@/lib/stripe'
+import { PLANS, TRIAL_PERIOD_DAYS, type PlanCode } from '@/lib/stripe/plans'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
 
@@ -21,31 +24,73 @@ export async function GET(request: NextRequest) {
       trialDaysLeft = Math.max(0, Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
     } else if (org.subscription_status === 'trialing' && !org.trial_ends_at && org.trial_started_at) {
       const trialStart = new Date(org.trial_started_at)
-      const trialEnd = new Date(trialStart.getTime() + 14 * 24 * 60 * 60 * 1000)
+      const trialEnd = new Date(trialStart.getTime() + TRIAL_PERIOD_DAYS * 24 * 60 * 60 * 1000)
       trialDaysLeft = Math.max(0, Math.ceil((trialEnd.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
     }
 
-    const planLimits: Record<string, { properties: number; messages: number; price: string }> = {
-      starter: { properties: 5, messages: 500, price: '$49/mo' },
-      professional: { properties: 20, messages: 2000, price: '$149/mo' },
-      premium: { properties: 40, messages: -1, price: '$299/mo' },
-    }
+    // Count properties
+    const supabase = createAdminClient()
+    const { count: propertyCount } = await supabase
+      .from('properties')
+      .select('*', { count: 'exact', head: true })
+      .eq('org_id', org.id)
 
-    const limits = planLimits[org.plan] || planLimits.starter
+    const quantity = propertyCount || 0
+    const planCode = (org.plan || 'starter') as PlanCode
+    const planConfig = PLANS[planCode] || PLANS.starter
+    const monthlyTotal = planConfig.pricePerProperty * quantity
+
+    // Get invoices from Stripe if customer exists
+    let invoices: any[] = []
+    if (org.stripe_customer_id) {
+      try {
+        const stripeInvoices = await getStripe().invoices.list({
+          customer: org.stripe_customer_id,
+          limit: 10,
+        })
+        invoices = stripeInvoices.data.map(inv => ({
+          id: inv.id,
+          number: inv.number,
+          status: inv.status,
+          amount: inv.amount_due,
+          currency: inv.currency,
+          created: inv.created,
+          hostedUrl: inv.hosted_invoice_url,
+          pdfUrl: inv.invoice_pdf,
+        }))
+      } catch (err) {
+        console.error('Failed to fetch Stripe invoices:', err)
+      }
+    }
 
     return NextResponse.json({
       org: {
         id: org.id,
         name: org.name,
         email: org.email,
-        plan: org.plan,
+        plan: planCode,
         status: org.subscription_status || 'trialing',
         trialDaysLeft,
         stripeConnected: !!org.stripe_customer_id,
+        hasSubscription: !!org.stripe_subscription_id,
         stripeCustomerId: org.stripe_customer_id || null,
+        cancelAtPeriodEnd: org.cancel_at_period_end || false,
+        currentPeriodEnd: org.current_period_end_at || null,
         createdAt: org.created_at,
       },
-      limits,
+      plan: {
+        code: planConfig.code,
+        name: planConfig.name,
+        pricePerProperty: planConfig.pricePerProperty,
+        displayPrice: planConfig.displayPrice,
+        features: planConfig.features,
+      },
+      billing: {
+        quantity,
+        monthlyTotal,
+        displayMonthlyTotal: `$${(monthlyTotal / 100).toFixed(0)}`,
+      },
+      invoices,
     })
   } catch (error) {
     console.error('Billing current error:', error)
