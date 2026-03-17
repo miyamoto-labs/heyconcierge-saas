@@ -171,11 +171,11 @@ export default function BillingPage() {
             </div>
             <div className="text-right">
               <div className="text-3xl font-extrabold text-slate-800 tracking-tight">
-                {currentPlan.displayPrice}<span className="text-base text-slate-500 font-normal">/property/mo</span>
+                NOK {currentPlan.displayPrice}<span className="text-base text-slate-500 font-normal">/property/mth</span>
               </div>
               {quantity > 0 && (
                 <p className="text-sm text-slate-500 mt-1">
-                  {quantity} {quantity === 1 ? 'property' : 'properties'} = <span className="font-bold text-slate-700">{monthlyTotal}/mo</span>
+                  {quantity} {quantity === 1 ? 'property' : 'properties'} = <span className="font-bold text-slate-700">{monthlyTotal}/mth</span>
                 </p>
               )}
             </div>
@@ -256,11 +256,11 @@ export default function BillingPage() {
                       )}
                     </div>
                     <div className="font-bold text-slate-800 text-2xl mb-1">
-                      {plan.displayPrice}<span className="text-sm text-slate-500 font-normal">/property/mo</span>
+                      NOK {plan.displayPrice}<span className="text-sm text-slate-500 font-normal">/property/mth</span>
                     </div>
                     {quantity > 0 && (
                       <p className="text-xs text-slate-500 mb-3">
-                        {quantity} {quantity === 1 ? 'property' : 'properties'} = ${estimatedTotal}/mo
+                        {quantity} {quantity === 1 ? 'property' : 'properties'} = NOK {estimatedTotal}/mth
                       </p>
                     )}
                     {hasSubscription && isCurrent ? (

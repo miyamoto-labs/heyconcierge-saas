@@ -106,14 +106,14 @@ export async function GET(request: NextRequest) {
         code: planConfig.code,
         name: planConfig.name,
         pricePerProperty: currentPrice,
-        displayPrice: `$${(currentPrice / 100).toFixed(0)}`,
+        displayPrice: `${(currentPrice / 100).toFixed(0)}`,
         features: planConfig.features,
       },
       plans: PLAN_ORDER.map(p => ({
         code: p,
         name: PLANS[p].name,
         pricePerProperty: planPrices[p].unitAmount,
-        displayPrice: `$${(planPrices[p].unitAmount / 100).toFixed(0)}`,
+        displayPrice: `${(planPrices[p].unitAmount / 100).toFixed(0)}`,
         currency: planPrices[p].currency,
         features: PLANS[p].features,
         popular: PLANS[p].popular || false,
@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
       billing: {
         quantity,
         monthlyTotal,
-        displayMonthlyTotal: `$${(monthlyTotal / 100).toFixed(0)}`,
+        displayMonthlyTotal: `NOK ${(monthlyTotal / 100).toFixed(0)}`,
       },
       invoices,
     })
