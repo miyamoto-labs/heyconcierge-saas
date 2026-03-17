@@ -39,5 +39,4 @@ backend/.env
 .env.production
 
 # claude
-CLAUDE.md
 .claude/
