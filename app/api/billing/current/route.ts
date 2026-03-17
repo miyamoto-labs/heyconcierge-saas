@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/require-auth'
 import { getStripe } from '@/lib/stripe'
-import { PLANS, TRIAL_PERIOD_DAYS, type PlanCode } from '@/lib/stripe/plans'
+import { PLANS, TRIAL_PERIOD_DAYS, PLAN_ORDER, type PlanCode, getStripePriceId } from '@/lib/stripe/plans'
 import { createAdminClient } from '@/lib/supabase/admin'
 
 export const dynamic = 'force-dynamic'
@@ -38,13 +38,37 @@ export async function GET(request: NextRequest) {
     const quantity = propertyCount || 0
     const planCode = (org.plan || 'starter') as PlanCode
     const planConfig = PLANS[planCode] || PLANS.starter
-    const monthlyTotal = planConfig.pricePerProperty * quantity
+
+    // Fetch real prices from Stripe for all plans
+    const stripe = getStripe()
+    const planPrices: Record<string, { unitAmount: number; currency: string; interval: string }> = {}
+    for (const plan of PLAN_ORDER) {
+      try {
+        const priceId = getStripePriceId(plan)
+        const price = await stripe.prices.retrieve(priceId)
+        planPrices[plan] = {
+          unitAmount: price.unit_amount || 0,
+          currency: price.currency,
+          interval: price.recurring?.interval || 'month',
+        }
+      } catch {
+        // Fall back to hardcoded if price not found
+        planPrices[plan] = {
+          unitAmount: PLANS[plan].pricePerProperty,
+          currency: 'usd',
+          interval: 'month',
+        }
+      }
+    }
+
+    const currentPrice = planPrices[planCode]?.unitAmount || planConfig.pricePerProperty
+    const monthlyTotal = currentPrice * quantity
 
     // Get invoices from Stripe if customer exists
     let invoices: any[] = []
     if (org.stripe_customer_id) {
       try {
-        const stripeInvoices = await getStripe().invoices.list({
+        const stripeInvoices = await stripe.invoices.list({
           customer: org.stripe_customer_id,
           limit: 10,
         })
@@ -81,10 +105,19 @@ export async function GET(request: NextRequest) {
       plan: {
         code: planConfig.code,
         name: planConfig.name,
-        pricePerProperty: planConfig.pricePerProperty,
-        displayPrice: planConfig.displayPrice,
+        pricePerProperty: currentPrice,
+        displayPrice: `$${(currentPrice / 100).toFixed(0)}`,
         features: planConfig.features,
       },
+      plans: PLAN_ORDER.map(p => ({
+        code: p,
+        name: PLANS[p].name,
+        pricePerProperty: planPrices[p].unitAmount,
+        displayPrice: `$${(planPrices[p].unitAmount / 100).toFixed(0)}`,
+        currency: planPrices[p].currency,
+        features: PLANS[p].features,
+        popular: PLANS[p].popular || false,
+      })),
       billing: {
         quantity,
         monthlyTotal,

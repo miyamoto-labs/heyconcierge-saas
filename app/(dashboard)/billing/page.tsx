@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-const PLAN_LIST = [
-  { id: 'starter', name: 'Starter', emoji: '🌱', price: '$9', period: '/property/mo' },
-  { id: 'professional', name: 'Professional', emoji: '⚡', price: '$19', period: '/property/mo', popular: true },
-  { id: 'premium', name: 'Premium', emoji: '👑', price: '$25', period: '/property/mo' },
-]
+
+const PLAN_EMOJIS: Record<string, string> = {
+  starter: '🌱',
+  professional: '⚡',
+  premium: '👑',
+}
 
 export default function BillingPage() {
   const [loading, setLoading] = useState(true)
@@ -44,7 +45,8 @@ export default function BillingPage() {
   }
 
   const currentPlanId = billing?.org?.plan || 'starter'
-  const currentPlan = PLAN_LIST.find(p => p.id === currentPlanId) || PLAN_LIST[0]
+  const planList = billing?.plans || []
+  const currentPlan = planList.find((p: any) => p.code === currentPlanId) || planList[0] || { code: 'starter', name: 'Starter', displayPrice: '$0' }
   const status = billing?.org?.status || 'trialing'
   const trialDays = billing?.org?.trialDaysLeft || 0
   const quantity = billing?.billing?.quantity || 0
@@ -149,7 +151,7 @@ export default function BillingPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl">{currentPlan.emoji}</span>
+                <span className="text-3xl">{PLAN_EMOJIS[currentPlan.code] || '📦'}</span>
                 <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{currentPlan.name}</h2>
                 <StatusBadge status={status} trialDays={trialDays} cancelAtPeriodEnd={cancelAtPeriodEnd} />
               </div>
@@ -169,7 +171,7 @@ export default function BillingPage() {
             </div>
             <div className="text-right">
               <div className="text-3xl font-extrabold text-slate-800 tracking-tight">
-                {currentPlan.price}<span className="text-base text-slate-500 font-normal">{currentPlan.period}</span>
+                {currentPlan.displayPrice}<span className="text-base text-slate-500 font-normal">/property/mo</span>
               </div>
               {quantity > 0 && (
                 <p className="text-sm text-slate-500 mt-1">
@@ -232,13 +234,14 @@ export default function BillingPage() {
               Price is per property per month. You currently have {quantity} {quantity === 1 ? 'property' : 'properties'}.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {PLAN_LIST.map((plan, idx) => {
-                const isCurrent = plan.id === currentPlanId
-                const isUpgrade = idx > PLAN_LIST.findIndex(p => p.id === currentPlanId)
-                const estimatedTotal = parseInt(plan.price.replace('$', '')) * Math.max(1, quantity)
+              {planList.map((plan: any, idx: number) => {
+                const isCurrent = plan.code === currentPlanId
+                const isUpgrade = idx > planList.findIndex((p: any) => p.code === currentPlanId)
+                const priceNum = plan.pricePerProperty / 100
+                const estimatedTotal = priceNum * Math.max(1, quantity)
                 return (
                   <div
-                    key={plan.id}
+                    key={plan.code}
                     className={`rounded-2xl p-5 border-2 transition-all ${
                       isCurrent
                         ? 'border-primary bg-[rgba(108,92,231,0.03)]'
@@ -246,14 +249,14 @@ export default function BillingPage() {
                     }`}
                   >
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-2xl">{plan.emoji}</span>
+                      <span className="text-2xl">{PLAN_EMOJIS[plan.code] || '📦'}</span>
                       <span className="font-semibold text-lg">{plan.name}</span>
                       {plan.popular && (
                         <span className="bg-primary text-white text-[0.6rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>
                       )}
                     </div>
                     <div className="font-bold text-slate-800 text-2xl mb-1">
-                      {plan.price}<span className="text-sm text-slate-500 font-normal">{plan.period}</span>
+                      {plan.displayPrice}<span className="text-sm text-slate-500 font-normal">/property/mo</span>
                     </div>
                     {quantity > 0 && (
                       <p className="text-xs text-slate-500 mb-3">
@@ -264,11 +267,11 @@ export default function BillingPage() {
                       <div className="text-center text-sm font-bold text-primary py-2">Current Plan</div>
                     ) : (
                       <button
-                        onClick={() => hasSubscription ? handleChangePlan(plan.id) : handleChoosePlan(plan.id)}
-                        disabled={changingPlan === plan.id}
+                        onClick={() => hasSubscription ? handleChangePlan(plan.code) : handleChoosePlan(plan.code)}
+                        disabled={changingPlan === plan.code}
                         className="w-full bg-primary/[0.08] text-primary py-2 rounded-lg font-bold text-sm hover:bg-primary/[0.14] transition-all disabled:opacity-50"
                       >
-                        {changingPlan === plan.id
+                        {changingPlan === plan.code
                           ? hasSubscription ? 'Changing...' : 'Redirecting...'
                           : hasSubscription
                             ? (isUpgrade ? 'Upgrade' : 'Downgrade')
