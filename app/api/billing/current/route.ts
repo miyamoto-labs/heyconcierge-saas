@@ -39,6 +39,17 @@ export async function GET(request: NextRequest) {
     const planCode = (org.plan || 'starter') as PlanCode
     const planConfig = PLANS[planCode] || PLANS.starter
 
+    // Fetch visible plans setting
+    let visiblePlans: string[] = [...PLAN_ORDER]
+    const { data: settingRow, error: settingError } = await supabase
+      .from('admin_settings')
+      .select('value')
+      .eq('key', 'visible_plans')
+      .single()
+    if (!settingError && settingRow?.value && Array.isArray(settingRow.value)) {
+      visiblePlans = settingRow.value
+    }
+
     // Fetch real prices from Stripe for all plans
     const stripe = getStripe()
     const planPrices: Record<string, { unitAmount: number; currency: string; interval: string }> = {}
@@ -109,15 +120,17 @@ export async function GET(request: NextRequest) {
         displayPrice: `${(currentPrice / 100).toFixed(0)}`,
         features: planConfig.features,
       },
-      plans: PLAN_ORDER.map(p => ({
-        code: p,
-        name: PLANS[p].name,
-        pricePerProperty: planPrices[p].unitAmount,
-        displayPrice: `${(planPrices[p].unitAmount / 100).toFixed(0)}`,
-        currency: planPrices[p].currency,
-        features: PLANS[p].features,
-        popular: PLANS[p].popular || false,
-      })),
+      plans: PLAN_ORDER
+        .filter(p => visiblePlans.includes(p))
+        .map(p => ({
+          code: p,
+          name: PLANS[p].name,
+          pricePerProperty: planPrices[p].unitAmount,
+          displayPrice: `${(planPrices[p].unitAmount / 100).toFixed(0)}`,
+          currency: planPrices[p].currency,
+          features: PLANS[p].features,
+          popular: PLANS[p].popular || false,
+        })),
       billing: {
         quantity,
         monthlyTotal,
