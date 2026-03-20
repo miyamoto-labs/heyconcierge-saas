@@ -83,27 +83,17 @@ function extractBookings(events: ParsedEvent[], propertyId: string) {
     if (lower.includes('airbnb')) platform = 'airbnb'
     else if (lower.includes('booking')) platform = 'booking'
 
-    // Detect blocked/unavailable dates (Airbnb uses "Airbnb (Not available)", "Not available", etc.)
-    const blockedPatterns = /not available|blocked|reserved|unavailable|closed/i
-    if (blockedPatterns.test(summary)) {
-      return {
-        property_id: propertyId,
-        guest_name: 'Blocked',
-        check_in_date: parseICalDate(event.dtstart),
-        check_out_date: parseICalDate(event.dtend),
-        booking_reference: `blocked-${parseICalDate(event.dtstart)}-${parseICalDate(event.dtend)}`,
-        platform: 'other',
-        status: 'confirmed',
-      }
-    }
-
-    // Extract guest name from "Guest Name - Confirmation Code" or just the summary
+    // Extract guest name
     let guestName = 'Guest'
     const nameParts = summary.split(' - ')
-    if (nameParts.length > 1) {
-      guestName = nameParts[0].trim()
-    } else if (summary && !blockedPatterns.test(summary)) {
-      guestName = summary.trim()
+    if (nameParts.length > 0) {
+      guestName = nameParts[0].replace(/^(Reserved|Booked|Blocked|Not available)\s*/i, '').trim()
+    }
+
+    // Flag blocked dates
+    if (/^(Not available|Blocked|Reserved)$/i.test(guestName)) {
+      guestName = 'Blocked'
+      platform = 'other'
     }
 
     const checkIn = parseICalDate(event.dtstart)

@@ -255,25 +255,17 @@ export default function CalendarPage() {
           <div className="grid grid-cols-7 gap-2">
             {generateCalendar().map((day, idx) => {
               const dayBookings = getBookingsForDate(day)
-              const isToday = day &&
+              const isToday = day && 
                 day === new Date().getDate() &&
                 currentDate.getMonth() === new Date().getMonth() &&
                 currentDate.getFullYear() === new Date().getFullYear()
-
-              const hasGuest = dayBookings.some(b => b.guest_name !== 'Blocked')
-              const isBlocked = dayBookings.some(b => b.guest_name === 'Blocked')
-              const isAvailable = day && dayBookings.length === 0
-
+              
               return (
                 <div
                   key={idx}
                   className={`min-h-[100px] p-2 rounded-xl border-2 transition-all ${
-                    day
-                      ? hasGuest
-                        ? 'bg-primary/[0.08] border-primary'
-                        : isBlocked
-                          ? 'bg-red-50 border-red-200'
-                          : 'bg-white border-slate-200 hover:border-primary cursor-pointer'
+                    day 
+                      ? 'bg-white border-slate-200 hover:border-primary cursor-pointer' 
                       : 'bg-transparent border-transparent'
                   } ${isToday ? 'border-accent bg-accent-soft' : ''}`}
                 >
@@ -282,21 +274,14 @@ export default function CalendarPage() {
                       <div className={`text-sm font-bold mb-1 ${isToday ? 'text-accent' : 'text-slate-800'}`}>
                         {day}
                       </div>
-                      {isAvailable && (
-                        <div className="text-xs text-emerald-500 font-bold">Available</div>
-                      )}
                       <div className="space-y-1">
                         {dayBookings.slice(0, 2).map(booking => (
                           <div
                             key={booking.id}
-                            className={`text-xs px-2 py-1 rounded truncate font-bold ${
-                              booking.guest_name === 'Blocked'
-                                ? 'bg-red-100 text-red-600'
-                                : 'bg-primary text-white'
-                            }`}
+                            className="text-xs px-2 py-1 rounded bg-primary text-white truncate font-bold"
                             title={`${booking.guest_name} (${booking.platform})`}
                           >
-                            {booking.guest_name === 'Blocked' ? 'Blocked' : booking.guest_name}
+                            {booking.guest_name}
                           </div>
                         ))}
                         {dayBookings.length > 2 && (
