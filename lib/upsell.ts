@@ -50,8 +50,8 @@ interface Booking {
   property_id: string
   guest_name: string
   guest_phone: string | null
-  check_in: string
-  check_out: string
+  check_in_date: string
+  check_out_date: string
   platform: string
   status: string
 }
@@ -130,7 +130,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
       .select('*')
       .eq('property_id', propertyId)
       .eq('status', 'confirmed')
-      .gte('check_in', new Date().toISOString().split('T')[0])
+      .gte('check_in_date', new Date().toISOString().split('T')[0])
 
     if (bErr || !bookings) continue
 
@@ -141,7 +141,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
 
       // Late checkout offer
       if (config.late_checkout_enabled) {
-        const sendAt = new Date(booking.check_out)
+        const sendAt = new Date(booking.check_out_date)
         sendAt.setHours(sendAt.getHours() - config.late_checkout_send_hours_before)
         if (sendAt > new Date()) {
           const scheduled = await scheduleOffer(supabase, {
@@ -164,7 +164,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
 
       // Early check-in offer
       if (config.early_checkin_enabled) {
-        const sendAt = new Date(booking.check_in)
+        const sendAt = new Date(booking.check_in_date)
         sendAt.setHours(sendAt.getHours() - config.early_checkin_send_hours_before)
         if (sendAt > new Date()) {
           const scheduled = await scheduleOffer(supabase, {
@@ -187,7 +187,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
 
       // Stay extension offer
       if (config.stay_extension_enabled) {
-        const sendAt = new Date(booking.check_out)
+        const sendAt = new Date(booking.check_out_date)
         sendAt.setHours(sendAt.getHours() - config.stay_extension_send_hours_before)
         if (sendAt > new Date()) {
           const scheduled = await scheduleOffer(supabase, {
@@ -208,7 +208,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
 
       // Review request (after checkout)
       if (config.review_request_enabled) {
-        const sendAt = new Date(booking.check_out)
+        const sendAt = new Date(booking.check_out_date)
         sendAt.setHours(sendAt.getHours() + config.review_request_send_hours_after)
         if (sendAt > new Date()) {
           const scheduled = await scheduleOffer(supabase, {
@@ -229,7 +229,7 @@ export async function scanAndScheduleOffers(supabase: SupabaseClient): Promise<{
 
       // Activity recommendation (after check-in)
       if (config.activity_recommendation_enabled) {
-        const sendAt = new Date(booking.check_in)
+        const sendAt = new Date(booking.check_in_date)
         sendAt.setHours(sendAt.getHours() + (config.activity_recommendation_send_hours_after_checkin || 24))
         if (sendAt > new Date()) {
           const scheduled = await scheduleOffer(supabase, {
@@ -315,8 +315,8 @@ async function scheduleGapNightOffers(supabase: SupabaseClient, config: UpsellCo
     .select('*')
     .eq('property_id', propertyId)
     .eq('status', 'confirmed')
-    .gte('check_out', new Date().toISOString().split('T')[0])
-    .order('check_in', { ascending: true })
+    .gte('check_out_date', new Date().toISOString().split('T')[0])
+    .order('check_in_date', { ascending: true })
 
   if (!bookings || bookings.length < 2) return 0
 
@@ -324,13 +324,13 @@ async function scheduleGapNightOffers(supabase: SupabaseClient, config: UpsellCo
     const current = bookings[i] as Booking
     const next = bookings[i + 1] as Booking
 
-    const gapStart = new Date(current.check_out)
-    const gapEnd = new Date(next.check_in)
+    const gapStart = new Date(current.check_out_date)
+    const gapEnd = new Date(next.check_in_date)
     const gapNights = Math.round((gapEnd.getTime() - gapStart.getTime()) / (1000 * 60 * 60 * 24))
 
     if (gapNights >= 1 && gapNights <= config.gap_night_max_gap) {
       if (current.guest_phone) {
-        const sendAt = new Date(current.check_out)
+        const sendAt = new Date(current.check_out_date)
         sendAt.setDate(sendAt.getDate() - config.gap_night_send_days_before)
         if (sendAt > new Date()) {
           const channel = current.guest_phone.startsWith('tg:') ? 'telegram' : 'whatsapp'
@@ -348,8 +348,8 @@ async function scheduleGapNightOffers(supabase: SupabaseClient, config: UpsellCo
               gap_nights: gapNights,
               price_per_night: discountedPrice,
               discount_pct: config.gap_night_discount_pct,
-              gap_start: current.check_out,
-              gap_end: next.check_in,
+              gap_start: current.check_out_date,
+              gap_end: next.check_in_date,
             },
           })
           if (didSchedule) scheduled++
