@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef } from 'react'
 
 const conversation = [
   { role: 'guest' as const, text: 'Hi! What time is check-in?', time: '9:38' },
@@ -15,62 +15,6 @@ export default function PhoneMockup() {
   const messagesRef = useRef<HTMLDivElement>(null)
   const idxRef = useRef(0)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const audioCtxRef = useRef<AudioContext | null>(null)
-
-  const getAudioCtx = useCallback(() => {
-    if (audioCtxRef.current) return audioCtxRef.current
-    try {
-      const AC = window.AudioContext || (window as any).webkitAudioContext
-      if (AC) audioCtxRef.current = new AC()
-    } catch {}
-    return audioCtxRef.current
-  }, [])
-
-  const playPop = useCallback((isGuest: boolean) => {
-    try {
-      const c = getAudioCtx()
-      if (!c) return
-      const o = c.createOscillator()
-      const g = c.createGain()
-      o.connect(g)
-      g.connect(c.destination)
-      o.type = 'sine'
-      const now = c.currentTime
-      o.frequency.setValueAtTime(isGuest ? 880 : 660, now)
-      o.frequency.exponentialRampToValueAtTime(isGuest ? 660 : 440, now + 0.08)
-      g.gain.setValueAtTime(0.08, now)
-      g.gain.exponentialRampToValueAtTime(0.001, now + 0.12)
-      o.start(now)
-      o.stop(now + 0.12)
-    } catch {}
-  }, [getAudioCtx])
-
-  const playClick = useCallback(() => {
-    try {
-      const c = getAudioCtx()
-      if (!c) return
-      const o = c.createOscillator()
-      const g = c.createGain()
-      o.connect(g)
-      g.connect(c.destination)
-      o.type = 'sine'
-      const now = c.currentTime
-      const freq = 1200 + Math.random() * 400
-      o.frequency.setValueAtTime(freq, now)
-      o.frequency.exponentialRampToValueAtTime(freq * 0.7, now + 0.03)
-      g.gain.setValueAtTime(0.04, now)
-      g.gain.exponentialRampToValueAtTime(0.001, now + 0.04)
-      o.start(now)
-      o.stop(now + 0.04)
-    } catch {}
-  }, [getAudioCtx])
-
-  const resumeAudio = useCallback(() => {
-    try {
-      const c = getAudioCtx()
-      if (c && c.state === 'suspended') c.resume()
-    } catch {}
-  }, [getAudioCtx])
 
   useEffect(() => {
     const el = messagesRef.current
@@ -99,7 +43,6 @@ export default function PhoneMockup() {
       requestAnimationFrame(() => {
         row.classList.add('visible')
         el.scrollTop = el.scrollHeight
-        playPop(isGuest)
       })
     }
 
@@ -136,27 +79,16 @@ export default function PhoneMockup() {
       const msg = conversation[idxRef.current++]
 
       if (msg.role === 'guest') {
-        let clicks = 0
         const totalClicks = Math.floor(msg.text.length * 0.6)
-        const clickInterval = setInterval(() => {
-          playClick()
-          clicks++
-          if (clicks >= totalClicks) clearInterval(clickInterval)
-        }, 130)
 
         timeoutRef.current = setTimeout(() => {
-          clearInterval(clickInterval)
           addMessage(msg)
           timeoutRef.current = setTimeout(next, 900 + Math.floor(Math.random() * 600))
         }, totalClicks * 130 + 100)
       } else {
         const typingEl = showTyping()
         const thinkTime = 1200 + msg.text.length * 18
-        const typingClickInterval = setInterval(() => {
-          playClick()
-        }, 400)
         timeoutRef.current = setTimeout(() => {
-          clearInterval(typingClickInterval)
           removeTyping(typingEl)
           timeoutRef.current = setTimeout(() => {
             addMessage(msg)
@@ -171,16 +103,7 @@ export default function PhoneMockup() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [playPop, playClick])
-
-  useEffect(() => {
-    document.addEventListener('click', resumeAudio, { once: true })
-    document.addEventListener('touchstart', resumeAudio, { once: true })
-    return () => {
-      document.removeEventListener('click', resumeAudio)
-      document.removeEventListener('touchstart', resumeAudio)
-    }
-  }, [resumeAudio])
+  }, [])
 
   return (
     <div className="relative">

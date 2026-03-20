@@ -224,16 +224,6 @@ export default function DashboardPage() {
             <span className="text-primary sm:hidden">HC</span>
           </Link>
           <div className="flex items-center gap-3 sm:gap-6">
-            <Link href="/calendar" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
-              Calendar
-            </Link>
-            <Link href="/upselling" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
-              Upselling
-            </Link>
-            <Link href="/billing" className="text-xs sm:text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors whitespace-nowrap no-underline">
-              Billing
-            </Link>
-
             {/* Organization Dropdown */}
             <div className="relative">
               <button
@@ -252,6 +242,14 @@ export default function DashboardPage() {
                       {organization?.plan || 'FREE'}
                     </div>
                   </div>
+
+                  <Link
+                    href="/calendar"
+                    onClick={() => setDropdownOpen(false)}
+                    className="block px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-colors no-underline"
+                  >
+                    Calendar
+                  </Link>
 
                   <Link
                     href="/billing"

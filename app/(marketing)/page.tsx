@@ -198,7 +198,7 @@ export default function Home() {
               <span className="text-primary">You get your time back.</span>
             </h1>
             <p className="text-lg italic text-saas-dark/70 mb-6 lg:mx-0 mx-auto">
-              {'\u201c'}your Airbnb runs itself, finally.{'\u201d'}
+              {'\u201c'}Your Airbnb on autopilot.{'\u201d'}
             </p>
             <p className="text-lg text-saas-muted mb-8 max-w-xl leading-relaxed lg:mx-0 mx-auto">
               An AI concierge that chats with your guests 24/7 on WhatsApp, Telegram, or SMS. Speaks every language, knows your property inside out, and never sleeps.
@@ -208,7 +208,7 @@ export default function Home() {
                 href="/signup"
                 className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5"
               >
-                Get Started Free
+                Start your 30-day free trial
                 <ArrowRight size={16} />
               </Link>
               <a
@@ -218,7 +218,6 @@ export default function Home() {
                 See How It Works
               </a>
             </div>
-            <p className="text-xs text-saas-light lg:text-left text-center">No credit card required</p>
           </div>
 
           {/* Right: Chat Mockup */}
@@ -300,8 +299,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            {/* Connecting line (desktop only) */}
-            <div className="hidden md:block absolute top-[72px] left-[20%] right-[20%] h-[2px] bg-saas-border z-0" />
 
             {steps.map((s, i) => (
               <div key={i} className="relative z-10 text-center reveal">
@@ -322,7 +319,7 @@ export default function Home() {
               href="/signup"
               className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-7 py-3.5 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-primary hover:shadow-saas-primary-lg hover:-translate-y-0.5"
             >
-              Get Started Free
+              Start your 30-day free trial
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -380,7 +377,7 @@ export default function Home() {
             href="/signup"
             className="inline-flex items-center gap-2 bg-white hover:bg-saas-bg text-saas-dark px-8 py-4 rounded-lg font-semibold text-sm no-underline transition-all shadow-saas-lg hover:shadow-saas-xl hover:-translate-y-0.5 reveal"
           >
-            Get Started Free
+            Start your 30-day free trial
             <ArrowRight size={16} />
           </Link>
         </div>
