@@ -22,6 +22,9 @@ const { scanAndScheduleRatings, sendDueRatings, handleRatingCallback, handleRati
 // OTA Activity Provider (GetYourGuide + Viator)
 const { searchActivities, formatActivitiesForPrompt, logAffiliateClick, ACTIVITY_SEARCH_TOOL, ACTIVITY_DETAILS_TOOL } = require('./activity_provider');
 
+// Google Places (restaurants, cafes, local businesses)
+const { searchPlaces, getPlaceDetails, formatPlacesForPrompt, PLACES_SEARCH_TOOL, PLACE_DETAILS_TOOL } = require('./places_service');
+
 const TELEGRAM_API = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}`;
 
 const app = express();
@@ -400,7 +403,7 @@ or anything fun to do nearby — use the search_activities tool to find options.
 Your job is to assist guests with:
 - Check-in/check-out procedures
 - WiFi passwords and access codes
-- Local recommendations (restaurants, attractions, tips)
+- Local recommendations (restaurants, attractions, tips) — ALWAYS use the search_places tool for this
 - House rules and amenities
 - General property questions${activitySection}
 
@@ -422,10 +425,11 @@ RESPONSE GUIDELINES:
 - Keep responses concise and WhatsApp-friendly (under 1000 characters when possible).
 - Use line breaks for readability, but avoid excessive formatting.
 - Be warm and helpful.
-- Include Google Maps links when recommending places:
-  https://www.google.com/maps/search/?api=1&query=<place+city>
+- ALWAYS use the search_places tool when guests ask about restaurants, cafes, bars, shops, pharmacies, supermarkets, or any local business. NEVER recommend places from memory — always search first.
+- Use the Google Maps links returned by the search_places tool. Never construct your own Google Maps links.
 - If you do not know an answer, say so honestly and suggest contacting the host.
 - Never invent information about the property that is not in the profile data.
+- Never invent or guess information about local businesses — always use the search tool.
 
 Here's the property information you have access to:
 
@@ -439,6 +443,8 @@ ${propertyContext}`;
   if (hasLocation) {
     tools.push(ACTIVITY_SEARCH_TOOL);
     tools.push(ACTIVITY_DETAILS_TOOL);
+    tools.push(PLACES_SEARCH_TOOL);
+    tools.push(PLACE_DETAILS_TOOL);
   }
 
   try {
@@ -454,6 +460,7 @@ ${propertyContext}`;
 
     // Tool use loop — handle up to 3 rounds of tool calls
     let lastSearchResults = [];
+    let lastPlacesResults = [];
     let toolRounds = 0;
 
     while (response.stop_reason === 'tool_use' && toolRounds < 3) {
@@ -464,15 +471,27 @@ ${propertyContext}`;
 
       const toolResults = [];
       for (const toolUse of toolUseBlocks) {
-        const { result, activities } = await handleActivityToolCall(
-          toolUse.name, toolUse.input, property, lastSearchResults
-        );
-        lastSearchResults = activities;
-        toolResults.push({
-          type: 'tool_result',
-          tool_use_id: toolUse.id,
-          content: result,
-        });
+        if (toolUse.name === 'search_places' || toolUse.name === 'get_place_details') {
+          const result = await handlePlacesToolCall(
+            toolUse.name, toolUse.input, property, lastPlacesResults
+          );
+          lastPlacesResults = result.places;
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: toolUse.id,
+            content: result.result,
+          });
+        } else {
+          const { result, activities } = await handleActivityToolCall(
+            toolUse.name, toolUse.input, property, lastSearchResults
+          );
+          lastSearchResults = activities;
+          toolResults.push({
+            type: 'tool_result',
+            tool_use_id: toolUse.id,
+            content: result,
+          });
+        }
       }
 
       // Log affiliate clicks for search results
@@ -569,6 +588,66 @@ async function handleActivityToolCall(toolName, toolInput, property, lastSearchR
   }
 
   return { result: `Unknown tool: ${toolName}`, activities: lastSearchResults };
+}
+
+/**
+ * Handle Google Places tool calls from Claude
+ */
+async function handlePlacesToolCall(toolName, toolInput, property, lastPlacesResults) {
+  if (toolName === 'search_places') {
+    if (!property || !property.latitude || !property.longitude) {
+      return { result: 'Places search not available — property location not configured.', places: [] };
+    }
+
+    const places = await searchPlaces({
+      query: toolInput.query,
+      latitude: Number(property.latitude),
+      longitude: Number(property.longitude),
+      limit: 5,
+    });
+
+    if (places.length === 0) {
+      return { result: 'No places found matching that search near this property.', places: [] };
+    }
+
+    const formatted = formatPlacesForPrompt(places);
+    return {
+      result: `Found ${places.length} places:\n\n${formatted}`,
+      places,
+    };
+  }
+
+  if (toolName === 'get_place_details') {
+    const idx = (toolInput.place_number || 0) - 1;
+    if (idx < 0 || idx >= lastPlacesResults.length) {
+      return {
+        result: `Place #${toolInput.place_number} not found. There are ${lastPlacesResults.length} places in the last search.`,
+        places: lastPlacesResults,
+      };
+    }
+
+    const place = lastPlacesResults[idx];
+    const details = await getPlaceDetails(place.placeId);
+    if (!details) {
+      return { result: 'Could not fetch details for this place.', places: lastPlacesResults };
+    }
+
+    const info = [
+      `Name: ${details.name}`,
+      details.rating ? `Rating: ${details.rating}/5 (${details.reviewCount} reviews)` : null,
+      details.priceLevel ? `Price: ${details.priceLevel}` : null,
+      details.address ? `Address: ${details.address}` : null,
+      details.phone ? `Phone: ${details.phone}` : null,
+      details.website ? `Website: ${details.website}` : null,
+      details.isOpen !== null ? `Currently: ${details.isOpen ? 'Open' : 'Closed'}` : null,
+      details.hours ? `\nHours:\n${details.hours.join('\n')}` : null,
+      `\nGoogle Maps: ${details.mapsUrl}`,
+    ].filter(Boolean).join('\n');
+
+    return { result: info, places: lastPlacesResults };
+  }
+
+  return { result: `Unknown tool: ${toolName}`, places: lastPlacesResults };
 }
 
 /**
