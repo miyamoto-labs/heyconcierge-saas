@@ -50,11 +50,11 @@ export async function POST(request: NextRequest) {
         },
       },
       success_url: returnUrl
-        ? `${request.headers.get('origin')}${returnUrl}?session_id={CHECKOUT_SESSION_ID}`
-        : `${request.headers.get('origin')}/signup?step=3&session_id={CHECKOUT_SESSION_ID}`,
+        ? `${request.headers.get('origin')}${returnUrl}${returnUrl.includes('?') ? '&' : '?'}session_id={CHECKOUT_SESSION_ID}`
+        : `${request.headers.get('origin')}/signup?step=6&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: returnUrl
         ? `${request.headers.get('origin')}${returnUrl}`
-        : `${request.headers.get('origin')}/signup?step=2`,
+        : `${request.headers.get('origin')}/signup?step=5`,
       metadata: {
         plan,
       },
