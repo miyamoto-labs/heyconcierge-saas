@@ -99,15 +99,11 @@ function extractBookings(events: ParsedEvent[], propertyId: string) {
     const checkIn = parseICalDate(event.dtstart)
     const checkOut = parseICalDate(event.dtend)
 
-    // Build a stable booking reference from dates + summary so upserts work
-    const bookingRef = `${event.summary || 'booking'}-${checkIn}-${checkOut}`.substring(0, 255)
-
     return {
       property_id: propertyId,
       guest_name: guestName || 'Guest',
-      check_in_date: checkIn,
-      check_out_date: checkOut,
-      booking_reference: bookingRef,
+      check_in: checkIn,
+      check_out: checkOut,
       platform,
       status: new Date(checkIn) > new Date() ? 'confirmed' : 'completed',
     }
