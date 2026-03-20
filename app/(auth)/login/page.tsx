@@ -2,12 +2,19 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
+  const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleOAuthLogin = async (provider: 'google' | 'azure' | 'facebook') => {
     setLoading(provider)
+    setError(null)
     const supabase = createClient()
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -18,8 +25,47 @@ export default function LoginPage() {
     })
     if (error) {
       console.error('OAuth error:', error.message)
+      setError(error.message)
       setLoading(null)
     }
+  }
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email || !password) return
+    setLoading('email')
+    setError(null)
+
+    const supabase = createClient()
+
+    if (isSignUp) {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      })
+      if (error) {
+        setError(error.message)
+        setLoading(null)
+        return
+      }
+      // Auto sign in after signup (works when email confirmation is disabled)
+      const { error: signInError } = await supabase.auth.signInWithPassword({ email, password })
+      if (signInError) {
+        setError(signInError.message)
+        setLoading(null)
+        return
+      }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) {
+        setError(error.message)
+        setLoading(null)
+        return
+      }
+    }
+
+    router.push('/auth/callback')
   }
 
   return (
@@ -33,6 +79,54 @@ export default function LoginPage() {
           <span className="text-primary">Concierge</span></span>
         </h1>
         <p className="text-slate-500 mb-8">Sign in to manage your properties</p>
+
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleEmailAuth} className="space-y-3 mb-6">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className="w-full border-2 border-slate-200 rounded-full px-6 py-3 text-slate-800 focus:border-primary focus:outline-none transition-colors"
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            className="w-full border-2 border-slate-200 rounded-full px-6 py-3 text-slate-800 focus:border-primary focus:outline-none transition-colors"
+            minLength={6}
+            required
+          />
+          <button
+            type="submit"
+            disabled={!!loading}
+            className="w-full bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary/90 hover:-translate-y-0.5 transition-all disabled:opacity-50"
+          >
+            {loading === 'email' ? 'Please wait...' : isSignUp ? 'Create account' : 'Sign in'}
+          </button>
+          <p className="text-sm text-slate-500">
+            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <button
+              type="button"
+              onClick={() => { setIsSignUp(!isSignUp); setError(null) }}
+              className="text-primary font-medium hover:underline"
+            >
+              {isSignUp ? 'Sign in' : 'Sign up'}
+            </button>
+          </p>
+        </form>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
+          <div className="relative flex justify-center text-sm"><span className="bg-white px-4 text-slate-400">or continue with</span></div>
+        </div>
 
         <div className="space-y-3">
           <button
