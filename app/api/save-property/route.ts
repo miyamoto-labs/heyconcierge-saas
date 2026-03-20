@@ -38,11 +38,6 @@ export async function POST(request: NextRequest) {
         .update({
           name: property.name,
           address: property.address,
-          postal_code: property.postal_code,
-          city: property.city,
-          country: property.country,
-          latitude: property.latitude,
-          longitude: property.longitude,
           property_type: property.property_type,
           whatsapp_number: property.whatsapp_number,
           ical_url: property.ical_url,
