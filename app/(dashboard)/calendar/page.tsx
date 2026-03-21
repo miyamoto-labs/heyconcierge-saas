@@ -30,26 +30,26 @@ interface BookingBar {
   row: number        // which slot row (0, 1, 2...) for stacking
 }
 
-const PLATFORM_COLORS: Record<string, { bar: string; text: string }> = {
-  airbnb: { bar: 'bg-rose-400', text: 'text-white' },
-  booking: { bar: 'bg-blue-500', text: 'text-white' },
-  other: { bar: 'bg-slate-400', text: 'text-white' },
-  blocked: { bar: 'bg-red-200', text: 'text-red-800' },
+function getBarStyle(_booking: Booking) {
+  return { bar: 'bg-emerald-400', text: 'text-white' }
 }
 
-function getBarStyle(booking: Booking) {
-  if (booking.guest_name === 'Blocked') return PLATFORM_COLORS.blocked
-  return PLATFORM_COLORS[booking.platform] || PLATFORM_COLORS.other
+function getNights(booking: Booking) {
+  return Math.round(
+    (new Date(booking.check_out_date).getTime() - new Date(booking.check_in_date).getTime()) / (1000 * 60 * 60 * 24)
+  )
 }
 
 function getBarLabel(booking: Booking, isStart: boolean) {
   if (!isStart) return ''
-  const nights = Math.round(
-    (new Date(booking.check_out_date).getTime() - new Date(booking.check_in_date).getTime()) / (1000 * 60 * 60 * 24)
-  )
-  if (booking.guest_name === 'Blocked') return `Blocked · ${nights}n`
+  const nights = getNights(booking)
+  const nightsLabel = nights === 1 ? '1 night' : `${nights} nights`
   const name = booking.guest_name || 'Guest'
-  return `${name} · ${nights}n`
+  // iCal "Not available" / "Reserved" entries are still real bookings
+  const displayName = name.toLowerCase().includes('not available') || name === 'Blocked'
+    ? 'Booked'
+    : name
+  return `${displayName} · ${nightsLabel}`
 }
 
 export default function CalendarPage() {
@@ -402,7 +402,7 @@ export default function CalendarPage() {
                       title={`${bar.booking.guest_name} (${bar.booking.platform})\n${bar.booking.check_in_date} → ${bar.booking.check_out_date} (${nights} nights)`}
                     >
                       <span className="text-xs font-bold truncate whitespace-nowrap">
-                        {bar.isStart ? label : (bar.booking.guest_name === 'Blocked' ? '' : bar.booking.guest_name)}
+                        {bar.isStart ? label : ''}
                       </span>
                     </div>
                   )
@@ -412,29 +412,47 @@ export default function CalendarPage() {
           })}
 
           {/* Legend */}
-          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center gap-6 mt-4 pt-4 border-t border-slate-100">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-2.5 rounded-full bg-red-200"></div>
-              <span className="text-xs text-slate-600 font-semibold">Blocked</span>
+              <div className="w-8 h-2.5 rounded-full bg-emerald-400"></div>
+              <span className="text-xs text-slate-600 font-semibold">Booked</span>
             </div>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-6 mt-8">
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-3xl font-black">{filteredBookings.filter(b => b.guest_name !== 'Blocked').length}</div>
-            <div className="text-sm text-slate-500">Guest Bookings</div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-3xl font-black">{filteredBookings.filter(b => b.guest_name === 'Blocked').length}</div>
-            <div className="text-sm text-slate-500">Blocked Periods</div>
-          </div>
-          <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-3xl font-black">{properties.length}</div>
-            <div className="text-sm text-slate-500">Properties</div>
-          </div>
-        </div>
+        {(() => {
+          const year = currentDate.getFullYear()
+          const month = currentDate.getMonth()
+          const daysInMonth = new Date(year, month + 1, 0).getDate()
+
+          // Count booked nights this month
+          let bookedNights = 0
+          for (const b of filteredBookings) {
+            const ci = new Date(Math.max(new Date(b.check_in_date).getTime(), new Date(year, month, 1).getTime()))
+            const co = new Date(Math.min(new Date(b.check_out_date).getTime(), new Date(year, month + 1, 0).getTime() + 86400000))
+            const nights = Math.max(0, Math.round((co.getTime() - ci.getTime()) / 86400000))
+            bookedNights += nights
+          }
+          const occupancyPct = daysInMonth > 0 ? Math.round((bookedNights / daysInMonth) * 100) : 0
+
+          return (
+            <div className="grid grid-cols-3 gap-6 mt-8">
+              <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="text-3xl font-black">{filteredBookings.length}</div>
+                <div className="text-sm text-slate-500">Upcoming Guests</div>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="text-3xl font-black">{bookedNights}</div>
+                <div className="text-sm text-slate-500">Booked Nights</div>
+              </div>
+              <div className="bg-white rounded-xl border border-slate-200 p-6">
+                <div className="text-3xl font-black">{occupancyPct}%</div>
+                <div className="text-sm text-slate-500">Occupancy Rate</div>
+              </div>
+            </div>
+          )
+        })()}
       </div>
     </div>
   )
