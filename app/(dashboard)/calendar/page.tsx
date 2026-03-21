@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -9,8 +9,8 @@ interface Booking {
   id: string
   property_id: string
   guest_name: string
-  check_in: string
-  check_out: string
+  check_in_date: string
+  check_out_date: string
   platform: string
   status: string
 }
@@ -18,6 +18,38 @@ interface Booking {
 interface Property {
   id: string
   name: string
+}
+
+// A booking bar segment for one calendar row (week)
+interface BookingBar {
+  booking: Booking
+  startCol: number   // 0-6 column in the week row
+  spanCols: number   // how many columns it spans
+  isStart: boolean   // does the booking start in this row?
+  isEnd: boolean     // does the booking end in this row?
+  row: number        // which slot row (0, 1, 2...) for stacking
+}
+
+const PLATFORM_COLORS: Record<string, { bar: string; text: string }> = {
+  airbnb: { bar: 'bg-rose-400', text: 'text-white' },
+  booking: { bar: 'bg-blue-500', text: 'text-white' },
+  other: { bar: 'bg-slate-400', text: 'text-white' },
+  blocked: { bar: 'bg-red-200', text: 'text-red-800' },
+}
+
+function getBarStyle(booking: Booking) {
+  if (booking.guest_name === 'Blocked') return PLATFORM_COLORS.blocked
+  return PLATFORM_COLORS[booking.platform] || PLATFORM_COLORS.other
+}
+
+function getBarLabel(booking: Booking, isStart: boolean) {
+  if (!isStart) return ''
+  const nights = Math.round(
+    (new Date(booking.check_out_date).getTime() - new Date(booking.check_in_date).getTime()) / (1000 * 60 * 60 * 24)
+  )
+  if (booking.guest_name === 'Blocked') return `Blocked · ${nights}n`
+  const name = booking.guest_name || 'Guest'
+  return `${name} · ${nights}n`
 }
 
 export default function CalendarPage() {
@@ -50,31 +82,28 @@ export default function CalendarPage() {
     try {
       const uid = authUserId
 
-      // Get user's organizations
       let { data: orgs } = await supabase
         .from('organizations')
         .select('id')
         .eq('auth_user_id', uid)
         .limit(1)
-      
+
       if (orgs && orgs[0]) {
-        // Get properties
         const { data: props } = await supabase
           .from('properties')
           .select('id, name')
           .eq('org_id', orgs[0].id)
-        
+
         setProperties(props || [])
 
-        // Get all bookings
         const propertyIds = props?.map(p => p.id) || []
         if (propertyIds.length > 0) {
           const { data: bkgs } = await supabase
             .from('bookings')
             .select('*')
             .in('property_id', propertyIds)
-            .order('check_in', { ascending: true })
-          
+            .order('check_in_date', { ascending: true })
+
           setBookings(bkgs || [])
         }
       }
@@ -87,17 +116,14 @@ export default function CalendarPage() {
   const syncCalendar = async () => {
     setSyncing(true)
     try {
-      const response = await fetch('/api/sync-calendar', {
-        method: 'POST',
-      })
-
+      const response = await fetch('/api/sync-calendar', { method: 'POST' })
       if (response.ok) {
         const data = await response.json()
         alert(`Calendar synced! ${data.message}`)
         await loadData()
       } else {
         const err = await response.json().catch(() => ({}))
-        alert(`Sync failed: ${err.error || 'Unknown error'}. Make sure your iCal URLs are configured in property settings.`)
+        alert(`Sync failed: ${err.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Sync error:', error)
@@ -112,58 +138,128 @@ export default function CalendarPage() {
     router.push('/login')
   }
 
-  // Generate calendar grid for current month
-  const generateCalendar = () => {
-    const year = currentDate.getFullYear()
-    const month = currentDate.getMonth()
-    
-    const firstDay = new Date(year, month, 1)
-    const lastDay = new Date(year, month + 1, 0)
-    const daysInMonth = lastDay.getDate()
-    const startingDayOfWeek = firstDay.getDay()
-    
-    const days = []
-    
-    // Previous month padding
-    for (let i = 0; i < startingDayOfWeek; i++) {
-      days.push(null)
-    }
-    
-    // Current month days
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(day)
-    }
-    
-    return days
-  }
-
-  const getBookingsForDate = (day: number | null) => {
-    if (!day) return []
-    
-    const dateStr = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      day
-    ).toISOString().split('T')[0]
-    
-    return bookings.filter(booking => {
-      if (selectedProperty !== 'all' && booking.property_id !== selectedProperty) {
-        return false
-      }
-      
-      return dateStr >= booking.check_in && dateStr <= booking.check_out
-    })
-  }
-
   const previousMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))
   }
-
   const nextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))
   }
 
   const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })
+
+  // Build calendar weeks: array of weeks, each week is array of 7 day numbers (null for padding)
+  const weeks = useMemo(() => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const daysInMonth = new Date(year, month + 1, 0).getDate()
+    const startDow = firstDay.getDay() // 0=Sun
+
+    const allDays: (number | null)[] = []
+    for (let i = 0; i < startDow; i++) allDays.push(null)
+    for (let d = 1; d <= daysInMonth; d++) allDays.push(d)
+    while (allDays.length % 7 !== 0) allDays.push(null)
+
+    const result: (number | null)[][] = []
+    for (let i = 0; i < allDays.length; i += 7) {
+      result.push(allDays.slice(i, i + 7))
+    }
+    return result
+  }, [currentDate])
+
+  // Filter bookings by selected property
+  const filteredBookings = useMemo(() => {
+    return bookings.filter(b =>
+      selectedProperty === 'all' || b.property_id === selectedProperty
+    )
+  }, [bookings, selectedProperty])
+
+  // For each week row, compute which booking bars appear
+  const weekBars = useMemo(() => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth()
+
+    return weeks.map((week) => {
+      // Get date range for this week row
+      const weekDates: (string | null)[] = week.map(day => {
+        if (day === null) return null
+        return new Date(year, month, day).toISOString().split('T')[0]
+      })
+
+      // Find first and last valid date in this week
+      const validDates = weekDates.filter(Boolean) as string[]
+      if (validDates.length === 0) return []
+
+      const weekStart = validDates[0]
+      const weekEnd = validDates[validDates.length - 1]
+
+      // Find bookings that overlap this week
+      // Booking overlaps if: check_in < day_after_weekEnd AND check_out > weekStart
+      const dayAfterWeekEnd = new Date(weekEnd)
+      dayAfterWeekEnd.setDate(dayAfterWeekEnd.getDate() + 1)
+      const dayAfterStr = dayAfterWeekEnd.toISOString().split('T')[0]
+
+      const overlapping = filteredBookings.filter(b => {
+        return b.check_in_date < dayAfterStr && b.check_out_date > weekStart
+      })
+
+      // For each overlapping booking, compute its bar segment in this week
+      const bars: BookingBar[] = []
+      const slotMap: Record<string, number> = {} // booking.id → assigned row
+
+      for (const booking of overlapping) {
+        // Find startCol: which column does this booking start in this week?
+        let startCol = 0
+        for (let c = 0; c < 7; c++) {
+          const d = weekDates[c]
+          if (d && d >= booking.check_in_date && d < booking.check_out_date) {
+            startCol = c
+            break
+          }
+        }
+
+        // Find endCol: last column this booking occupies in this week
+        let endCol = startCol
+        for (let c = startCol; c < 7; c++) {
+          const d = weekDates[c]
+          if (d && d >= booking.check_in_date && d < booking.check_out_date) {
+            endCol = c
+          } else if (d && d >= booking.check_out_date) {
+            break
+          }
+        }
+
+        const spanCols = endCol - startCol + 1
+        const isStart = weekDates.some(d => d === booking.check_in_date)
+        const isEnd = (() => {
+          // Check-out date is the day after the last night
+          const lastNight = new Date(booking.check_out_date)
+          lastNight.setDate(lastNight.getDate() - 1)
+          const lastNightStr = lastNight.toISOString().split('T')[0]
+          return weekDates.some(d => d === lastNightStr)
+        })()
+
+        // Assign a slot row (stack bookings that overlap on same days)
+        let row = 0
+        while (bars.some(b => b.row === row && !(b.startCol + b.spanCols <= startCol || startCol + spanCols <= b.startCol))) {
+          row++
+        }
+        slotMap[booking.id] = row
+
+        bars.push({ booking, startCol, spanCols, isStart, isEnd, row })
+      }
+
+      return bars
+    })
+  }, [weeks, filteredBookings, currentDate])
+
+  // Max bar rows across all weeks (for consistent row height)
+  const maxBarRows = useMemo(() => {
+    return Math.max(1, ...weekBars.map(bars => {
+      if (bars.length === 0) return 0
+      return Math.max(...bars.map(b => b.row)) + 1
+    }))
+  }, [weekBars])
 
   if (loading) {
     return (
@@ -172,6 +268,11 @@ export default function CalendarPage() {
       </div>
     )
   }
+
+  const barHeight = 24
+  const barGap = 2
+  const dayNumberHeight = 28
+  const minCellHeight = dayNumberHeight + maxBarRows * (barHeight + barGap) + 8
 
   return (
     <div className="min-h-screen bg-[#FDFCFA]">
@@ -184,23 +285,20 @@ export default function CalendarPage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-800 font-bold">← Dashboard</Link>
-            <Link href="/upselling" className="text-sm text-slate-800 hover:text-primary font-bold">💰 Upselling</Link>
+            <Link href="/upselling" className="text-sm text-slate-800 hover:text-primary font-bold">Upselling</Link>
             <span className="text-sm text-slate-500">{userEmail}</span>
-            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">
-              Logout
-            </button>
+            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">Logout</button>
           </div>
         </div>
       </header>
 
       <div className="max-w-6xl mx-auto px-8 py-12">
-        {/* Header */}
+        {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">📅 Calendar</h1>
+            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">Calendar</h1>
             <p className="text-slate-500">View and sync your bookings</p>
           </div>
-          
           <div className="flex gap-4">
             <select
               value={selectedProperty}
@@ -212,110 +310,127 @@ export default function CalendarPage() {
                 <option key={prop.id} value={prop.id}>{prop.name}</option>
               ))}
             </select>
-            
             <button
               onClick={syncCalendar}
               disabled={syncing}
               className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {syncing ? '🔄 Syncing...' : '🔄 Sync Calendar'}
+              {syncing ? 'Syncing...' : 'Sync Calendar'}
             </button>
           </div>
         </div>
 
         {/* Calendar */}
-        <div className="bg-white rounded-xl border border-slate-200 p-8">
+        <div className="bg-white rounded-xl border border-slate-200 p-6">
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6">
-            <button
-              onClick={previousMonth}
-              className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all"
-            >
-              ←
-            </button>
+            <button onClick={previousMonth} className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all">←</button>
             <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{monthName}</h2>
-            <button
-              onClick={nextMonth}
-              className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all"
-            >
-              →
-            </button>
+            <button onClick={nextMonth} className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all">→</button>
           </div>
 
           {/* Day Headers */}
-          <div className="grid grid-cols-7 gap-2 mb-2">
+          <div className="grid grid-cols-7 border-b border-slate-200">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center font-bold text-sm text-slate-500 py-2">
+              <div key={day} className="text-center font-bold text-xs text-slate-400 uppercase tracking-wider py-3">
                 {day}
               </div>
             ))}
           </div>
 
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2">
-            {generateCalendar().map((day, idx) => {
-              const dayBookings = getBookingsForDate(day)
-              const isToday = day && 
-                day === new Date().getDate() &&
-                currentDate.getMonth() === new Date().getMonth() &&
-                currentDate.getFullYear() === new Date().getFullYear()
-              
-              return (
-                <div
-                  key={idx}
-                  className={`min-h-[100px] p-2 rounded-xl border-2 transition-all ${
-                    day 
-                      ? 'bg-white border-slate-200 hover:border-primary cursor-pointer' 
-                      : 'bg-transparent border-transparent'
-                  } ${isToday ? 'border-accent bg-accent-soft' : ''}`}
-                >
-                  {day && (
-                    <>
-                      <div className={`text-sm font-bold mb-1 ${isToday ? 'text-accent' : 'text-slate-800'}`}>
-                        {day}
-                      </div>
-                      <div className="space-y-1">
-                        {dayBookings.slice(0, 2).map(booking => (
-                          <div
-                            key={booking.id}
-                            className="text-xs px-2 py-1 rounded bg-primary text-white truncate font-bold"
-                            title={`${booking.guest_name} (${booking.platform})`}
-                          >
-                            {booking.guest_name}
-                          </div>
-                        ))}
-                        {dayBookings.length > 2 && (
-                          <div className="text-xs text-slate-500 font-bold">
-                            +{dayBookings.length - 2} more
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
-              )
-            })}
+          {/* Calendar Rows */}
+          {weeks.map((week, weekIdx) => {
+            const bars = weekBars[weekIdx]
+            const today = new Date()
+
+            return (
+              <div key={weekIdx} className="relative grid grid-cols-7 border-b border-slate-100 last:border-b-0">
+                {week.map((day, colIdx) => {
+                  const isToday = day &&
+                    day === today.getDate() &&
+                    currentDate.getMonth() === today.getMonth() &&
+                    currentDate.getFullYear() === today.getFullYear()
+
+                  return (
+                    <div
+                      key={colIdx}
+                      className={`relative border-r border-slate-100 last:border-r-0 ${!day ? 'bg-slate-50/50' : ''}`}
+                      style={{ minHeight: `${minCellHeight}px` }}
+                    >
+                      {day && (
+                        <div className={`text-sm font-semibold p-2 pb-0 ${
+                          isToday
+                            ? 'text-white'
+                            : 'text-slate-700'
+                        }`}>
+                          {isToday ? (
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm font-bold">
+                              {day}
+                            </span>
+                          ) : day}
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+
+                {/* Booking bars overlaid on this week row */}
+                {bars.map((bar, barIdx) => {
+                  const style = getBarStyle(bar.booking)
+                  const label = getBarLabel(bar.booking, bar.isStart)
+                  const nights = Math.round(
+                    (new Date(bar.booking.check_out_date).getTime() - new Date(bar.booking.check_in_date).getTime()) / (1000 * 60 * 60 * 24)
+                  )
+
+                  // Position: percentage-based within the 7-col grid
+                  const leftPct = (bar.startCol / 7) * 100
+                  const widthPct = (bar.spanCols / 7) * 100
+
+                  return (
+                    <div
+                      key={bar.booking.id + '-' + barIdx}
+                      className={`absolute ${style.bar} ${style.text} flex items-center overflow-hidden cursor-default
+                        ${bar.isStart ? 'rounded-l-full pl-3' : 'pl-2'}
+                        ${bar.isEnd ? 'rounded-r-full pr-3' : 'pr-1'}
+                      `}
+                      style={{
+                        left: `calc(${leftPct}% + 4px)`,
+                        width: `calc(${widthPct}% - 8px)`,
+                        top: `${dayNumberHeight + bar.row * (barHeight + barGap)}px`,
+                        height: `${barHeight}px`,
+                      }}
+                      title={`${bar.booking.guest_name} (${bar.booking.platform})\n${bar.booking.check_in_date} → ${bar.booking.check_out_date} (${nights} nights)`}
+                    >
+                      <span className="text-xs font-bold truncate whitespace-nowrap">
+                        {bar.isStart ? label : (bar.booking.guest_name === 'Blocked' ? '' : bar.booking.guest_name)}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            )
+          })}
+
+          {/* Legend */}
+          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-slate-100">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-2.5 rounded-full bg-red-200"></div>
+              <span className="text-xs text-slate-600 font-semibold">Blocked</span>
+            </div>
           </div>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-6 mt-8">
           <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-4xl mb-2">📊</div>
-            <div className="text-3xl font-black">{bookings.length}</div>
-            <div className="text-sm text-slate-500">Total Bookings</div>
+            <div className="text-3xl font-black">{filteredBookings.filter(b => b.guest_name !== 'Blocked').length}</div>
+            <div className="text-sm text-slate-500">Guest Bookings</div>
           </div>
-          
           <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-4xl mb-2">📅</div>
-            <div className="text-3xl font-black">
-              {bookings.filter(b => b.status === 'confirmed').length}
-            </div>
-            <div className="text-sm text-slate-500">Upcoming</div>
+            <div className="text-3xl font-black">{filteredBookings.filter(b => b.guest_name === 'Blocked').length}</div>
+            <div className="text-sm text-slate-500">Blocked Periods</div>
           </div>
-          
           <div className="bg-white rounded-xl border border-slate-200 p-6">
-            <div className="text-4xl mb-2">🏠</div>
             <div className="text-3xl font-black">{properties.length}</div>
             <div className="text-sm text-slate-500">Properties</div>
           </div>

@@ -72,38 +72,62 @@ function parseICalDate(raw: string): string {
   return `${dateStr.substring(0, 4)}-${dateStr.substring(4, 6)}-${dateStr.substring(6, 8)}`
 }
 
-function extractBookings(events: ParsedEvent[], propertyId: string) {
+function detectPlatformFromUrl(icalUrl: string): string {
+  const lower = icalUrl.toLowerCase()
+  if (lower.includes('airbnb')) return 'airbnb'
+  if (lower.includes('booking.com') || lower.includes('ical.booking')) return 'booking'
+  if (lower.includes('vrbo') || lower.includes('expedia')) return 'other'
+  return 'other'
+}
+
+function extractBookings(events: ParsedEvent[], propertyId: string, icalUrl: string) {
+  const urlPlatform = detectPlatformFromUrl(icalUrl)
+
   return events.map(event => {
     const summary = event.summary || 'Untitled Booking'
     const description = event.description || ''
 
-    // Detect platform
-    let platform = 'other'
+    // Detect platform from event content first, then fall back to URL
+    let platform = urlPlatform
     const lower = (summary + ' ' + description).toLowerCase()
     if (lower.includes('airbnb')) platform = 'airbnb'
     else if (lower.includes('booking')) platform = 'booking'
 
-    // Extract guest name
-    let guestName = 'Guest'
-    const nameParts = summary.split(' - ')
-    if (nameParts.length > 0) {
-      guestName = nameParts[0].replace(/^(Reserved|Booked|Blocked|Not available)\s*/i, '').trim()
+    // Detect blocked/unavailable dates (Airbnb uses "Airbnb (Not available)", Booking.com uses "CLOSED - Not available", etc.)
+    const blockedPatterns = /not available|blocked|reserved|unavailable|closed/i
+    if (blockedPatterns.test(summary)) {
+      return {
+        property_id: propertyId,
+        guest_name: 'Blocked',
+        check_in_date: parseICalDate(event.dtstart),
+        check_out_date: parseICalDate(event.dtend),
+        booking_reference: `blocked-${parseICalDate(event.dtstart)}-${parseICalDate(event.dtend)}`,
+        platform,
+        status: 'confirmed',
+      }
     }
 
-    // Flag blocked dates
-    if (/^(Not available|Blocked|Reserved)$/i.test(guestName)) {
-      guestName = 'Blocked'
-      platform = 'other'
+    // Extract guest name from "Guest Name - Confirmation Code" or just the summary
+    let guestName = 'Guest'
+    const nameParts = summary.split(' - ')
+    if (nameParts.length > 1) {
+      guestName = nameParts[0].trim()
+    } else if (summary && !blockedPatterns.test(summary)) {
+      guestName = summary.trim()
     }
 
     const checkIn = parseICalDate(event.dtstart)
     const checkOut = parseICalDate(event.dtend)
 
+    // Build a stable booking reference from dates + summary so upserts work
+    const bookingRef = `${event.summary || 'booking'}-${checkIn}-${checkOut}`.substring(0, 255)
+
     return {
       property_id: propertyId,
       guest_name: guestName || 'Guest',
-      check_in: checkIn,
-      check_out: checkOut,
+      check_in_date: checkIn,
+      check_out_date: checkOut,
+      booking_reference: bookingRef,
       platform,
       status: new Date(checkIn) > new Date() ? 'confirmed' : 'completed',
     }
@@ -148,7 +172,7 @@ export async function POST(request: NextRequest) {
 
         // Parse events
         const events = parseICS(icsText)
-        const bookings = extractBookings(events, property.id)
+        const bookings = extractBookings(events, property.id, property.ical_url)
 
         // Delete old bookings for this property
         await supabase
