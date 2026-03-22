@@ -4,7 +4,7 @@
 
 ---
 
-> These Terms of Service ("Terms") govern your access to and use of the HeyConcierge platform and services. Please read them carefully. By registering for an account or using our services, you agree to be bound by these Terms and our [Privacy Policy](./PRIVACY_POLICY.md) and [Data Processing Agreement](./DATA_PROCESSING_AGREEMENT.md), which are incorporated herein by reference.
+> These Terms of Service ("Terms") govern your access to and use of the HeyConcierge platform and services. Please read them carefully. By registering for an account or using our services, you agree to be bound by these Terms and our [Privacy Policy](/legal/privacy) and Data Processing Agreement, which are incorporated herein by reference.
 >
 > If you do not agree to these Terms, do not use the service.
 
@@ -204,7 +204,7 @@ Ensuring that all property information, instructions, house rules, and other Con
 
 ### 8.3 Lawful Guest Data Processing
 
-Complying with Applicable Data Protection Law in relation to your guests' personal data, including obtaining any necessary consents and providing appropriate privacy notices. See also our [Data Processing Agreement](./DATA_PROCESSING_AGREEMENT.md).
+Complying with Applicable Data Protection Law in relation to your guests' personal data, including obtaining any necessary consents and providing appropriate privacy notices. See also our Data Processing Agreement.
 
 ### 8.4 Third-Party Platform Compliance
 

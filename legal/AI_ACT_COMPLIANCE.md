@@ -67,9 +67,9 @@ HeyConcierge's concierge bot interacts directly with guests via messaging platfo
 **Obligation:** Inform persons that they are interacting with an AI system.
 
 **Implementation:**
-1. **AI disclosure in bot welcome message** — The concierge bot's initial message to each guest clearly states that it is an AI-powered assistant. Templates are provided in multiple languages (see [AI Disclosure Templates](./AI_DISCLOSURE_TEMPLATES.md)).
+1. **AI disclosure in bot welcome message** — The concierge bot's initial message to each guest clearly states that it is an AI-powered assistant. Templates are provided in multiple languages (see AI Disclosure Templates).
 2. **Host contractual obligation** — The Terms of Service (Clause 8.1) require hosts to ensure guests are informed they are communicating with an AI-powered service.
-3. **Guest privacy notice** — A standard guest privacy notice (see [Guest Privacy Notice](./GUEST_PRIVACY_NOTICE.md)) includes information about AI processing.
+3. **Guest privacy notice** — A standard guest privacy notice (see Guest Privacy Notice) includes information about AI processing.
 
 ### 4.2 General-Purpose AI Model (GPAI) Obligations
 

@@ -28,7 +28,7 @@ HeyConcierge operates a SaaS platform that enables property hosts ("Hosts") to d
 - **HeyConcierge acts as a Data Processor** on behalf of Hosts with respect to Guest personal data processed through the concierge service. Hosts are the Data Controllers for their Guests' data.
 - **Guests** are the Data Subjects whose personal data is processed when they interact with the AI concierge.
 
-This Privacy Policy addresses both categories of processing. If you are a Host seeking information about how your Guests' data is handled under the contract between us, please also refer to our [Data Processing Agreement](./DATA_PROCESSING_AGREEMENT.md).
+This Privacy Policy addresses both categories of processing. If you are a Host seeking information about how your Guests' data is handled under the contract between us, please also refer to our Data Processing Agreement.
 
 ---
 
@@ -211,7 +211,7 @@ In the event of a personal data breach that is likely to result in a risk to the
 
 ## 11. Cookies and Tracking
 
-Our website and platform use cookies and similar technologies. A separate Cookie Policy is available at [Cookie Policy](./COOKIE_POLICY.md). You may manage cookie preferences through your browser settings or our cookie consent tool.
+Our website and platform use cookies and similar technologies. A separate Cookie Policy is available at Cookie Policy. You may manage cookie preferences through your browser settings or our cookie consent tool.
 
 ---
 
