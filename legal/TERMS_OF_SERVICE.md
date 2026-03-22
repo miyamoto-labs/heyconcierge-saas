@@ -1,6 +1,6 @@
 # Terms of Service
 
-**Last updated: February 2026**
+**Last updated: March 2026**
 
 ---
 
@@ -17,9 +17,8 @@ HeyConcierge is an AI-powered guest concierge platform that enables property hos
 HeyConcierge is operated by:
 
 **HeyConcierge AS**
-[REGISTRERT ADRESSE KOMMER]
-Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
+Organisation number: 937 386 206
 Email: hello@heyconcierge.io
 
 ---
@@ -428,9 +427,9 @@ These Terms are written in English. In the event of any conflict between an Engl
 For legal enquiries relating to these Terms:
 
 **HeyConcierge AS**
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
+Organisation number: 937 386 206
 Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
-Tromsø, Norway
 
 For general support: **support@heyconcierge.io**
 For data protection: **privacy@heyconcierge.io**

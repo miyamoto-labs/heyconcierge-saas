@@ -9,9 +9,9 @@
 This Cookie Policy explains how HeyConcierge AS ("we", "us", "our") uses cookies and similar tracking technologies on our website and platform at heyconcierge.io.
 
 **HeyConcierge AS**
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
+Organisation number: 937 386 206
 Email: hello@heyconcierge.io
 
 ---
@@ -105,5 +105,5 @@ For questions about our use of cookies, please contact:
 
 **HeyConcierge AS**
 Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway

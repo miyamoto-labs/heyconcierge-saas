@@ -19,9 +19,9 @@ The Host entity or individual who has registered for and uses the HeyConcierge s
 
 **Data Processor ("Processor"):**
 HeyConcierge AS
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
+Organisation number: 937 386 206
 Email: hello@heyconcierge.io
 (hereinafter "**Processor**" or "**HeyConcierge**")
 
@@ -332,7 +332,7 @@ For all data protection queries relating to this DPA, please contact:
 
 HeyConcierge — Data Protection Contact
 Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway
 
 ---

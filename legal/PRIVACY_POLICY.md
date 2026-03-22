@@ -11,9 +11,9 @@ Welcome to HeyConcierge. This Privacy Policy explains how HeyConcierge ("we", "u
 HeyConcierge is operated by:
 
 **HeyConcierge AS**
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway
-Organisation number: [VENTER PÅ BRØNNØYSUND]
+Organisation number: 937 386 206
 Email: hello@heyconcierge.io
 
 We are committed to protecting your privacy and processing your personal data in compliance with the EU General Data Protection Regulation (GDPR), the Norwegian Personal Data Act (*Personopplysningsloven*), and any other applicable data protection legislation.
@@ -256,7 +256,7 @@ For any questions, concerns, or requests regarding this Privacy Policy or our da
 **Data Protection Contact**
 HeyConcierge
 Email: **hello@heyconcierge.io**
-[REGISTRERT ADRESSE KOMMER]
+Hjalmar Johansens gate 314, 9007 Tromsø, Norway
 Tromsø, Norway
 
 We aim to respond to all enquiries within **5 business days**.
