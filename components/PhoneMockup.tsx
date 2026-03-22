@@ -2,14 +2,86 @@
 
 import { useEffect, useRef } from 'react'
 
-const conversation = [
-  { role: 'guest' as const, text: 'Hi! What time is check-in?', time: '9:38' },
-  { role: 'ai' as const, text: 'Welcome! Check-in is from 3PM. Your door code is 4821. Need early access? I can check with the host!', time: '9:38' },
-  { role: 'guest' as const, text: 'Perfect. Is there parking nearby?', time: '9:39' },
-  { role: 'ai' as const, text: 'Yes! Free street parking right outside. Paid garage on Storgata is a 2 min walk (~80 NOK/day). Location sent to your phone.', time: '9:39' },
-  { role: 'guest' as const, text: 'Amazing! Any restaurant recommendations?', time: '9:41' },
-  { role: 'ai' as const, text: "Absolutely! Try Emma's Drommekjokken for Arctic cuisine with stunning views, or Mathallen for casual bites. Both are walkable!", time: '9:41' },
+type MessageItem = {
+  role: 'guest' | 'ai'
+  text?: string
+  time: string
+  cards?: {
+    type: 'restaurant' | 'activity'
+    name: string
+    desc: string
+    rating?: string
+    price?: string
+    bookable?: boolean
+  }[]
+  image?: {
+    caption: string
+  }
+}
+
+const conversation: MessageItem[] = [
+  { role: 'guest', text: 'Any good restaurants nearby?', time: '9:38' },
+  {
+    role: 'ai',
+    text: 'Here are my top 3 picks! 🍽️',
+    time: '9:38',
+    cards: [
+      { type: 'restaurant', name: 'Emma\'s Drømmekjøkken', desc: 'Arctic fine dining, stunning views', rating: '4.8' },
+      { type: 'restaurant', name: 'Mathallen Tromsø', desc: 'Casual bites, local favorites', rating: '4.6' },
+      { type: 'restaurant', name: 'Fiskekompaniet', desc: 'Fresh seafood by the harbour', rating: '4.7' },
+    ],
+  },
+  { role: 'guest', text: "We'd love to see the Northern Lights!", time: '9:41' },
+  {
+    role: 'ai',
+    text: 'Great choice! Here are the best experiences:',
+    time: '9:41',
+    cards: [
+      { type: 'activity', name: 'Arctic Explorer Tours', desc: 'Northern Lights chase, 4 hours', price: 'From 1,290 NOK', bookable: true },
+      { type: 'activity', name: 'Tromsø Safari', desc: 'Lights & reindeer combo, 5 hours', price: 'From 1,690 NOK', bookable: true },
+      { type: 'activity', name: 'Pukka Travels', desc: 'Small group aurora hunt, 6 hours', price: 'From 1,490 NOK', bookable: true },
+    ],
+  },
+  { role: 'guest', text: "I can't find the keybox 😅", time: '23:12' },
+  {
+    role: 'ai',
+    text: "No worries! Here's exactly where it is:",
+    time: '23:12',
+    image: {
+      caption: "The main key is placed in a key box attached on the railing on the north side of the building. This is the side of the building that is towards the city center 🔑",
+    },
+  },
 ]
+
+function renderCard(card: MessageItem['cards'][0]) {
+  const div = document.createElement('div')
+  div.className = 'mockup-card'
+
+  if (card.type === 'restaurant') {
+    div.innerHTML = `
+      <div class="mockup-card-header">
+        <span class="mockup-card-name">${card.name}</span>
+        <span class="mockup-card-rating">⭐ ${card.rating}</span>
+      </div>
+      <div class="mockup-card-desc">${card.desc}</div>
+      <div class="mockup-card-action mockup-card-maps">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="#ea4335"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        View on Maps
+      </div>
+    `
+  } else {
+    div.innerHTML = `
+      <div class="mockup-card-header">
+        <span class="mockup-card-name">${card.name}</span>
+      </div>
+      <div class="mockup-card-desc">${card.desc}</div>
+      <div class="mockup-card-price">${card.price}</div>
+      <div class="mockup-card-action mockup-card-book">Book Now →</div>
+    `
+  }
+
+  return div
+}
 
 export default function PhoneMockup() {
   const messagesRef = useRef<HTMLDivElement>(null)
@@ -20,7 +92,7 @@ export default function PhoneMockup() {
     const el = messagesRef.current
     if (!el) return
 
-    const addMessage = (msg: typeof conversation[0]) => {
+    const addMessage = (msg: MessageItem) => {
       const isGuest = msg.role === 'guest'
       const row = document.createElement('div')
       row.className = `mockup-bubble-row ${msg.role}`
@@ -28,14 +100,39 @@ export default function PhoneMockup() {
       const bubble = document.createElement('div')
       bubble.className = `mockup-bubble ${isGuest ? 'mockup-guest-bubble' : 'mockup-ai-bubble'}`
 
-      const textSpan = document.createElement('span')
-      textSpan.textContent = msg.text
+      if (msg.text) {
+        const textSpan = document.createElement('span')
+        textSpan.textContent = msg.text
+        bubble.appendChild(textSpan)
+      }
+
+      // Add image if present
+      if (msg.image) {
+        const imgWrap = document.createElement('div')
+        imgWrap.className = 'mockup-image-wrap'
+        imgWrap.innerHTML = `
+          <div class="mockup-image-placeholder">
+            <img src="/Keybox.png" alt="Keybox location" />
+          </div>
+          <div class="mockup-image-caption">${msg.image.caption}</div>
+        `
+        bubble.appendChild(imgWrap)
+      }
+
+      // Add cards if present
+      if (msg.cards && msg.cards.length > 0) {
+        const cardsContainer = document.createElement('div')
+        cardsContainer.className = 'mockup-cards-container'
+        msg.cards.forEach((card) => {
+          cardsContainer.appendChild(renderCard(card))
+        })
+        bubble.appendChild(cardsContainer)
+      }
 
       const meta = document.createElement('span')
       meta.className = 'mockup-bubble-meta'
       meta.innerHTML = msg.time + (isGuest ? ' <svg viewBox="0 0 16 11" width="16" height="11"><path d="M11.07 0.73l-7.02 7.51L1.48 5.37 0 6.79l3.05 3.19.49.52.49-.52 7.56-8.09z" fill="#53bdeb"/><path d="M15.07 0.73l-7.02 7.51-0.6-0.64-1.48 1.58 2.08 2.19.49.52.49-.52 7.56-8.09z" fill="#53bdeb"/></svg>' : '')
 
-      bubble.appendChild(textSpan)
       bubble.appendChild(meta)
       row.appendChild(bubble)
       el.appendChild(row)
@@ -79,7 +176,7 @@ export default function PhoneMockup() {
       const msg = conversation[idxRef.current++]
 
       if (msg.role === 'guest') {
-        const totalClicks = Math.floor(msg.text.length * 0.6)
+        const totalClicks = Math.floor((msg.text?.length || 20) * 0.6)
 
         timeoutRef.current = setTimeout(() => {
           addMessage(msg)
@@ -87,7 +184,7 @@ export default function PhoneMockup() {
         }, totalClicks * 130 + 100)
       } else {
         const typingEl = showTyping()
-        const thinkTime = 1200 + msg.text.length * 18
+        const thinkTime = 1200 + (msg.text?.length || 30) * 18
         timeoutRef.current = setTimeout(() => {
           removeTyping(typingEl)
           timeoutRef.current = setTimeout(() => {

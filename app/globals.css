@@ -557,6 +557,91 @@ nav.saas-scrolled {
 .mockup-bubble-meta svg {
   flex-shrink: 0;
 }
+/* Cards inside bubbles */
+.mockup-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 5px;
+}
+.mockup-card {
+  background: #1a252d;
+  border-radius: 6px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.mockup-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+.mockup-card-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: #e9edef;
+}
+.mockup-card-rating {
+  font-size: 9px;
+  color: #fbbf24;
+  white-space: nowrap;
+}
+.mockup-card-desc {
+  font-size: 9px;
+  color: #8696a0;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+.mockup-card-price {
+  font-size: 9px;
+  color: #00a884;
+  font-weight: 600;
+  margin-top: 3px;
+}
+.mockup-card-action {
+  margin-top: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 3px 6px;
+  text-align: center;
+  cursor: default;
+}
+.mockup-card-maps {
+  background: rgba(234, 67, 53, 0.1);
+  color: #ea4335;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+.mockup-card-book {
+  background: #00a884;
+  color: white;
+  border-radius: 4px;
+}
+/* Image message */
+.mockup-image-wrap {
+  margin-top: 5px;
+}
+.mockup-image-placeholder {
+  width: 100%;
+  height: 80px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mockup-image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.mockup-image-caption {
+  font-size: 9px;
+  color: #e9edef;
+  margin-top: 4px;
+  line-height: 1.35;
+}
 /* Typing indicator */
 .mockup-typing-indicator {
   display: flex;
