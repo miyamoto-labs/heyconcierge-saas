@@ -537,7 +537,11 @@ function SignupPage() {
 
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Failed to create checkout session')
-      if (data.url) window.location.href = data.url
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error('No checkout URL returned from Stripe')
+      }
     } catch (err) {
       console.error('Checkout error:', err)
       setError(err instanceof Error ? err.message : 'Failed to start checkout')
@@ -572,7 +576,7 @@ function SignupPage() {
         <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
           <div className="max-w-[800px] mx-auto flex items-center justify-center">
             <Link href="/dashboard" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+              <img src="/message_logo.png" alt="HeyConcierge" className="w-8 h-8 rounded-lg" />
               <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
             </Link>
           </div>
@@ -615,7 +619,7 @@ function SignupPage() {
       <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
           <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <img src="/message_logo.png" alt="HeyConcierge" className="w-8 h-8 rounded-lg" />
             <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
           </Link>
           <span className="text-sm text-slate-500 font-semibold">

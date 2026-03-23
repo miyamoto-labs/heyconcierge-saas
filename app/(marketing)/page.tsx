@@ -101,13 +101,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-[100] px-6 lg:px-8 py-4 backdrop-blur-[12px] bg-white/80 border-b border-transparent transition-all duration-300">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/" className="text-xl font-bold tracking-tight no-underline flex items-center gap-2">
-            <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center">
-              <svg width="22" height="22" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
-                <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
-                <rect x="5" y="17" width="22" height="4" rx="1.5" />
-              </svg>
-            </div>
+            <img src="/message_logo.png" alt="HeyConcierge" className="w-9 h-9 rounded-lg" />
             <span className="text-saas-dark">Hey<span className="text-primary">Concierge</span></span>
           </Link>
 
@@ -390,13 +384,7 @@ export default function Home() {
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-7 h-7 bg-primary rounded-lg flex items-center justify-center">
-                  <svg width="14" height="14" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
-                    <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
-                    <rect x="5" y="17" width="22" height="4" rx="1.5" />
-                  </svg>
-                </div>
+                <img src="/message_logo.png" alt="HeyConcierge" className="w-7 h-7 rounded-lg" />
                 <span className="text-white font-bold text-lg">HeyConcierge</span>
               </div>
               <p className="text-sm text-saas-light/70 leading-relaxed max-w-xs">

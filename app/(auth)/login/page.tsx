@@ -72,7 +72,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center px-4">
       <div className="bg-white rounded-xl border border-slate-200 p-12 max-w-[500px] w-full text-center">
         <div className="flex justify-center mb-6">
-          <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center"><svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+          <img src="/message_logo.png" alt="HeyConcierge" className="w-14 h-14 rounded-xl" />
         </div>
         <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">
           <span className="text-slate-800">Hey
