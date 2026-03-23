@@ -122,10 +122,10 @@ Access to the full Service requires a paid Subscription. Subscription plans and 
 
 ### 6.2 Free Trial
 
-New Hosts are entitled to a **14-day free trial** of the Service, commencing on the date of account registration.
+New Hosts are entitled to a **30-day free trial** of the Service, commencing on the date of account registration.
 
 - No payment method is required to begin the trial.
-- At the end of the 14-day trial period, your account will **automatically convert to a paid Subscription** on the plan you selected unless you cancel before the trial ends.
+- At the end of the 30-day trial period, your account will **automatically convert to a paid Subscription** on the plan you selected unless you cancel before the trial ends.
 - You may cancel at any time during the trial period via your Account dashboard or by contacting support@heyconcierge.io.
 
 ### 6.3 Payment

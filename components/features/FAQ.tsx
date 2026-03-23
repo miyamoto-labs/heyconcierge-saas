@@ -95,7 +95,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Getting Started',
     question: 'Can I try it before buying?',
-    answer: 'Yes! 14-day free trial with full access to all features. No credit card required.',
+    answer: 'Yes! 30-day free trial with full access to all features. No credit card required.',
   },
 ];
 

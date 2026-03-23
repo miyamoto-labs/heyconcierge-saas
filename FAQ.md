@@ -145,7 +145,7 @@ Enterprise API access is available. Contact us for details.
 5. Start automating guest communication!
 
 ### Can I try it before buying?
-Yes! 14-day free trial with full access to all features. No credit card required.
+Yes! 30-day free trial with full access to all features. No credit card required.
 
 ### What happens after my trial?
 You'll receive a reminder before your trial ends. If you choose to continue, select a plan and add payment info. If not, your account simply goes inactive — no charges.
