@@ -53,7 +53,7 @@ const conversation: MessageItem[] = [
   },
 ]
 
-function renderCard(card: MessageItem['cards'][0]) {
+function renderCard(card: NonNullable<MessageItem['cards']>[0]) {
   const div = document.createElement('div')
   div.className = 'mockup-card'
 
