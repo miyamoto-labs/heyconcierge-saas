@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       .from('properties')
       .select('id')
       .eq('id', property_id)
-      .eq('organization_id', org.id)
+      .eq('org_id', org.id)
       .single()
 
     if (!property) {
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
       const { data: sessions } = await supabase
         .from('guest_sessions')
         .select('property_id, created_at, last_message_at')
-        .eq('phone', phone)
+        .eq('guest_phone', phone)
         .eq('property_id', property_id)
       data.sessions = sessions || []
 

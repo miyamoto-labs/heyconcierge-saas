@@ -53,6 +53,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save MFA settings' }, { status: 500 })
     }
 
+    // Invalidate all other sessions for this admin user (force re-login)
+    await supabase
+      .from('admin_sessions')
+      .delete()
+      .eq('admin_user_id', adminUser.id)
+      .neq('id', session.id)
+
+    // Mark current session as MFA verified
     await supabase
       .from('admin_sessions')
       .update({ mfa_verified: true })
