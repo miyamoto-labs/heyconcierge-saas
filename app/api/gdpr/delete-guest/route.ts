@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       .from('properties')
       .select('id')
       .eq('id', property_id)
-      .eq('organization_id', org.id)
+      .eq('org_id', org.id)
       .single()
 
     if (!property) {
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       const { count: sessionCount } = await supabase
         .from('guest_sessions')
         .delete({ count: 'exact' })
-        .eq('phone', phone)
+        .eq('guest_phone', phone)
         .eq('property_id', property_id)
       deleted.sessions = sessionCount || 0
 

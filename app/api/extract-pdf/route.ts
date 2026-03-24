@@ -29,12 +29,31 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No PDF files uploaded' }, { status: 400 })
     }
 
+    // Limit file count
+    const MAX_FILES = 5
+    if (files.length > MAX_FILES) {
+      return NextResponse.json({ error: `Too many files. Maximum ${MAX_FILES} allowed.` }, { status: 400 })
+    }
+
+    // Validate each file
+    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+    const ALLOWED_TYPES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    for (const file of files) {
+      if (file.size > MAX_FILE_SIZE) {
+        return NextResponse.json({ error: `File "${file.name}" exceeds 10MB limit.` }, { status: 400 })
+      }
+      if (file.type && !ALLOWED_TYPES.includes(file.type)) {
+        return NextResponse.json({ error: `File "${file.name}" has unsupported type. Only PDF and DOCX allowed.` }, { status: 400 })
+      }
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const pdfParse = require('pdf-parse')
 
     const allTexts: string[] = []
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer())
+      if (buffer.byteLength === 0) continue
       const pdfData = await pdfParse(buffer)
       allTexts.push(pdfData.text)
     }

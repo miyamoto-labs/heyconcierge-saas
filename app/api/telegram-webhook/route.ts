@@ -260,7 +260,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    const chatId: number = message.chat.id
+    const chatId: number = Number(message.chat.id)
+    if (!Number.isInteger(chatId) || chatId === 0) {
+      return NextResponse.json({ ok: true })
+    }
     const text: string = message.text.trim()
     const firstName: string = message.from?.first_name || 'Guest'
 

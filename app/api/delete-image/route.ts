@@ -23,6 +23,10 @@ export async function POST(request: NextRequest) {
       const urlParts = imageUrl.split('/property-images/')
       if (urlParts.length === 2) {
         const filePath = urlParts[1]
+        // Prevent path traversal attacks
+        if (filePath.includes('..') || filePath.startsWith('/')) {
+          return NextResponse.json({ error: 'Invalid image path' }, { status: 400 })
+        }
         const { error: storageError } = await supabase.storage
           .from('property-images')
           .remove([filePath])
