@@ -60,7 +60,7 @@ export default function PropertyViewPage() {
           .from('goconcierge_messages')
           .select('*')
           .eq('property_id', propertyId)
-          .order('timestamp', { ascending: false })
+          .order('created_at', { ascending: false })
           .limit(10)
         
         setMessages(msgs || [])

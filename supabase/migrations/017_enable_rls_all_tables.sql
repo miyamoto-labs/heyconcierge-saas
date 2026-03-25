@@ -44,7 +44,7 @@ ALTER TABLE stripe_webhook_events ENABLE ROW LEVEL SECURITY;
 -- === ORGANIZATIONS ===
 CREATE POLICY "auth_select_own_org" ON organizations
   FOR SELECT TO authenticated
-  USING (auth_user_id = auth.uid() OR email = (SELECT email FROM auth.users WHERE id = auth.uid()));
+  USING (auth_user_id = auth.uid() OR LOWER(email) = LOWER(auth.jwt()->>'email'));
 
 CREATE POLICY "auth_insert_own_org" ON organizations
   FOR INSERT TO authenticated
