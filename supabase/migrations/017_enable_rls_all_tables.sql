@@ -102,11 +102,11 @@ CREATE POLICY "auth_select_users" ON users
 
 CREATE POLICY "auth_insert_users" ON users
   FOR INSERT TO authenticated
-  WITH CHECK (true);
+  WITH CHECK (supabase_auth_id = auth.uid());
 
 CREATE POLICY "auth_update_users" ON users
   FOR UPDATE TO authenticated
-  USING (true);
+  USING (supabase_auth_id = auth.uid());
 
 -- === BOOKINGS ===
 CREATE POLICY "auth_select_own_bookings" ON bookings
