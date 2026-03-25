@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireAuth } from '@/lib/auth/require-auth'
 import Anthropic from '@anthropic-ai/sdk'
 
 const anthropic = new Anthropic({
@@ -22,6 +23,11 @@ Rules:
 
 export async function POST(request: NextRequest) {
   try {
+    const { user } = await requireAuth()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const formData = await request.formData()
 
     const files = formData.getAll('pdfs') as File[]

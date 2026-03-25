@@ -12,8 +12,9 @@ const RETENTION_DAYS = 90
 
 export async function POST(request: NextRequest) {
   // Basic auth for cron jobs
+  const cronSecret = process.env.CRON_SECRET
   const secret = request.headers.get('x-cron-secret')
-  if (process.env.CRON_SECRET && secret !== process.env.CRON_SECRET) {
+  if (!cronSecret || secret !== cronSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

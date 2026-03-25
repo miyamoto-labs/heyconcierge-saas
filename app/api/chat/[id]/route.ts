@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { getAdminSession } from '@/lib/admin-auth'
 
 export async function GET(
   request: NextRequest,
@@ -40,6 +41,12 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Only admins can delete chats
+    const session = await getAdminSession()
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     // Delete messages first (foreign key constraint)
     const { error: messagesError } = await supabase
       .from('messages')
