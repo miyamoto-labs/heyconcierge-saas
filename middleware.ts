@@ -60,14 +60,18 @@ export async function middleware(request: NextRequest) {
   const publicPaths = ['/login', '/signup', '/auth']
   const isPublicRoute = publicPaths.some(path => pathname.startsWith(path))
 
-  // API routes that don't require auth
+  // API routes that use their own auth mechanism (not Supabase JWT).
+  // Be specific — broad prefixes like '/api/admin' would bypass JWT for any
+  // new route accidentally placed under that path.
   const publicApiPaths = [
-    '/api/auth',
-    '/api/admin',
-    '/api/telegram-webhook',
-    '/api/cron',
-    '/api/chat', // Chat API for admin dashboard (uses admin_session, not Supabase auth)
-    '/api/webhooks', // Stripe webhooks use their own signature verification
+    '/api/admin/',           // Admin panel — cookie-based admin_session auth
+    '/api/telegram-webhook', // Telegram — secret token header
+    '/api/cron/',            // Cron jobs — CRON_SECRET bearer token
+    '/api/webhooks/',        // Stripe — signature verification
+    '/api/chat/',            // Chat widget — public, rate-limited in handler
+    '/api/verify-access',    // Access gate — public by design
+    '/api/sync-calendar',    // Calendar sync — service-level auth
+    '/api/activities/search', // Activity search — used by AI concierge
   ]
   const isPublicApi = publicApiPaths.some(path => pathname.startsWith(path))
 

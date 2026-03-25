@@ -92,10 +92,41 @@ function shouldEscalate(message: string): boolean {
   return escalationKeywords.some(keyword => lowerMessage.includes(keyword))
 }
 
+// Simple in-memory rate limiter (per-IP, resets on cold start)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
+const RATE_LIMIT_WINDOW_MS = 60_000 // 1 minute
+const RATE_LIMIT_MAX = 10 // 10 messages per minute per IP
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
+    return false
+  }
+  entry.count++
+  return entry.count > RATE_LIMIT_MAX
+}
+
+const MAX_MESSAGE_LENGTH = 2000
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit by IP
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: 'Too many messages. Please wait a moment.' }, { status: 429 })
+    }
+
     const { chatId, message, userEmail, userName } = await request.json()
 
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 })
+    }
+
+    if (message.length > MAX_MESSAGE_LENGTH) {
+      return NextResponse.json({ error: `Message too long. Maximum ${MAX_MESSAGE_LENGTH} characters.` }, { status: 400 })
+    }
 
     // Create chat if new
     let finalChatId = chatId
