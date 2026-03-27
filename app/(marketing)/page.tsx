@@ -97,11 +97,11 @@ export default function Home() {
           </div>
 
           {isLoggedIn ? (
-            <Link href="/dashboard" className="text-sm font-medium text-white bg-grove hover:bg-grove-dark px-5 py-2.5 rounded-full transition-all no-underline ml-2">
+            <Link href="/dashboard" className="hidden md:inline-flex text-sm font-medium text-white bg-grove hover:bg-grove-dark px-5 py-2.5 rounded-full transition-all no-underline ml-2">
               Dashboard <ArrowUpRight size={14} className="inline ml-1" />
             </Link>
           ) : (
-            <Link href="/signup" className="text-sm font-medium text-white bg-grove hover:bg-grove-dark px-5 py-2.5 rounded-full transition-all no-underline ml-2">
+            <Link href="/signup" className="hidden md:inline-flex text-sm font-medium text-white bg-grove hover:bg-grove-dark px-5 py-2.5 rounded-full transition-all no-underline ml-2">
               Start Free Trial <ArrowUpRight size={14} className="inline ml-1" />
             </Link>
           )}
