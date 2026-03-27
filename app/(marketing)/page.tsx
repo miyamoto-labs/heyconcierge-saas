@@ -150,7 +150,7 @@ export default function Home() {
               Your guests have questions.<br />You have better<br />things to do.
             </h1>
             <p className="text-lg text-earth-muted max-w-lg mb-10 leading-relaxed animate-fade-in-up-1">
-              An AI concierge trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. It answers every guest question instantly on WhatsApp, around the clock. And earns you commission every time a guest pays for an activity it recommends.
+              Trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. Answers every guest question on WhatsApp, any hour of the day. When a guest books an experience it suggested — the commission is yours.
             </p>
             <div className="flex gap-4 items-center flex-wrap animate-fade-in-up-2 mb-12">
               <Link
