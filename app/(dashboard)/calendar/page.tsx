@@ -263,8 +263,8 @@ export default function CalendarPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-12 h-12 border-4 border-grove border-t-transparent rounded-full"></div>
       </div>
     )
   }
@@ -275,19 +275,19 @@ export default function CalendarPage() {
   const minCellHeight = dayNumberHeight + maxBarRows * (barHeight + barGap) + 8
 
   return (
-    <div className="min-h-screen bg-[#FDFCFA]">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+      <header className="px-8 py-4 border-b border-earth-border bg-white/90 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
-            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
+          <Link href="/" className="text-xl font-extrabold text-earth-dark tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-grove rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="font-serif text-earth-dark hidden sm:inline">HeyConcierge</span>
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-800 font-bold">← Dashboard</Link>
-            <Link href="/upselling" className="text-sm text-slate-800 hover:text-primary font-bold">Upselling</Link>
-            <span className="text-sm text-slate-500">{userEmail}</span>
-            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">Logout</button>
+            <Link href="/dashboard" className="text-sm text-earth-muted hover:text-earth-dark font-bold">← Dashboard</Link>
+            <Link href="/upselling" className="text-sm text-earth-dark hover:text-grove font-bold">Upselling</Link>
+            <span className="text-sm text-earth-muted">{userEmail}</span>
+            <button onClick={handleLogout} className="text-sm text-earth-muted hover:text-earth-dark font-bold">Logout</button>
           </div>
         </div>
       </header>
@@ -296,14 +296,14 @@ export default function CalendarPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">Calendar</h1>
-            <p className="text-slate-500">View and sync your bookings</p>
+            <h1 className="text-4xl font-extrabold text-earth-dark tracking-tight mb-2">Calendar</h1>
+            <p className="text-earth-muted">View and sync your bookings</p>
           </div>
           <div className="flex gap-4">
             <select
               value={selectedProperty}
               onChange={(e) => setSelectedProperty(e.target.value)}
-              className="px-4 py-2 rounded-full border-2 border-slate-200 font-bold text-sm hover:border-primary transition-all outline-none"
+              className="px-4 py-2 rounded-full border-2 border-earth-border font-bold text-sm hover:border-grove transition-all outline-none"
             >
               <option value="all">All Properties</option>
               {properties.map(prop => (
@@ -313,7 +313,7 @@ export default function CalendarPage() {
             <button
               onClick={syncCalendar}
               disabled={syncing}
-              className="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-grove text-white px-6 py-2 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {syncing ? 'Syncing...' : 'Sync Calendar'}
             </button>
@@ -321,18 +321,18 @@ export default function CalendarPage() {
         </div>
 
         {/* Calendar */}
-        <div className="bg-white rounded-xl border border-slate-200 p-6">
+        <div className="bg-white rounded-xl border border-earth-border p-6">
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-6">
-            <button onClick={previousMonth} className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all">←</button>
-            <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">{monthName}</h2>
-            <button onClick={nextMonth} className="w-10 h-10 rounded-full bg-primary/[0.08] hover:bg-primary/[0.14] font-bold text-xl transition-all">→</button>
+            <button onClick={previousMonth} className="w-10 h-10 rounded-full bg-grove/[0.08] hover:bg-grove/[0.14] font-bold text-xl transition-all">←</button>
+            <h2 className="text-2xl font-extrabold text-earth-dark tracking-tight">{monthName}</h2>
+            <button onClick={nextMonth} className="w-10 h-10 rounded-full bg-grove/[0.08] hover:bg-grove/[0.14] font-bold text-xl transition-all">→</button>
           </div>
 
           {/* Day Headers */}
-          <div className="grid grid-cols-7 border-b border-slate-200">
+          <div className="grid grid-cols-7 border-b border-earth-border">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-              <div key={day} className="text-center font-bold text-xs text-slate-400 uppercase tracking-wider py-3">
+              <div key={day} className="text-center font-bold text-xs text-earth-light uppercase tracking-wider py-3">
                 {day}
               </div>
             ))}
@@ -344,7 +344,7 @@ export default function CalendarPage() {
             const today = new Date()
 
             return (
-              <div key={weekIdx} className="relative grid grid-cols-7 border-b border-slate-100 last:border-b-0">
+              <div key={weekIdx} className="relative grid grid-cols-7 border-b border-earth-border last:border-b-0">
                 {week.map((day, colIdx) => {
                   const isToday = day &&
                     day === today.getDate() &&
@@ -354,17 +354,17 @@ export default function CalendarPage() {
                   return (
                     <div
                       key={colIdx}
-                      className={`relative border-r border-slate-100 last:border-r-0 ${!day ? 'bg-slate-50/50' : ''}`}
+                      className={`relative border-r border-earth-border last:border-r-0 ${!day ? 'bg-slate-50/50' : ''}`}
                       style={{ minHeight: `${minCellHeight}px` }}
                     >
                       {day && (
                         <div className={`text-sm font-semibold p-2 pb-0 ${
                           isToday
                             ? 'text-white'
-                            : 'text-slate-700'
+                            : 'text-earth-text'
                         }`}>
                           {isToday ? (
-                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm font-bold">
+                            <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-grove text-white text-sm font-bold">
                               {day}
                             </span>
                           ) : day}
@@ -412,10 +412,10 @@ export default function CalendarPage() {
           })}
 
           {/* Legend */}
-          <div className="flex items-center gap-6 mt-4 pt-4 border-t border-slate-100">
+          <div className="flex items-center gap-6 mt-4 pt-4 border-t border-earth-border">
             <div className="flex items-center gap-2">
               <div className="w-8 h-2.5 rounded-full bg-emerald-400"></div>
-              <span className="text-xs text-slate-600 font-semibold">Booked</span>
+              <span className="text-xs text-earth-muted font-semibold">Booked</span>
             </div>
           </div>
         </div>
@@ -438,17 +438,17 @@ export default function CalendarPage() {
 
           return (
             <div className="grid grid-cols-3 gap-6 mt-8">
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="bg-white rounded-xl border border-earth-border p-6">
                 <div className="text-3xl font-black">{filteredBookings.length}</div>
-                <div className="text-sm text-slate-500">Upcoming Guests</div>
+                <div className="text-sm text-earth-muted">Upcoming Guests</div>
               </div>
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="bg-white rounded-xl border border-earth-border p-6">
                 <div className="text-3xl font-black">{bookedNights}</div>
-                <div className="text-sm text-slate-500">Booked Nights</div>
+                <div className="text-sm text-earth-muted">Booked Nights</div>
               </div>
-              <div className="bg-white rounded-xl border border-slate-200 p-6">
+              <div className="bg-white rounded-xl border border-earth-border p-6">
                 <div className="text-3xl font-black">{occupancyPct}%</div>
-                <div className="text-sm text-slate-500">Occupancy Rate</div>
+                <div className="text-sm text-earth-muted">Occupancy Rate</div>
               </div>
             </div>
           )

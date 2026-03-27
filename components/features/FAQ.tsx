@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
-import LogoSVG from '@/components/brand/LogoSVG';
 
 interface FAQItem {
   question: string;
@@ -30,7 +28,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Pricing',
     question: 'How much does it cost?',
-    answer: 'We offer flexible pricing:\n• Free Trial: 14 days, full access, no credit card required\n• Pay-per-property: $29/month per property\n• Multi-property discount: Contact us for volume pricing',
+    answer: 'We offer flexible pricing:\n• Free Trial: 30 days, full access\n• Pay-per-property: $12.99/month per property\n• 10+ properties: Contact us for enterprise pricing',
   },
   {
     category: 'Pricing',
@@ -45,7 +43,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Setup',
     question: 'What platforms do you integrate with?',
-    answer: 'HeyConcierge works with any platform that provides an iCal calendar feed: Airbnb, VRBO/HomeAway, Booking.com, Direct bookings (Google Calendar, iCloud), and Property management systems (Guesty, Hostaway, etc.)',
+    answer: 'HeyConcierge works with any platform that provides an iCal calendar feed: Airbnb, VRBO/HomeAway, Booking.com, direct bookings (Google Calendar, iCloud), and property management systems (Guesty, Hostaway, etc.)',
   },
   {
     category: 'Setup',
@@ -60,7 +58,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Features',
     question: 'What questions can HeyConcierge answer?',
-    answer: 'Common guest questions like: Check-in time and instructions, WiFi password, House rules, Local recommendations, Parking information, Appliance instructions, Emergency contacts, and Check-out procedures.',
+    answer: 'Common guest questions like: check-in time and instructions, WiFi password, house rules, local recommendations, parking information, appliance instructions, emergency contacts, and check-out procedures.',
   },
   {
     category: 'Features',
@@ -70,7 +68,7 @@ const faqData: FAQItem[] = [
   {
     category: 'Features',
     question: 'Does it send check-in instructions automatically?',
-    answer: 'Yes. When a new booking is detected, HeyConcierge automatically sends: Welcome message, Check-in time and instructions, WiFi details, Important house rules, and Your contact info. You control exactly when these are sent (e.g., 24 hours before arrival).',
+    answer: 'Yes. When a new booking is detected, HeyConcierge automatically sends: welcome message, check-in time and instructions, WiFi details, important house rules, and your contact info. You control exactly when these are sent (e.g., 24 hours before arrival).',
   },
   {
     category: 'Privacy',
@@ -80,12 +78,12 @@ const faqData: FAQItem[] = [
   {
     category: 'Privacy',
     question: 'What data do you store?',
-    answer: 'Only what\'s necessary to provide the service: Calendar data (dates, guest names), Property details you provide, Message history, and Your contact information.',
+    answer: 'Only what\'s necessary to provide the service: calendar data (dates, guest names), property details you provide, message history, and your contact information.',
   },
   {
     category: 'Support',
     question: 'What if I need help?',
-    answer: 'We offer: Live chat support, Email support (response within 24 hours), Setup assistance, and Knowledge base & guides.',
+    answer: 'We offer: live chat support, email support (response within 24 hours), setup assistance, and a knowledge base & guides.',
   },
   {
     category: 'Technical',
@@ -95,11 +93,11 @@ const faqData: FAQItem[] = [
   {
     category: 'Getting Started',
     question: 'Can I try it before buying?',
-    answer: 'Yes! 30-day free trial with full access to all features. No credit card required.',
+    answer: 'Yes! 30-day free trial with full access to all features.',
   },
 ];
 
-const categories = ['General', 'Pricing', 'Setup', 'Features', 'Privacy', 'Support', 'Technical', 'Getting Started'];
+const categories = ['All', 'General', 'Pricing', 'Setup', 'Features', 'Privacy', 'Support', 'Technical', 'Getting Started'];
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -110,113 +108,115 @@ export default function FAQ() {
     : faqData.filter(item => item.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-bg">
-      <header className="px-8 py-4 border-b border-[rgba(108,92,231,0.08)] bg-[rgba(255,248,240,0.85)] backdrop-blur-[20px] sticky top-0 z-30">
+    <div className="min-h-screen" style={{ background: '#FAFAF7' }}>
+      {/* Header */}
+      <header className="px-8 py-4 border-b border-earth-border bg-white/90 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="font-nunito text-xl font-black no-underline flex items-center gap-2">
-            <LogoSVG className="w-8 h-8" />
-            <span className="text-accent">Hey</span><span className="text-dark">Concierge</span>
+          <Link href="/" className="no-underline flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-grove rounded-lg flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
+                <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
+                <rect x="5" y="17" width="22" height="4" rx="1.5" />
+              </svg>
+            </div>
+            <span className="font-serif text-earth-dark text-lg">HeyConcierge</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-muted hover:text-dark font-bold">Dashboard</Link>
-            <Link href="/" className="text-sm text-muted hover:text-dark font-bold">Home</Link>
+          <div className="flex items-center gap-5">
+            <Link href="/dashboard" className="text-sm text-earth-muted hover:text-earth-dark font-medium no-underline transition-colors">Dashboard</Link>
+            <Link href="/" className="text-sm text-earth-muted hover:text-earth-dark font-medium no-underline transition-colors">Home</Link>
           </div>
         </div>
       </header>
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Frequently Asked Questions
-        </h1>
-        <p className="text-xl text-gray-600">
-          Everything you need to know about HeyConcierge
-        </p>
-      </div>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap gap-2 justify-center mb-8">
-        <button
-          onClick={() => setSelectedCategory('All')}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            selectedCategory === 'All'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          All
-        </button>
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setSelectedCategory(category)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-              selectedCategory === category
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+      <div className="max-w-3xl mx-auto px-4 py-20">
+        {/* Hero */}
+        <div className="text-center mb-14">
+          <p className="text-xs font-semibold tracking-widest text-grove uppercase mb-4">FAQ</p>
+          <h1 className="font-serif text-4xl sm:text-5xl text-earth-dark mb-4">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-earth-muted text-lg">
+            Everything you need to know about HeyConcierge
+          </p>
+        </div>
 
-      {/* FAQ Accordion */}
-      <div className="space-y-4">
-        {filteredFAQs.map((item, index) => (
-          <div
-            key={index}
-            className="border border-gray-200 rounded-lg overflow-hidden hover:border-blue-300 transition-colors"
-          >
+        {/* Category Filter */}
+        <div className="flex flex-wrap gap-2 justify-center mb-10">
+          {categories.map(category => (
             <button
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
+              key={category}
+              onClick={() => { setSelectedCategory(category); setOpenIndex(null); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === category
+                  ? 'bg-grove text-white'
+                  : 'bg-white border border-earth-border text-earth-muted hover:border-grove hover:text-grove'
+              }`}
             >
-              <div className="flex items-center gap-3 text-left">
-                <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                  {item.category}
-                </span>
-                <span className="font-semibold text-gray-900">
-                  {item.question}
-                </span>
-              </div>
-              <ChevronDown
-                className={`w-5 h-5 text-gray-500 transition-transform flex-shrink-0 ${
-                  openIndex === index ? 'rotate-180' : ''
-                }`}
-              />
+              {category}
             </button>
-            {openIndex === index && (
-              <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                <p className="text-gray-700 whitespace-pre-line leading-relaxed">
-                  {item.answer}
-                </p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Contact CTA */}
-      <div className="mt-16 text-center bg-blue-50 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Still have questions?
-        </h2>
-        <p className="text-gray-600 mb-6">
-          We're here to help! Get in touch and we'll answer any questions you have.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="mailto:support@heyconcierge.io"
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Email Support
-          </a>
-          <button className="px-6 py-3 bg-white text-blue-600 border border-blue-600 rounded-lg font-medium hover:bg-blue-50 transition-colors">
-            Schedule a Demo
-          </button>
+        {/* FAQ Accordion */}
+        <div className="divide-y divide-earth-border border border-earth-border rounded-xl overflow-hidden bg-white">
+          {filteredFAQs.map((item, index) => (
+            <div key={index}>
+              <button
+                onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                className="w-full px-6 py-5 flex items-center justify-between hover:bg-grove-subtle transition-colors text-left"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-[10px] font-semibold text-grove bg-grove-subtle px-2 py-0.5 rounded uppercase tracking-wide flex-shrink-0">
+                    {item.category}
+                  </span>
+                  <span className="font-medium text-earth-dark">
+                    {item.question}
+                  </span>
+                </div>
+                <svg
+                  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                  className={`text-earth-muted transition-transform flex-shrink-0 ml-4 ${openIndex === index ? 'rotate-180' : ''}`}
+                  strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {openIndex === index && (
+                <div className="px-6 py-5 bg-grove-subtle border-t border-earth-border">
+                  <p className="text-earth-text whitespace-pre-line leading-relaxed text-sm">
+                    {item.answer}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="mt-16 text-center border-t border-earth-border pt-16">
+          <h2 className="font-serif text-3xl text-earth-dark mb-3">
+            Still have questions?
+          </h2>
+          <p className="text-earth-muted mb-8">
+            We&apos;re here to help — get in touch and we&apos;ll answer anything.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href="mailto:support@heyconcierge.io"
+              className="px-7 py-3 bg-grove hover:bg-grove-dark text-white rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all no-underline"
+            >
+              Email Support
+            </a>
+            <Link
+              href="/"
+              className="px-7 py-3 border border-earth-border text-earth-text hover:border-grove hover:text-grove rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all no-underline"
+            >
+              Back to Home
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }

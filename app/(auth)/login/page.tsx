@@ -69,16 +69,13 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center px-4">
-      <div className="bg-white rounded-xl border border-slate-200 p-12 max-w-[500px] w-full text-center">
+    <div className="earth-page min-h-screen flex items-center justify-center px-4" style={{ background: '#FAFAF7' }}>
+      <div className="bg-white rounded-xl border border-earth-border p-10 max-w-[460px] w-full text-center">
         <div className="flex justify-center mb-6">
-          <div className="w-14 h-14 bg-primary rounded-xl flex items-center justify-center"><svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+          <div className="w-12 h-12 bg-grove rounded-xl flex items-center justify-center"><svg width="24" height="24" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
         </div>
-        <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-2">
-          <span className="text-slate-800">Hey
-          <span className="text-primary">Concierge</span></span>
-        </h1>
-        <p className="text-slate-500 mb-8">Sign in to manage your properties</p>
+        <h1 className="font-serif text-3xl text-earth-dark mb-2">HeyConcierge</h1>
+        <p className="text-earth-muted mb-8 text-sm">Sign in to manage your properties</p>
 
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
@@ -92,7 +89,7 @@ export default function LoginPage() {
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-full px-6 py-3 text-slate-800 focus:border-primary focus:outline-none transition-colors"
+            className="w-full border border-earth-border rounded-lg px-4 py-3 text-earth-dark focus:border-grove focus:outline-none transition-colors text-sm"
             required
           />
           <input
@@ -100,23 +97,23 @@ export default function LoginPage() {
             placeholder="Password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            className="w-full border-2 border-slate-200 rounded-full px-6 py-3 text-slate-800 focus:border-primary focus:outline-none transition-colors"
+            className="w-full border border-earth-border rounded-lg px-4 py-3 text-earth-dark focus:border-grove focus:outline-none transition-colors text-sm"
             minLength={6}
             required
           />
           <button
             type="submit"
             disabled={!!loading}
-            className="w-full bg-primary text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary/90 hover:-translate-y-0.5 transition-all disabled:opacity-50"
+            className="w-full bg-grove hover:bg-grove-dark text-white px-8 py-3 rounded-lg font-semibold text-sm hover:-translate-y-0.5 transition-all disabled:opacity-50"
           >
             {loading === 'email' ? 'Please wait...' : isSignUp ? 'Create account' : 'Sign in'}
           </button>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-earth-muted">
             {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
             <button
               type="button"
               onClick={() => { setIsSignUp(!isSignUp); setError(null) }}
-              className="text-primary font-medium hover:underline"
+              className="text-grove font-medium hover:underline"
             >
               {isSignUp ? 'Sign in' : 'Sign up'}
             </button>
@@ -124,15 +121,15 @@ export default function LoginPage() {
         </form>
 
         <div className="relative mb-6">
-          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-200" /></div>
-          <div className="relative flex justify-center text-sm"><span className="bg-white px-4 text-slate-400">or continue with</span></div>
+          <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-earth-border" /></div>
+          <div className="relative flex justify-center text-sm"><span className="bg-white px-4 text-earth-light">or continue with</span></div>
         </div>
 
         <div className="space-y-3">
           <button
             onClick={() => handleOAuthLogin('google')}
             disabled={!!loading}
-            className="w-full bg-white border-2 border-slate-200 text-slate-800 px-8 py-4 rounded-full font-semibold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-white border border-earth-border text-earth-text px-8 py-3 rounded-lg font-medium text-sm hover:border-grove hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -157,9 +154,9 @@ export default function LoginPage() {
           <button
             onClick={() => handleOAuthLogin('azure')}
             disabled={!!loading}
-            className="w-full bg-white border-2 border-slate-200 text-slate-800 px-8 py-4 rounded-full font-semibold text-lg hover:border-primary hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+            className="w-full bg-white border border-earth-border text-earth-text px-8 py-3 rounded-lg font-medium text-sm hover:border-grove hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
           >
-            <svg className="w-6 h-6" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#F35325" d="M1 1h10v10H1z"/>
               <path fill="#81BC06" d="M13 1h10v10H13z"/>
               <path fill="#05A6F0" d="M1 13h10v10H1z"/>
@@ -169,7 +166,7 @@ export default function LoginPage() {
           </button>
         </div>
 
-        <p className="text-xs text-slate-500 mt-6">
+        <p className="text-xs text-earth-light mt-6">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>

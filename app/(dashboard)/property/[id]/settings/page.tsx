@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import { ToastProvider, useToast } from '@/components/ui/Toast'
 import { createClient } from '@/lib/supabase/client'
 import dynamic from 'next/dynamic'
@@ -465,44 +464,44 @@ function PropertySettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin w-12 h-12 border-4 border-grove border-t-transparent rounded-full"></div>
       </div>
     )
   }
 
   if (!property) {
     return (
-      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-black mb-4">Property not found</h1>
-          <Link href="/dashboard" className="text-primary font-bold">Back to Dashboard</Link>
+          <Link href="/dashboard" className="text-grove font-bold">Back to Dashboard</Link>
         </div>
       </div>
     )
   }
 
-  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-slate-200 focus:border-primary outline-none transition-all bg-white"
+  const inputClass = "w-full px-4 py-3 rounded-lg border border-earth-border focus:border-grove outline-none transition-all bg-white text-earth-dark text-sm"
 
   return (
-    <div className="min-h-screen bg-[#FDFCFA]">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+      <header className="px-8 py-4 border-b border-earth-border bg-white/90 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <Link href="/" className="no-underline flex items-center gap-2.5">
+            <div className="w-8 h-8 bg-grove rounded-lg flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" />
                 <path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" />
                 <rect x="5" y="17" width="22" height="4" rx="1.5" />
               </svg>
             </div>
-            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
+            <span className="font-serif text-earth-dark text-lg">HeyConcierge</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm text-slate-500 hover:text-slate-800 font-bold">Back to Dashboard</Link>
-            <span className="text-sm text-slate-500">{userEmail}</span>
-            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-slate-800 font-bold">
+          <div className="flex items-center gap-5">
+            <Link href="/dashboard" className="text-sm text-earth-muted hover:text-earth-dark font-medium no-underline transition-colors">Back to Dashboard</Link>
+            <span className="text-sm text-earth-muted">{userEmail}</span>
+            <button onClick={handleLogout} className="text-sm text-earth-muted hover:text-earth-dark font-medium bg-transparent border-0 cursor-pointer transition-colors">
               Logout
             </button>
           </div>
@@ -512,10 +511,10 @@ function PropertySettingsPage() {
       {/* Unsaved changes bar */}
       {hasUnsavedChanges && (
         <div className="sticky top-[57px] z-20 bg-gradient-to-r from-[#FDCB6E] to-[#F9CA24] px-4 py-2 text-center" style={{ animation: 'slideDown 0.3s ease-out' }}>
-          <div className="flex items-center justify-center gap-2 text-sm font-bold text-slate-800">
+          <div className="flex items-center justify-center gap-2 text-sm font-bold text-earth-dark">
             <div className="w-2 h-2 rounded-full bg-orange animate-pulse" />
             You have unsaved changes
-            <button onClick={handleSave} disabled={saving} className="ml-2 px-4 py-1 bg-dark text-white rounded-full text-xs font-bold hover:bg-primary transition-all">
+            <button onClick={handleSave} disabled={saving} className="ml-2 px-4 py-1 bg-dark text-white rounded-full text-xs font-bold hover:bg-grove transition-all">
               {saving ? 'Saving...' : 'Save now'}
             </button>
           </div>
@@ -526,31 +525,31 @@ function PropertySettingsPage() {
         {/* Page header with completion */}
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-4xl font-extrabold text-slate-800 tracking-tight mb-1">{property.name}</h1>
-            <p className="text-slate-500">Configure what your AI concierge knows</p>
+            <h1 className="font-serif text-4xl text-earth-dark mb-1">{property.name}</h1>
+            <p className="text-earth-muted text-sm">Configure what your AI concierge knows</p>
           </div>
           <div className="flex items-center gap-3">
             {/* Test Concierge button */}
             <button
               onClick={() => setShowTestChat(true)}
-              className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:border-primary shadow-md transition-all group"
+              className="flex items-center gap-2 bg-grove hover:bg-grove-dark text-white px-5 py-2.5 rounded-full font-medium text-sm hover:-translate-y-0.5 transition-all group"
             >
-              <AnimatedMascot mood="happy" size={24} />
+              <img src="/mascot.png" alt="" className="w-6 h-6 rounded-full object-cover" />
               <span>Test Concierge</span>
               <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
             </button>
             {config && (
-              <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3">
+              <div className="flex items-center gap-3 bg-white rounded-xl border border-earth-border px-5 py-3">
                 <div className="relative w-11 h-11">
                   <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
-                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={completedCount === totalCount ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(completedCount / totalCount) * 100}, 100`} strokeLinecap="round" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E5E5E0" strokeWidth="3" />
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#4A5D23" strokeWidth="3" strokeDasharray={`${(completedCount / totalCount) * 100}, 100`} strokeLinecap="round" />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{completedCount}/{totalCount}</span>
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-earth-dark">{completedCount}/{totalCount}</span>
                 </div>
                 <div className="text-xs">
-                  <p className="font-bold text-slate-800">{completedCount === totalCount ? 'All set!' : 'Setup progress'}</p>
-                  <p className="text-slate-500">{completionItems.filter(i => !i.done).map(i => i.label).join(', ') || 'Ready for guests'}</p>
+                  <p className="font-bold text-earth-dark">{completedCount === totalCount ? 'All set!' : 'Setup progress'}</p>
+                  <p className="text-earth-muted">{completionItems.filter(i => !i.done).map(i => i.label).join(', ') || 'Ready for guests'}</p>
                 </div>
               </div>
             )}
@@ -558,24 +557,24 @@ function PropertySettingsPage() {
         </div>
 
         {/* Section 1: Property Details */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-              <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+        <div className="bg-white rounded-xl border border-earth-border overflow-hidden">
+          <div className="px-8 py-5 border-b border-earth-border flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-grove-subtle flex items-center justify-center">
+              <svg className="w-4 h-4 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-slate-800 tracking-tight text-slate-800">Property Details</h2>
-              <p className="text-xs text-slate-500">The basics about your place</p>
+              <h2 className="text-sm font-medium text-earth-dark">Property Details</h2>
+              <p className="text-xs text-earth-muted">The basics about your place</p>
             </div>
           </div>
           <div className="px-8 py-6 space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-bold mb-1.5 text-slate-800">Property Name</label>
+                <label className="block text-sm font-bold mb-1.5 text-earth-dark">Property Name</label>
                 <input type="text" value={property.name} onChange={(e) => updateProperty({ name: e.target.value })} className={inputClass} />
               </div>
               <div>
-                <label className="block text-sm font-bold mb-1.5 text-slate-800">Property Type</label>
+                <label className="block text-sm font-bold mb-1.5 text-earth-dark">Property Type</label>
                 <select value={property.property_type} onChange={(e) => updateProperty({ property_type: e.target.value })} className={inputClass}>
                   <option value="Apartment">Apartment</option>
                   <option value="House">House</option>
@@ -607,37 +606,37 @@ function PropertySettingsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-1.5 text-slate-800">Your Phone Number</label>
+              <label className="block text-sm font-bold mb-1.5 text-earth-dark">Your Phone Number</label>
               <input type="text" value={property.whatsapp_number || ''} onChange={(e) => updateProperty({ whatsapp_number: e.target.value })} placeholder="+1234567890" className={inputClass} />
-              <p className="text-xs text-slate-500 mt-1.5">Used for guest messaging (Telegram, WhatsApp, SMS). Include country code.</p>
+              <p className="text-xs text-earth-muted mt-1.5">Used for guest messaging (Telegram, WhatsApp, SMS). Include country code.</p>
             </div>
 
             <div>
-              <label className="block text-sm font-bold mb-1.5 text-slate-800">iCal URL <span className="font-normal text-slate-500">(optional)</span></label>
+              <label className="block text-sm font-bold mb-1.5 text-earth-dark">iCal URL <span className="font-normal text-earth-muted">(optional)</span></label>
               <input type="text" value={property.ical_url || ''} onChange={(e) => updateProperty({ ical_url: e.target.value })} placeholder="https://airbnb.com/calendar/ical/..." className={inputClass} />
             </div>
           </div>
         </div>
 
         {/* Section 2: Guest Knowledge */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(85,239,196,0.1)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-mint/20 flex items-center justify-center">
-              <svg className="w-5 h-5 text-mint-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+        <div className="bg-white rounded-xl border border-earth-border overflow-hidden">
+          <div className="px-8 py-5 border-b border-earth-border flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-grove-subtle flex items-center justify-center">
+              <svg className="w-4 h-4 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-slate-800 tracking-tight text-slate-800">Guest Knowledge</h2>
-              <p className="text-xs text-slate-500">What your AI concierge tells guests — type it or drop a PDF/Word doc</p>
+              <h2 className="text-sm font-medium text-earth-dark">Guest Knowledge</h2>
+              <p className="text-xs text-earth-muted">What your AI concierge tells guests — type it or drop a PDF/Word doc</p>
             </div>
           </div>
           <div className="px-8 py-6 space-y-5">
             {/* Single PDF drop zone for all fields */}
             <div
               className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
-                pdfDragActive ? 'border-primary bg-primary/[0.04]'
+                pdfDragActive ? 'border-grove bg-grove/[0.04]'
                 : pdfExtractError ? 'border-red-300 bg-red-50'
                 : pdfExtractedFile ? 'border-green-300 bg-green-50'
-                : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-[rgba(108,92,231,0.02)]'
+                : 'border-[rgba(108,92,231,0.2)] hover:border-grove/50 bg-[rgba(108,92,231,0.02)]'
               } ${pdfExtracting ? 'opacity-60 pointer-events-none' : ''}`}
               onDragEnter={handlePdfDrag}
               onDragLeave={handlePdfDrag}
@@ -654,8 +653,8 @@ function PropertySettingsPage() {
               />
               {pdfExtracting ? (
                 <div className="flex items-center justify-center gap-3 py-2">
-                  <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                  <span className="text-slate-800 font-bold text-sm">Reading your document and filling in the fields below...</span>
+                  <div className="animate-spin w-5 h-5 border-2 border-grove border-t-transparent rounded-full"></div>
+                  <span className="text-earth-dark font-bold text-sm">Reading your document and filling in the fields below...</span>
                 </div>
               ) : pdfExtractError ? (
                 <div className="flex items-center gap-3 py-1">
@@ -685,17 +684,17 @@ function PropertySettingsPage() {
                 </div>
               ) : (
                 <div className="text-center py-2">
-                  <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                  <p className="text-slate-800 font-bold text-sm">Drop your property guide here (PDF or Word)</p>
-                  <p className="text-xs text-slate-500 mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
+                  <svg className="w-8 h-8 mx-auto mb-2 text-grove/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                  <p className="text-earth-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
+                  <p className="text-xs text-earth-muted mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
                 </div>
               )}
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-px bg-primary/[0.08]"></div>
-              <span className="text-xs text-slate-500 font-medium">or type manually</span>
-              <div className="flex-1 h-px bg-primary/[0.08]"></div>
+              <div className="flex-1 h-px bg-grove/[0.08]"></div>
+              <span className="text-xs text-earth-muted font-medium">or type manually</span>
+              <div className="flex-1 h-px bg-grove/[0.08]"></div>
             </div>
 
             {/* WiFi */}
@@ -740,14 +739,14 @@ function PropertySettingsPage() {
         </div>
 
         {/* Section 3: Property Images */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(253,121,168,0.08)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-pink/15 flex items-center justify-center">
-              <svg className="w-5 h-5 text-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+        <div className="bg-white rounded-xl border border-earth-border overflow-hidden">
+          <div className="px-8 py-5 border-b border-earth-border flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-grove-subtle flex items-center justify-center">
+              <svg className="w-4 h-4 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
             </div>
             <div>
-              <h2 className="text-lg font-extrabold text-slate-800 tracking-tight text-slate-800">Property Images</h2>
-              <p className="text-xs text-slate-500">Photos sent to guests when they ask relevant questions</p>
+              <h2 className="text-sm font-medium text-earth-dark">Property Images</h2>
+              <p className="text-xs text-earth-muted">Photos sent to guests when they ask relevant questions</p>
             </div>
           </div>
           <div className="px-8 py-6">
@@ -762,20 +761,20 @@ function PropertySettingsPage() {
         </div>
 
         {/* Section 4: Guest Reviews */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="px-8 py-5 bg-gradient-to-r from-[rgba(255,193,7,0.08)] to-transparent flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-yellow/15 flex items-center justify-center">
-              <svg className="w-5 h-5 text-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+        <div className="bg-white rounded-xl border border-earth-border overflow-hidden">
+          <div className="px-8 py-5 border-b border-earth-border flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-grove-subtle flex items-center justify-center">
+              <svg className="w-4 h-4 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
             </div>
             <div className="flex-1">
-              <h2 className="text-lg font-extrabold text-slate-800 tracking-tight text-slate-800">Guest Reviews</h2>
-              <p className="text-xs text-slate-500">Ratings collected automatically after guest checkout</p>
+              <h2 className="text-sm font-medium text-earth-dark">Guest Reviews</h2>
+              <p className="text-xs text-earth-muted">Ratings collected automatically after guest checkout</p>
             </div>
             {ratingStats && ratingStats.totalCompleted > 0 && (
               <div className="flex items-center gap-2 bg-[rgba(255,193,7,0.1)] px-4 py-2 rounded-full">
                 <RatingStars rating={Math.round(ratingStats.averageRating)} size="sm" />
-                <span className="font-bold text-sm text-slate-800">{ratingStats.averageRating}</span>
-                <span className="text-xs text-slate-500">({ratingStats.totalCompleted} review{ratingStats.totalCompleted !== 1 ? 's' : ''})</span>
+                <span className="font-bold text-sm text-earth-dark">{ratingStats.averageRating}</span>
+                <span className="text-xs text-earth-muted">({ratingStats.totalCompleted} review{ratingStats.totalCompleted !== 1 ? 's' : ''})</span>
               </div>
             )}
           </div>
@@ -783,45 +782,45 @@ function PropertySettingsPage() {
             {ratings.length === 0 ? (
               <div className="text-center py-8">
                 <svg className="w-12 h-12 mx-auto mb-3 text-[#E8E4FF]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
-                <p className="text-slate-500 font-bold mb-1">No reviews yet</p>
-                <p className="text-xs text-slate-500">Ratings are collected automatically via Telegram/WhatsApp 2 hours after guest checkout.</p>
+                <p className="text-earth-muted font-bold mb-1">No reviews yet</p>
+                <p className="text-xs text-earth-muted">Ratings are collected automatically via Telegram/WhatsApp 2 hours after guest checkout.</p>
               </div>
             ) : (
               <div className="space-y-4">
                 {/* Stats bar */}
                 {ratingStats && (
                   <div className="flex gap-4 text-center">
-                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
-                      <p className="text-2xl font-black text-slate-800">{ratingStats.totalCompleted}</p>
-                      <p className="text-xs text-slate-500 font-bold">Completed</p>
+                    <div className="flex-1 bg-grove-subtle/50 rounded-xl p-3">
+                      <p className="text-2xl font-serif text-earth-dark">{ratingStats.totalCompleted}</p>
+                      <p className="text-xs text-earth-muted">Completed</p>
                     </div>
-                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
-                      <p className="text-2xl font-black text-slate-800">{ratingStats.sent}</p>
-                      <p className="text-xs text-slate-500 font-bold">Pending</p>
+                    <div className="flex-1 bg-grove-subtle/50 rounded-xl p-3">
+                      <p className="text-2xl font-serif text-earth-dark">{ratingStats.sent}</p>
+                      <p className="text-xs text-earth-muted">Pending</p>
                     </div>
-                    <div className="flex-1 bg-[rgba(108,92,231,0.04)] rounded-xl p-3">
-                      <p className="text-2xl font-black text-slate-800">{ratingStats.expired}</p>
-                      <p className="text-xs text-slate-500 font-bold">Expired</p>
+                    <div className="flex-1 bg-grove-subtle/50 rounded-xl p-3">
+                      <p className="text-2xl font-serif text-earth-dark">{ratingStats.expired}</p>
+                      <p className="text-xs text-earth-muted">Expired</p>
                     </div>
                   </div>
                 )}
 
                 {/* Review list */}
                 {ratings.map((review: any) => (
-                  <div key={review.id} className="border-2 border-slate-200 rounded-2xl p-4">
+                  <div key={review.id} className="border-2 border-earth-border rounded-2xl p-4">
                     <div className="flex items-center justify-between mb-2">
                       <RatingStars rating={review.rating} size="md" />
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] bg-[rgba(108,92,231,0.08)] text-slate-500 px-2 py-0.5 rounded-full font-bold uppercase">
+                        <span className="text-[10px] bg-grove-subtle text-grove px-2 py-0.5 rounded-full font-medium uppercase tracking-wide">
                           {review.channel}
                         </span>
-                        <span className="text-xs text-slate-500">
+                        <span className="text-xs text-earth-muted">
                           {new Date(review.completed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </span>
                       </div>
                     </div>
                     {review.comment && review.comment.length > 0 && (
-                      <p className="text-sm text-slate-800 mt-2">&ldquo;{review.comment}&rdquo;</p>
+                      <p className="text-sm text-earth-dark mt-2">&ldquo;{review.comment}&rdquo;</p>
                     )}
                   </div>
                 ))}
@@ -834,10 +833,10 @@ function PropertySettingsPage() {
         <button
           onClick={handleSave}
           disabled={saving}
-          className={`w-full px-8 py-4 rounded-full font-bold text-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+          className={`w-full px-8 py-4 rounded-full font-medium text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             hasUnsavedChanges
-              ? 'bg-gradient-to-r from-primary to-[#A29BFE] text-white hover:-translate-y-0.5 hover:border-primary shadow-md animate-pulse'
-              : 'bg-primary text-white hover:-translate-y-0.5 hover:border-primary shadow-md'
+              ? 'bg-grove text-white hover:bg-grove-dark hover:-translate-y-0.5 ring-2 ring-grove/30'
+              : 'bg-grove text-white hover:bg-grove-dark hover:-translate-y-0.5'
           }`}
         >
           {saving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Save Changes'}
@@ -897,13 +896,13 @@ function AIField({ label, icon, color, children }: {
   children: React.ReactNode
 }) {
   const colorMap: Record<string, string> = {
-    primary: 'border-primary/30 bg-primary/5',
+    primary: 'border-grove/30 bg-grove/5',
     accent: 'border-accent/30 bg-accent-soft/30',
     yellow: 'border-yellow/40 bg-yellow/5',
     pink: 'border-pink/30 bg-pink-soft/30',
   }
   const iconBg: Record<string, string> = {
-    primary: 'bg-primary/10 text-primary',
+    primary: 'bg-grove/10 text-grove',
     accent: 'bg-accent/10 text-accent',
     yellow: 'bg-yellow/20 text-orange',
     pink: 'bg-pink/10 text-pink',
@@ -915,7 +914,7 @@ function AIField({ label, icon, color, children }: {
         <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${iconBg[color] || iconBg.primary}`}>
           {icon}
         </div>
-        <label className="text-sm font-bold text-slate-800">{label}</label>
+        <label className="text-sm font-bold text-earth-dark">{label}</label>
       </div>
       <div className="space-y-2">
         {children}
@@ -1001,8 +1000,8 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
       <div
         className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all ${
           dragActive
-            ? 'border-primary bg-primary/[0.04]'
-            : 'border-[rgba(108,92,231,0.15)] hover:border-primary'
+            ? 'border-grove bg-grove/[0.04]'
+            : 'border-[rgba(108,92,231,0.15)] hover:border-grove'
         } ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -1011,20 +1010,20 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
       >
         <input type="file" accept="image/*" multiple onChange={handleFileInput} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" disabled={uploading} />
         <div className="pointer-events-none">
-          <svg className="w-10 h-10 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-10 h-10 mx-auto mb-2 text-grove/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          <p className="text-slate-800 font-bold text-sm mb-0.5">Drop images here or click to browse</p>
-          <p className="text-xs text-slate-500">PNG, JPG, JPEG up to 10MB each</p>
+          <p className="text-earth-dark font-bold text-sm mb-0.5">Drop images here or click to browse</p>
+          <p className="text-xs text-earth-muted">PNG, JPG, JPEG up to 10MB each</p>
         </div>
       </div>
 
       {selectedFiles.length > 0 && (
-        <div className="bg-primary/[0.04] rounded-xl p-4">
+        <div className="bg-grove/[0.04] rounded-xl p-4">
           <p className="text-sm font-bold mb-2">Selected: {selectedFiles.length} file(s)</p>
           <div className="space-y-1">
             {selectedFiles.map((file, idx) => (
-              <div key={idx} className="flex items-center justify-between text-xs text-slate-500">
+              <div key={idx} className="flex items-center justify-between text-xs text-earth-muted">
                 <span className="truncate">• {file.name}</span>
                 <button type="button" onClick={() => removeSelectedFile(idx)} className="ml-2 text-red-400 hover:text-red-600 shrink-0">✕</button>
               </div>
@@ -1044,8 +1043,8 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
                 onClick={() => toggleTag(tag.id)}
                 className={`px-4 py-2 rounded-full font-bold text-sm transition-all ${
                   selectedTags.includes(tag.id)
-                    ? 'bg-primary text-white'
-                    : 'bg-primary/[0.08] text-slate-800 hover:bg-primary/[0.14]'
+                    ? 'bg-grove text-white'
+                    : 'bg-grove/[0.08] text-earth-dark hover:bg-grove/[0.14]'
                 }`}
               >
                 {tag.emoji} {tag.label}
@@ -1056,7 +1055,7 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
       )}
 
       {selectedFiles.length > 0 && selectedTags.length > 0 && (
-        <button onClick={handleUpload} disabled={uploading} className="w-full bg-primary text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all disabled:opacity-50">
+        <button onClick={handleUpload} disabled={uploading} className="w-full bg-grove text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-all disabled:opacity-50">
           {uploading ? 'Uploading...' : `Upload ${selectedFiles.length} Image(s)`}
         </button>
       )}
@@ -1070,7 +1069,7 @@ function PropertyImagesUpload({ propertyId, images, onUpload, onDelete, uploadin
                 <img src={img.url} alt={img.filename} className="w-full h-32 object-cover rounded-xl" />
                 <div className="flex flex-wrap gap-1 mt-1.5">
                   {img.tags?.map((tag: string) => (
-                    <span key={tag} className="text-[10px] bg-primary/[0.08] text-slate-800 px-1.5 py-0.5 rounded-full">
+                    <span key={tag} className="text-[10px] bg-grove/[0.08] text-earth-dark px-1.5 py-0.5 rounded-full">
                       {availableTags.find(t => t.id === tag)?.emoji} {tag}
                     </span>
                   ))}

@@ -17,11 +17,27 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Nunito', sans-serif;
 }
 
-/* Animated gradient background */
+/* Animated gradient background (legacy — used by dashboard/auth) */
 body {
   background: linear-gradient(135deg, #FFF8F0 0%, #F5EDFF 50%, #FFF8F0 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
+}
+
+/* Override for new marketing pages */
+body:has(.earth-page) {
+  background: #ffffff;
+  animation: none;
+  color: #2C2C2C;
+}
+
+body:has(.earth-page) h1,
+body:has(.earth-page) h2,
+body:has(.earth-page) h3,
+body:has(.earth-page) h4,
+body:has(.earth-page) h5,
+body:has(.earth-page) h6 {
+  font-family: 'DM Serif Display', Georgia, serif;
 }
 
 @keyframes gradientShift {
@@ -171,10 +187,10 @@ body {
   50% { box-shadow: 0 0 40px rgba(108, 92, 231, 0.6), 0 0 60px rgba(108, 92, 231, 0.3); }
 }
 
-/* Button hover lift with shadow */
-button:hover, a.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(108, 92, 231, 0.4);
+/* Button hover lift with shadow (legacy pages only) */
+.earth-page button:hover,
+.earth-page a.btn:hover {
+  /* disabled for earth-page */
 }
 
 /* Scroll reveal */
@@ -315,76 +331,122 @@ nav.saas-scrolled {
   transform: rotate(180deg);
 }
 
-/* === Phone Mockup (WhatsApp style) === */
+/* === Phone Mockup — Realistic iPhone 15 (Orange/Copper frame) === */
 .mockup-phone {
   position: relative;
-  width: 230px;
-  height: 460px;
-  border-radius: 34px;
-  background: #1c1c22;
-  box-shadow: 0 0 0 1px #2a2a30, 0 0 0 2px #111115,
-    0 30px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06);
+  width: 252px;
+  height: 526px;
+  border-radius: 48px;
+  /* Aluminum frame: multi-stop gradient to simulate chamfered edges */
+  background: linear-gradient(135deg,
+    #e08050 0%,
+    #c96838 12%,
+    #a84e28 30%,
+    #c07040 55%,
+    #b86030 72%,
+    #d88050 88%,
+    #e89060 100%
+  );
+  box-shadow:
+    /* chamfer top-left highlight */
+    inset 2px 2px 0 rgba(255,210,170,0.35),
+    /* chamfer bottom-right shadow */
+    inset -1px -1px 0 rgba(0,0,0,0.4),
+    /* outer edge */
+    0 0 0 0.5px rgba(255,160,100,0.3),
+    /* deep drop shadow */
+    0 50px 120px rgba(0,0,0,0.55),
+    0 15px 35px rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.2);
   z-index: 1;
 }
+/* Silent switch (top-left button) */
 .mockup-phone::before {
   content: '';
   position: absolute;
-  left: -3px;
-  top: 110px;
-  width: 3px;
-  height: 36px;
-  background: #2a2a30;
+  left: -2.5px;
+  top: 108px;
+  width: 2.5px;
+  height: 28px;
+  background: linear-gradient(to right,
+    #7a3818 0%,
+    #a05030 40%,
+    #9a4a28 100%
+  );
   border-radius: 2px 0 0 2px;
-  box-shadow: 0 50px 0 #2a2a30, 0 88px 0 #2a2a30;
+  box-shadow:
+    /* volume up */
+    0 44px 0 0 #8a4020,
+    /* volume down */
+    0 80px 0 0 #8a4020;
 }
+/* Power button */
 .mockup-phone::after {
   content: '';
   position: absolute;
-  right: -3px;
-  top: 150px;
-  width: 3px;
-  height: 60px;
-  background: #2a2a30;
+  right: -2.5px;
+  top: 148px;
+  width: 2.5px;
+  height: 66px;
+  background: linear-gradient(to left,
+    #7a3818 0%,
+    #a05030 40%,
+    #9a4a28 100%
+  );
   border-radius: 0 2px 2px 0;
 }
 .mockup-screen {
   position: absolute;
-  inset: 8px;
-  border-radius: 26px;
+  /* Very thin bezel — almost edge to edge */
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border-radius: 45px;
   background: #0b141a;
   overflow: hidden;
   display: flex;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   flex-direction: column;
+  /* Subtle inner reflection along top edge */
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.04);
 }
+/* Dynamic Island — precise pill shape */
 .mockup-island {
   position: absolute;
-  top: 12px;
+  top: 11px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100px;
-  height: 30px;
+  width: 86px;
+  height: 26px;
   background: #000;
-  border-radius: 20px;
+  border-radius: 14px;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 8px;
+  padding-right: 6px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.03);
 }
 .mockup-island-cam {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #111;
-  border: 1.5px solid #222;
+  background: #0a0a0a;
   position: relative;
+  box-shadow:
+    inset 0 0 0 1px #181818,
+    inset 0 0 4px rgba(30,100,220,0.4);
 }
 .mockup-island-cam::after {
   content: '';
   position: absolute;
-  inset: 2px;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: #1a3a4a;
+  background: radial-gradient(circle at 30% 30%, #1a4a6a, #0a1a2a);
 }
 /* Status bar — WhatsApp dark teal */
 .mockup-status-bar {
@@ -465,6 +527,7 @@ nav.saas-scrolled {
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-overflow: ellipsis;
 }
 .mockup-wa-header-info p {
@@ -531,6 +594,7 @@ nav.saas-scrolled {
   line-height: 1.45;
   font-weight: 400;
   position: relative;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 .mockup-guest-bubble {
   background: #005c4b;
@@ -743,11 +807,11 @@ nav.saas-scrolled {
 
 @media (max-width: 640px) {
   .mockup-phone {
-    width: 200px;
-    height: 400px;
-    border-radius: 30px;
+    width: 210px;
+    height: 438px;
+    border-radius: 42px;
   }
   .mockup-screen {
-    border-radius: 22px;
+    border-radius: 40px;
   }
 }

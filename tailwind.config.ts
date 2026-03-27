@@ -20,6 +20,21 @@ const config: Config = {
         'saas-success': '#10B981',
         'primary-dark': '#5A4BD1',
 
+        // === NEW: Earthy/olive redesign palette ===
+        'grove': {
+          DEFAULT: '#4A5D23',
+          dark: '#3B4A1C',
+          light: '#6B7F3A',
+          lighter: '#8FA855',
+          subtle: '#F4F5EF',
+          bg: '#FAFAF7',
+        },
+        'earth-dark': '#1A1A1A',
+        'earth-text': '#2C2C2C',
+        'earth-muted': '#6B6B6B',
+        'earth-light': '#9B9B9B',
+        'earth-border': '#E5E5E0',
+
         // === LEGACY: Keep all old colors for dashboard/auth/admin pages ===
         bg: '#FFF8F0',
         'bg-alt': '#F0F4FF',
@@ -44,6 +59,7 @@ const config: Config = {
         inter: ['Inter', 'system-ui', 'sans-serif'],
         nunito: ['Nunito', 'sans-serif'],
         quicksand: ['Quicksand', 'sans-serif'],
+        serif: ['DM Serif Display', 'Georgia', 'serif'],
       },
       keyframes: {
         // === NEW: Subtle professional animations ===

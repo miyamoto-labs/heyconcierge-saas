@@ -7,31 +7,31 @@ interface LegalPageProps {
 
 export default function LegalPage({ content }: LegalPageProps) {
   return (
-    <article style={{ fontFamily: "'Quicksand', sans-serif" }}>
+    <article style={{ fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif" }}>
       <ReactMarkdown
         components={{
           h1: ({ children }) => (
-            <h1 style={{ fontFamily: "'Nunito', sans-serif", color: '#2D2B55', fontSize: '2.2rem', fontWeight: 900, marginBottom: '0.5rem', lineHeight: 1.2 }}>
+            <h1 style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: '#1A1A1A', fontSize: '2.5rem', fontWeight: 400, marginBottom: '0.5rem', lineHeight: 1.15 }}>
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 style={{ fontFamily: "'Nunito', sans-serif", color: '#2D2B55', fontSize: '1.25rem', fontWeight: 800, marginTop: '3rem', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid rgba(108,92,231,0.12)' }}>
+            <h2 style={{ fontFamily: "Inter, sans-serif", color: '#1A1A1A', fontSize: '1.1rem', fontWeight: 600, marginTop: '3rem', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid #E5E5E0' }}>
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 style={{ fontFamily: "'Nunito', sans-serif", color: '#2D2B55', fontSize: '1rem', fontWeight: 700, marginTop: '1.5rem', marginBottom: '0.5rem' }}>
+            <h3 style={{ fontFamily: "Inter, sans-serif", color: '#2C2C2C', fontSize: '0.95rem', fontWeight: 600, marginTop: '1.5rem', marginBottom: '0.5rem' }}>
               {children}
             </h3>
           ),
           p: ({ children }) => (
-            <p style={{ color: 'rgba(45,43,85,0.75)', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.95rem' }}>
+            <p style={{ color: '#6B6B6B', lineHeight: 1.8, marginBottom: '1rem', fontSize: '0.95rem' }}>
               {children}
             </p>
           ),
           li: ({ children }) => (
-            <li style={{ color: 'rgba(45,43,85,0.75)', lineHeight: 1.8, marginBottom: '0.3rem', fontSize: '0.95rem' }}>
+            <li style={{ color: '#6B6B6B', lineHeight: 1.8, marginBottom: '0.3rem', fontSize: '0.95rem' }}>
               {children}
             </li>
           ),
@@ -46,20 +46,20 @@ export default function LegalPage({ content }: LegalPageProps) {
             </ol>
           ),
           a: ({ href, children }) => (
-            <a href={href} style={{ color: '#6C5CE7', textDecoration: 'none' }} onMouseOver={e => (e.currentTarget.style.textDecoration = 'underline')} onMouseOut={e => (e.currentTarget.style.textDecoration = 'none')}>
+            <a href={href} style={{ color: '#4A5D23', textDecoration: 'none' }} onMouseOver={e => (e.currentTarget.style.textDecoration = 'underline')} onMouseOut={e => (e.currentTarget.style.textDecoration = 'none')}>
               {children}
             </a>
           ),
           strong: ({ children }) => (
-            <strong style={{ color: '#2D2B55', fontWeight: 700 }}>{children}</strong>
+            <strong style={{ color: '#2C2C2C', fontWeight: 600 }}>{children}</strong>
           ),
           blockquote: ({ children }) => (
-            <blockquote style={{ borderLeft: '3px solid #6C5CE7', paddingLeft: '1.25rem', margin: '1.5rem 0', color: 'rgba(45,43,85,0.6)', fontStyle: 'italic', background: 'rgba(108,92,231,0.04)', borderRadius: '0 8px 8px 0', padding: '1rem 1.25rem' }}>
+            <blockquote style={{ borderLeft: '3px solid #4A5D23', paddingLeft: '1.25rem', margin: '1.5rem 0', color: '#6B6B6B', fontStyle: 'italic', background: '#F4F5EF', borderRadius: '0 8px 8px 0', padding: '1rem 1.25rem' }}>
               {children}
             </blockquote>
           ),
           hr: () => (
-            <hr style={{ border: 'none', borderTop: '1px solid rgba(108,92,231,0.12)', margin: '2.5rem 0' }} />
+            <hr style={{ border: 'none', borderTop: '1px solid #E5E5E0', margin: '2.5rem 0' }} />
           ),
           table: ({ children }) => (
             <div style={{ overflowX: 'auto', marginBottom: '1.5rem' }}>
@@ -69,17 +69,17 @@ export default function LegalPage({ content }: LegalPageProps) {
             </div>
           ),
           th: ({ children }) => (
-            <th style={{ textAlign: 'left', padding: '0.6rem 1rem', background: 'rgba(108,92,231,0.08)', color: '#2D2B55', fontWeight: 700, borderBottom: '2px solid rgba(108,92,231,0.15)' }}>
+            <th style={{ textAlign: 'left', padding: '0.6rem 1rem', background: '#F4F5EF', color: '#2C2C2C', fontWeight: 600, borderBottom: '2px solid #E5E5E0' }}>
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td style={{ padding: '0.6rem 1rem', color: 'rgba(45,43,85,0.75)', borderBottom: '1px solid rgba(108,92,231,0.08)', verticalAlign: 'top' }}>
+            <td style={{ padding: '0.6rem 1rem', color: '#6B6B6B', borderBottom: '1px solid #E5E5E0', verticalAlign: 'top' }}>
               {children}
             </td>
           ),
           code: ({ children }) => (
-            <code style={{ background: 'rgba(108,92,231,0.08)', color: '#6C5CE7', padding: '0.15em 0.4em', borderRadius: '4px', fontSize: '0.875em', fontFamily: 'monospace' }}>
+            <code style={{ background: '#F4F5EF', color: '#4A5D23', padding: '0.15em 0.4em', borderRadius: '4px', fontSize: '0.875em', fontFamily: 'monospace' }}>
               {children}
             </code>
           ),

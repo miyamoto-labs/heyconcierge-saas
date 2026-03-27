@@ -65,9 +65,11 @@ const STEPS = ['Account', 'Property', 'Knowledge', 'Test', 'Finish']
 
 export default function SignupPageWrapper() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center"><div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div></div>}>
-      <SignupPage />
-    </Suspense>
+    <div className="earth-page" style={{ background: '#FAFAF7' }}>
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin w-8 h-8 border-2 border-grove border-t-transparent rounded-full"></div></div>}>
+        <SignupPage />
+      </Suspense>
+    </div>
   )
 }
 
@@ -559,8 +561,8 @@ function SignupPage() {
 
   if (initializing) {
     return (
-      <div className="min-h-screen bg-[#FDFCFA] flex items-center justify-center">
-        <div className="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
+        <div className="animate-spin w-12 h-12 border-4 border-grove border-t-transparent rounded-full"></div>
       </div>
     )
   }
@@ -568,12 +570,12 @@ function SignupPage() {
   // Step 6: Welcome page (outside progress bar)
   if (step === 6) {
     return (
-      <div className="min-h-screen bg-[#FDFCFA] flex flex-col">
-        <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+      <div className="min-h-screen bg-transparent flex flex-col">
+        <header className="px-8 py-4 border-b border-earth-border bg-white/90 backdrop-blur-[12px] sticky top-0 z-30">
           <div className="max-w-[800px] mx-auto flex items-center justify-center">
-            <Link href="/dashboard" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
-              <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
+            <Link href="/dashboard" className="text-xl font-extrabold text-earth-dark tracking-tight no-underline flex items-center gap-2">
+              <div className="w-8 h-8 bg-grove rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+              <span className="font-serif text-earth-dark">HeyConcierge</span>
             </Link>
           </div>
         </header>
@@ -581,24 +583,24 @@ function SignupPage() {
         <div className="max-w-[600px] mx-auto w-full px-8 flex-1 pb-12 pt-12">
           <div className="animate-slide-up text-center">
             <div className="text-6xl mb-4">&#127881;</div>
-            <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Welcome aboard!</h2>
-            <p className="text-slate-500 mb-2">Your 30-day free trial has started.</p>
-            <p className="text-slate-500 mb-8">Place this QR code in your property &mdash; guests scan it to open Telegram and start chatting with your AI concierge.</p>
+            <h2 className="text-3xl font-extrabold text-earth-dark tracking-tight mb-2">Welcome aboard!</h2>
+            <p className="text-earth-muted mb-2">Your 30-day free trial has started.</p>
+            <p className="text-earth-muted mb-8">Place this QR code in your property &mdash; guests scan it to open Telegram and start chatting with your AI concierge.</p>
 
             {qrDataUrl && (
-              <div className="inline-block bg-white rounded-3xl p-8 border border-slate-200 shadow-sm mb-8">
+              <div className="inline-block bg-white rounded-3xl p-8 border border-earth-border shadow-sm mb-8">
                 <img src={qrDataUrl} alt="QR Code" className="w-[250px] h-[250px] mx-auto" />
-                <p className="mt-4 font-bold text-slate-800">{form.propertyName}</p>
-                <p className="text-sm text-slate-500">Scan to chat with HeyConcierge</p>
+                <p className="mt-4 font-bold text-earth-dark">{form.propertyName}</p>
+                <p className="text-sm text-earth-muted">Scan to chat with HeyConcierge</p>
               </div>
             )}
 
             <div className="flex gap-4 justify-center flex-wrap">
-              <Link href="/dashboard" className="inline-flex items-center gap-2 bg-primary text-white px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
+              <Link href="/dashboard" className="inline-flex items-center gap-2 bg-grove text-white px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]">
                 Go to Dashboard &#8594;
               </Link>
               {qrDataUrl && (
-                <a href={qrDataUrl} download={`heyconcierge-qr-${form.propertyName}.png`} className="inline-flex items-center gap-2 border-2 border-slate-200 text-slate-800 px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5">
+                <a href={qrDataUrl} download={`heyconcierge-qr-${form.propertyName}.png`} className="inline-flex items-center gap-2 border-2 border-earth-border text-earth-dark px-8 py-3 rounded-full font-semibold no-underline transition-all hover:-translate-y-0.5">
                   Download QR Code
                 </a>
               )}
@@ -610,15 +612,15 @@ function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFCFA] flex flex-col">
+    <div className="min-h-screen bg-transparent flex flex-col">
       {/* Header */}
-      <header className="px-8 py-4 border-b border-slate-200 bg-white/80 backdrop-blur-[12px] sticky top-0 z-30">
+      <header className="px-8 py-4 border-b border-earth-border bg-white/90 backdrop-blur-[12px] sticky top-0 z-30">
         <div className="max-w-[800px] mx-auto flex items-center justify-between">
-          <Link href="/" className="text-xl font-extrabold text-slate-800 tracking-tight no-underline flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
-            <span className="text-slate-800">Hey<span className="text-primary">Concierge</span></span>
+          <Link href="/" className="text-xl font-extrabold text-earth-dark tracking-tight no-underline flex items-center gap-2">
+            <div className="w-8 h-8 bg-grove rounded-lg flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4c-1 0-1.5 1-1.5 2v1h3V6c0-1-.5-2-1.5-2z" /><path d="M7 14c0-5 4-9 9-9s9 4 9 9v1H7v-1z" /><rect x="5" y="17" width="22" height="4" rx="1.5" /></svg></div>
+            <span className="font-serif text-earth-dark">HeyConcierge</span>
           </Link>
-          <span className="text-sm text-slate-500 font-semibold">
+          <span className="text-sm text-earth-muted font-semibold">
             Step {step} of {STEPS.length}
           </span>
         </div>
@@ -629,13 +631,13 @@ function SignupPage() {
         <div className="flex items-center gap-2 mb-2">
           {STEPS.map((_, i) => (
             <div key={i} className="flex-1">
-              <div className={`h-2 rounded-full transition-all ${i + 1 <= step ? 'bg-primary' : 'bg-slate-200'}`} />
+              <div className={`h-2 rounded-full transition-all ${i + 1 <= step ? 'bg-grove' : 'bg-slate-200'}`} />
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-xs text-slate-500 font-semibold mb-8">
+        <div className="flex justify-between text-xs text-earth-muted font-semibold mb-8">
           {STEPS.map((s, i) => (
-            <span key={i} className={i + 1 <= step ? 'text-primary' : ''}>{s}</span>
+            <span key={i} className={i + 1 <= step ? 'text-grove' : ''}>{s}</span>
           ))}
         </div>
       </div>
@@ -662,14 +664,14 @@ function SignupPage() {
               <Input label="Phone (optional)" value={account.phone} onChange={v => updateAccount('phone', v)} placeholder="+47 555 123 456" type="tel" />
 
               <div>
-                <label className="block text-sm font-bold text-slate-800 mb-2">Account Type</label>
+                <label className="block text-sm font-bold text-earth-dark mb-2">Account Type</label>
                 <div className="flex gap-3">
                   <button type="button" onClick={() => updateAccount('isCompany', false)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${!account.isCompany ? 'bg-primary text-white shadow-md' : 'bg-white text-slate-500 border-2 border-slate-200'}`}>
+                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${!account.isCompany ? 'bg-grove text-white shadow-md' : 'bg-white text-earth-muted border-2 border-earth-border'}`}>
                     Private
                   </button>
                   <button type="button" onClick={() => updateAccount('isCompany', true)}
-                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${account.isCompany ? 'bg-primary text-white shadow-md' : 'bg-white text-slate-500 border-2 border-slate-200'}`}>
+                    className={`flex-1 px-4 py-3 rounded-xl font-bold text-sm transition-all ${account.isCompany ? 'bg-grove text-white shadow-md' : 'bg-white text-earth-muted border-2 border-earth-border'}`}>
                     Company
                   </button>
                 </div>
@@ -683,11 +685,11 @@ function SignupPage() {
             </div>
 
             <div className="flex justify-between mt-10">
-              <Link href="/" className="text-slate-500 font-bold no-underline hover:text-primary transition-colors">&#8592; Home</Link>
+              <Link href="/" className="text-earth-muted font-bold no-underline hover:text-grove transition-colors">&#8592; Home</Link>
               <button
                 onClick={handleCreateOrg}
                 disabled={!canNextStep1() || loading}
-                className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNextStep1() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
+                className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNextStep1() ? 'bg-grove hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
               >
                 {loading ? 'Setting up...' : 'Next \u2192'}
               </button>
@@ -723,23 +725,23 @@ function SignupPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-800 mb-1.5">Country *</label>
+                <label className="block text-sm font-bold text-earth-dark mb-1.5">Country *</label>
                 <select value={form.propertyCountry} onChange={e => update('propertyCountry', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium focus:border-primary focus:outline-none transition-colors">
+                  className="w-full px-4 py-3 rounded-xl border-2 border-earth-border bg-white text-earth-dark font-medium focus:border-grove focus:outline-none transition-colors">
                   {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.flag} {c.name}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-800 mb-1.5">Property Type</label>
+                <label className="block text-sm font-bold text-earth-dark mb-1.5">Property Type</label>
                 <select value={form.propertyType} onChange={e => update('propertyType', e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium focus:border-primary focus:outline-none transition-colors">
+                  className="w-full px-4 py-3 rounded-xl border-2 border-earth-border bg-white text-earth-dark font-medium focus:border-grove focus:outline-none transition-colors">
                   {PROPERTY_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-800 mb-1.5">Property Photos (Optional)</label>
+                <label className="block text-sm font-bold text-earth-dark mb-1.5">Property Photos (Optional)</label>
                 <PhotoUpload
                   onPhotosUploaded={(urls) => update('propertyImages', urls)}
                   existingPhotos={form.propertyImages}
@@ -749,11 +751,11 @@ function SignupPage() {
             </div>
 
             <div className="flex justify-between mt-10">
-              <button onClick={() => setStep(1)} className="text-slate-500 font-bold hover:text-primary transition-colors">&#8592; Back</button>
+              <button onClick={() => setStep(1)} className="text-earth-muted font-bold hover:text-grove transition-colors">&#8592; Back</button>
               <button
                 onClick={() => setStep(3)}
                 disabled={!canNextStep2()}
-                className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNextStep2() ? 'bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
+                className={`px-8 py-3 rounded-full font-semibold text-white transition-all ${canNextStep2() ? 'bg-grove hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)]' : 'bg-slate-300 cursor-not-allowed'}`}
               >
                 Next &#8594;
               </button>
@@ -766,27 +768,27 @@ function SignupPage() {
           <div className="animate-slide-up">
             <div className="flex items-start justify-between mb-8">
               <div>
-                <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">Guest Knowledge</h2>
-                <p className="text-slate-500">What should HeyConcierge know about your property?</p>
+                <h2 className="text-3xl font-extrabold text-earth-dark tracking-tight mb-2">Guest Knowledge</h2>
+                <p className="text-earth-muted">What should HeyConcierge know about your property?</p>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3 shrink-0">
+                <div className="flex items-center gap-3 bg-white rounded-xl border border-earth-border px-5 py-3 shrink-0">
                   <div className="relative w-11 h-11">
                     <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#6C5CE7" strokeWidth="3" strokeDasharray={`${(3 / STEPS.length) * 100}, 100`} strokeLinecap="round" />
                     </svg>
-                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">3/{STEPS.length}</span>
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-earth-dark">3/{STEPS.length}</span>
                   </div>
                   <div className="text-xs">
-                    <p className="font-bold text-slate-800">Step 3: Knowledge</p>
-                    <p className="text-slate-500">{STEPS.slice(3).join(' \u2192 ')}</p>
+                    <p className="font-bold text-earth-dark">Step 3: Knowledge</p>
+                    <p className="text-earth-muted">{STEPS.slice(3).join(' \u2192 ')}</p>
                   </div>
                 </div>
                 {hasGuestKnowledge && (
                   <button
                     onClick={() => setShowTestChat(true)}
-                    className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:border-primary shadow-md transition-all group"
+                    className="flex items-center gap-2 bg-gradient-to-r from-primary to-[#A29BFE] text-white px-5 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 hover:border-grove shadow-md transition-all group"
                   >
                     <AnimatedMascot mood="happy" size={24} />
                     <span>Test Concierge</span>
@@ -797,15 +799,15 @@ function SignupPage() {
             </div>
             <div className="space-y-5">
               {/* Calendar Sync */}
-              <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-4">
-                <p className="text-sm font-bold text-slate-800 mb-2">Calendar Sync (Optional)</p>
+              <div className="bg-slate-50 border-2 border-earth-border rounded-xl p-4">
+                <p className="text-sm font-bold text-earth-dark mb-2">Calendar Sync (Optional)</p>
                 <Input
                   label="iCal URL"
                   value={form.icalUrl}
                   onChange={v => update('icalUrl', v)}
                   placeholder="https://www.airbnb.com/calendar/ical/..."
                 />
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="text-xs text-earth-muted mt-2">
                   Airbnb: Calendar &gt; Export | Booking.com: Extranet &gt; Calendar &gt; Export
                 </p>
               </div>
@@ -813,10 +815,10 @@ function SignupPage() {
               {/* PDF Upload Zone */}
               <div
                 className={`relative rounded-2xl border-2 border-dashed p-5 transition-all ${
-                  form.pdfDragActive ? 'border-primary bg-primary/[0.04]'
+                  form.pdfDragActive ? 'border-grove bg-grove/[0.04]'
                   : form.pdfExtractError ? 'border-red-300 bg-red-50'
                   : form.pdfExtractedFile ? 'border-green-300 bg-green-50'
-                  : 'border-[rgba(108,92,231,0.2)] hover:border-primary/50 bg-[rgba(108,92,231,0.02)]'
+                  : 'border-[rgba(108,92,231,0.2)] hover:border-grove/50 bg-[rgba(108,92,231,0.02)]'
                 } ${form.pdfExtracting ? 'opacity-60 pointer-events-none' : ''}`}
                 onDragEnter={(e) => { e.preventDefault(); update('pdfDragActive', true); }}
                 onDragLeave={(e) => { e.preventDefault(); update('pdfDragActive', false); }}
@@ -842,8 +844,8 @@ function SignupPage() {
                 />
                 {form.pdfExtracting ? (
                   <div className="flex items-center justify-center gap-3 py-2">
-                    <div className="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
-                    <span className="text-slate-800 font-bold text-sm">Reading your document and filling in the fields below...</span>
+                    <div className="animate-spin w-5 h-5 border-2 border-grove border-t-transparent rounded-full"></div>
+                    <span className="text-earth-dark font-bold text-sm">Reading your document and filling in the fields below...</span>
                   </div>
                 ) : form.pdfExtractError ? (
                   <div className="flex items-center gap-3 py-1">
@@ -873,9 +875,9 @@ function SignupPage() {
                   </div>
                 ) : (
                   <div className="text-center py-2">
-                    <svg className="w-8 h-8 mx-auto mb-2 text-primary/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
-                    <p className="text-slate-800 font-bold text-sm">Drop your property guide here (PDF or Word)</p>
-                    <p className="text-xs text-slate-500 mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
+                    <svg className="w-8 h-8 mx-auto mb-2 text-grove/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <p className="text-earth-dark font-bold text-sm">Drop your property guide here (PDF or Word)</p>
+                    <p className="text-xs text-earth-muted mt-0.5">AI will auto-fill fields and extract images with smart tagging</p>
                   </div>
                 )}
               </div>
@@ -884,9 +886,9 @@ function SignupPage() {
               <button
                 type="button"
                 onClick={() => update('showManualFields', !form.showManualFields)}
-                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors"
+                className="w-full flex items-center justify-center gap-2 text-sm font-bold text-earth-muted hover:text-earth-dark transition-colors"
               >
-                <div className="flex-1 h-px bg-primary/[0.08]"></div>
+                <div className="flex-1 h-px bg-grove/[0.08]"></div>
                 <span className="flex items-center gap-2">
                   {form.showManualFields ? (
                     <>
@@ -900,7 +902,7 @@ function SignupPage() {
                     </>
                   )}
                 </span>
-                <div className="flex-1 h-px bg-primary/[0.08]"></div>
+                <div className="flex-1 h-px bg-grove/[0.08]"></div>
               </button>
 
               {/* Manual fields (collapsible) */}
@@ -931,8 +933,8 @@ function SignupPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">Property Images (Optional)</p>
-                    <p className="text-xs text-slate-500">Photos sent to guests when they ask about check-in, parking, etc.</p>
+                    <p className="text-sm font-bold text-earth-dark">Property Images (Optional)</p>
+                    <p className="text-xs text-earth-muted">Photos sent to guests when they ask about check-in, parking, etc.</p>
                   </div>
                 </div>
                 <PendingImageUpload
@@ -962,11 +964,11 @@ function SignupPage() {
             </div>
 
             <div className="flex justify-between mt-10">
-              <button onClick={() => setStep(2)} className="text-slate-500 font-bold hover:text-primary transition-colors">&#8592; Back</button>
+              <button onClick={() => setStep(2)} className="text-earth-muted font-bold hover:text-grove transition-colors">&#8592; Back</button>
               <button
                 onClick={handleCreateProperty}
                 disabled={loading}
-                className="px-8 py-3 rounded-full font-semibold text-white bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] transition-all disabled:opacity-50"
+                className="px-8 py-3 rounded-full font-semibold text-white bg-grove hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] transition-all disabled:opacity-50"
               >
                 {loading ? 'Creating...' : 'Create Property'}
               </button>
@@ -998,12 +1000,12 @@ function SignupPage() {
               </div>
             )}
 
-            <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+            <div className="bg-white rounded-2xl border border-earth-border p-8 text-center">
+              <div className="w-16 h-16 bg-grove/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
               </div>
-              <h3 className="text-lg font-extrabold text-slate-800 mb-2">Chat with your AI concierge</h3>
-              <p className="text-sm text-slate-500 mb-6">Ask anything a guest would ask &mdash; WiFi password, check-in steps, restaurant tips, house rules.</p>
+              <h3 className="text-lg font-extrabold text-earth-dark mb-2">Chat with your AI concierge</h3>
+              <p className="text-sm text-earth-muted mb-6">Ask anything a guest would ask &mdash; WiFi password, check-in steps, restaurant tips, house rules.</p>
               <button
                 onClick={() => setShowTestChat(true)}
                 className="bg-gradient-to-r from-primary to-[#A29BFE] text-white px-8 py-4 rounded-full font-semibold text-lg hover:-translate-y-0.5 transition-all shadow-[0_4px_15px_rgba(108,92,231,0.3)]"
@@ -1013,10 +1015,10 @@ function SignupPage() {
             </div>
 
             <div className="flex justify-between mt-10">
-              <button onClick={() => setStep(3)} className="text-slate-500 font-bold hover:text-primary transition-colors">&#8592; Back</button>
+              <button onClick={() => setStep(3)} className="text-earth-muted font-bold hover:text-grove transition-colors">&#8592; Back</button>
               <button
                 onClick={() => setStep(5)}
-                className="px-8 py-3 rounded-full font-semibold text-white bg-primary hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] transition-all"
+                className="px-8 py-3 rounded-full font-semibold text-white bg-grove hover:-translate-y-0.5 shadow-[0_4px_15px_rgba(108,92,231,0.3)] transition-all"
               >
                 Next &#8594;
               </button>
@@ -1037,19 +1039,19 @@ function SignupPage() {
                   disabled={creatingCheckout}
                   className={`w-full text-left rounded-2xl p-6 border-2 transition-all bg-white hover:-translate-y-0.5 ${
                     selectedPlan === p.code
-                      ? 'border-primary shadow-md'
-                      : 'border-slate-200 shadow-sm'
+                      ? 'border-grove shadow-md'
+                      : 'border-earth-border shadow-sm'
                   } ${creatingCheckout ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <span className="font-semibold text-lg text-slate-800">{p.name}</span>
-                      {p.popular && <span className="bg-primary text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
+                      <span className="font-semibold text-lg text-earth-dark">{p.name}</span>
+                      {p.popular && <span className="bg-grove text-white text-[0.65rem] font-bold px-2 py-0.5 rounded-full">POPULAR</span>}
                     </div>
                     <div className="flex items-center gap-3">
-                      <div className="font-bold text-slate-800 text-xl">{p.price}</div>
+                      <div className="font-bold text-earth-dark text-xl">{p.price}</div>
                       {selectedPlan === p.code && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <div className="w-6 h-6 rounded-full bg-grove flex items-center justify-center">
                           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                         </div>
                       )}
@@ -1057,7 +1059,7 @@ function SignupPage() {
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {p.features.map((f, i) => (
-                      <span key={i} className="text-xs text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full">{'\u2713'} {f}</span>
+                      <span key={i} className="text-xs text-earth-muted bg-slate-50 px-2.5 py-1 rounded-full">{'\u2713'} {f}</span>
                     ))}
                   </div>
                 </button>
@@ -1065,14 +1067,14 @@ function SignupPage() {
             </div>
 
             {selectedPlan && (
-              <div className="mt-6 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent rounded-2xl p-5 border-2 border-slate-200">
+              <div className="mt-6 bg-gradient-to-r from-[rgba(108,92,231,0.06)] to-transparent rounded-2xl p-5 border-2 border-earth-border">
                 <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                  <div className="w-10 h-10 rounded-xl bg-grove/10 flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5 text-grove" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-bold text-slate-800 text-sm mb-1">30-day free trial included</p>
-                    <p className="text-xs text-slate-500">You won&apos;t be charged until your trial ends. Cancel anytime.</p>
+                    <p className="font-bold text-earth-dark text-sm mb-1">30-day free trial included</p>
+                    <p className="text-xs text-earth-muted">You won&apos;t be charged until your trial ends. Cancel anytime.</p>
                   </div>
                 </div>
                 <button
@@ -1092,12 +1094,12 @@ function SignupPage() {
                     </>
                   )}
                 </button>
-                <p className="text-xs text-center text-slate-500 mt-3">Secure payment powered by Stripe</p>
+                <p className="text-xs text-center text-earth-muted mt-3">Secure payment powered by Stripe</p>
               </div>
             )}
 
             <div className="flex justify-start mt-10">
-              <button onClick={() => setStep(4)} className="text-slate-500 font-bold hover:text-primary transition-colors">&#8592; Back</button>
+              <button onClick={() => setStep(4)} className="text-earth-muted font-bold hover:text-grove transition-colors">&#8592; Back</button>
             </div>
           </div>
         )}
@@ -1134,20 +1136,20 @@ function StepHeader({ step, totalSteps, title, subtitle, stepLabel, remaining }:
   return (
     <div className="flex items-start justify-between mb-8">
       <div>
-        <h2 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-2">{title}</h2>
-        <p className="text-slate-500">{subtitle}</p>
+        <h2 className="text-3xl font-extrabold text-earth-dark tracking-tight mb-2">{title}</h2>
+        <p className="text-earth-muted">{subtitle}</p>
       </div>
-      <div className="flex items-center gap-3 bg-white rounded-xl border border-slate-200 px-5 py-3 shrink-0 ml-4">
+      <div className="flex items-center gap-3 bg-white rounded-xl border border-earth-border px-5 py-3 shrink-0 ml-4">
         <div className="relative w-11 h-11">
           <svg className="w-11 h-11 -rotate-90" viewBox="0 0 36 36">
             <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#E8E4F0" strokeWidth="3" />
             <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke={step === totalSteps ? '#55EFC4' : '#6C5CE7'} strokeWidth="3" strokeDasharray={`${(step / totalSteps) * 100}, 100`} strokeLinecap="round" />
           </svg>
-          <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-800">{step}/{totalSteps}</span>
+          <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-earth-dark">{step}/{totalSteps}</span>
         </div>
         <div className="text-xs">
-          <p className="font-bold text-slate-800">Step {step}: {stepLabel}</p>
-          {remaining.length > 0 && <p className="text-slate-500">{remaining.join(' \u2192 ')}</p>}
+          <p className="font-bold text-earth-dark">Step {step}: {stepLabel}</p>
+          {remaining.length > 0 && <p className="text-earth-muted">{remaining.join(' \u2192 ')}</p>}
         </div>
       </div>
     </div>
@@ -1159,9 +1161,9 @@ function Input({ label, value, onChange, placeholder, type = 'text' }: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-bold text-slate-800 mb-1.5">{label}</label>
+      <label className="block text-sm font-bold text-earth-dark mb-1.5">{label}</label>
       <input type={type} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium placeholder:text-slate-300 focus:border-primary focus:outline-none transition-colors" />
+        className="w-full px-4 py-3 rounded-xl border-2 border-earth-border bg-white text-earth-dark font-medium placeholder:text-slate-300 focus:border-grove focus:outline-none transition-colors" />
     </div>
   )
 }
@@ -1169,7 +1171,7 @@ function Input({ label, value, onChange, placeholder, type = 'text' }: {
 function TextArea({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {
   return (
     <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={3}
-      className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 bg-white text-slate-800 font-medium placeholder:text-slate-300 focus:border-primary focus:outline-none transition-colors resize-none" />
+      className="w-full px-4 py-3 rounded-xl border-2 border-earth-border bg-white text-earth-dark font-medium placeholder:text-slate-300 focus:border-grove focus:outline-none transition-colors resize-none" />
   )
 }
 
@@ -1177,13 +1179,13 @@ function AIField({ label, icon, color, children }: {
   label: string; icon: React.ReactNode; color: string; children: React.ReactNode
 }) {
   const colorMap: Record<string, string> = {
-    primary: 'border-primary/30 bg-primary/5',
+    primary: 'border-grove/30 bg-grove/5',
     accent: 'border-accent/30 bg-accent-soft/30',
     yellow: 'border-yellow/40 bg-yellow/5',
     pink: 'border-pink/30 bg-pink-soft/30',
   }
   const iconBg: Record<string, string> = {
-    primary: 'bg-primary/10 text-primary',
+    primary: 'bg-grove/10 text-grove',
     accent: 'bg-accent/10 text-accent',
     yellow: 'bg-yellow/20 text-orange',
     pink: 'bg-pink/10 text-pink',
@@ -1195,7 +1197,7 @@ function AIField({ label, icon, color, children }: {
         <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${iconBg[color] || iconBg.primary}`}>
           {icon}
         </div>
-        <label className="text-sm font-bold text-slate-800">{label}</label>
+        <label className="text-sm font-bold text-earth-dark">{label}</label>
       </div>
       <div className="space-y-2">
         {children}
@@ -1221,7 +1223,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
 
   return (
     <div className="space-y-3">
-      <div className="relative border-2 border-dashed border-[rgba(108,92,231,0.15)] hover:border-primary rounded-xl p-4 text-center transition-all">
+      <div className="relative border-2 border-dashed border-[rgba(108,92,231,0.15)] hover:border-grove rounded-xl p-4 text-center transition-all">
         <input type="file" accept="image/*" multiple
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
@@ -1229,8 +1231,8 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
             }
           }}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
-        <p className="text-slate-800 font-bold text-sm">Drop images here or click to browse</p>
-        <p className="text-xs text-slate-500">PNG, JPG up to 10MB each</p>
+        <p className="text-earth-dark font-bold text-sm">Drop images here or click to browse</p>
+        <p className="text-xs text-earth-muted">PNG, JPG up to 10MB each</p>
       </div>
 
       {selectedFiles.length > 0 && (
@@ -1238,7 +1240,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
           <div className="bg-white rounded-lg p-3">
             <p className="text-sm font-bold mb-1">Selected: {selectedFiles.length} file(s)</p>
             {selectedFiles.map((file, i) => (
-              <p key={i} className="text-xs text-slate-500 truncate">{'\u2022'} {file.name}</p>
+              <p key={i} className="text-xs text-earth-muted truncate">{'\u2022'} {file.name}</p>
             ))}
           </div>
 
@@ -1251,7 +1253,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
                     prev.includes(tag.id) ? prev.filter(t => t !== tag.id) : [...prev, tag.id]
                   )}
                   className={`px-3 py-1.5 rounded-full font-bold text-xs transition-all ${
-                    selectedTags.includes(tag.id) ? 'bg-primary text-white' : 'bg-primary/[0.08] text-slate-800 hover:bg-primary/[0.14]'
+                    selectedTags.includes(tag.id) ? 'bg-grove text-white' : 'bg-grove/[0.08] text-earth-dark hover:bg-grove/[0.14]'
                   }`}>
                   {tag.emoji} {tag.label}
                 </button>
@@ -1261,7 +1263,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
 
           {selectedTags.length > 0 && (
             <button type="button" onClick={handleAdd}
-              className="w-full bg-primary text-white px-4 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all">
+              className="w-full bg-grove text-white px-4 py-2.5 rounded-full font-bold text-sm hover:-translate-y-0.5 transition-all">
               Add {selectedFiles.length} Image(s)
             </button>
           )}
@@ -1277,7 +1279,7 @@ function PendingImageUpload({ pendingImages, onAdd, onRemove }: {
                 <img src={img.url} alt={`Pending ${i + 1}`} className="w-full h-24 object-cover rounded-lg" />
                 <div className="flex flex-wrap gap-0.5 mt-1">
                   {img.tags.map(tag => (
-                    <span key={tag} className="text-[9px] bg-primary/[0.08] px-1 py-0.5 rounded-full">
+                    <span key={tag} className="text-[9px] bg-grove/[0.08] px-1 py-0.5 rounded-full">
                       {AVAILABLE_TAGS.find(t => t.id === tag)?.emoji} {tag}
                     </span>
                   ))}
