@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 import AnimatedMascot from '@/components/brand/AnimatedMascot'
 import PhotoUpload from '@/components/PhotoUpload'
 import AddressAutocomplete from '@/components/AddressAutocomplete'
@@ -76,8 +75,6 @@ export default function SignupPageWrapper() {
 function SignupPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const supabase = createClient()
-
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [initializing, setInitializing] = useState(true)
@@ -231,64 +228,46 @@ function SignupPage() {
   // Auth check + handle Stripe return
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
+      // Use server-side API to check status (bypasses RLS)
+      const statusRes = await fetch('/api/signup/status')
+      const status = await statusRes.json()
+
+      if (!status.authenticated) {
         router.push('/login')
         return
       }
-      setUserId(user.id)
 
-      if (user.email) setAccount(a => ({ ...a, email: a.email || user.email! }))
-      const oauthName = user.user_metadata?.full_name || user.user_metadata?.name
-      if (oauthName) setAccount(a => ({ ...a, name: a.name || oauthName }))
+      setUserId(status.user.id)
+      if (status.user.email) setAccount(a => ({ ...a, email: a.email || status.user.email }))
+      if (status.user.name) setAccount(a => ({ ...a, name: a.name || status.user.name }))
 
       // Handle Stripe return
       const sessionId = searchParams?.get('session_id')
       if (sessionId) {
-        await completeAfterPayment(user.id, sessionId)
+        await completeAfterPayment(status.user.id, sessionId)
         setInitializing(false)
         return
       }
 
-      // Check existing org
-      const { data: org } = await supabase
-        .from('organizations')
-        .select('id, subscription_status')
-        .or(`auth_user_id.eq.${user.id},email.eq.${user.email}`)
-        .limit(1)
-        .single()
-
-      if (org) {
-        if (org.subscription_status && org.subscription_status !== 'incomplete') {
+      if (status.org) {
+        if (status.org.subscription_status && status.org.subscription_status !== 'incomplete') {
           router.push('/dashboard')
           return
         }
 
-        setOrgId(org.id)
+        setOrgId(status.org.id)
 
-        const { data: props } = await supabase
-          .from('properties')
-          .select('id, name')
-          .eq('org_id', org.id)
-          .limit(1)
+        if (status.property) {
+          setPropertyId(status.property.id)
+          setForm(f => ({ ...f, propertyName: status.property.name || f.propertyName }))
 
-        if (props && props.length > 0) {
-          setPropertyId(props[0].id)
-          setForm(f => ({ ...f, propertyName: props[0].name || f.propertyName }))
-
-          const { data: cfgData } = await supabase
-            .from('property_config_sheets')
-            .select('wifi_password, checkin_instructions, local_tips, house_rules')
-            .eq('property_id', props[0].id)
-            .single()
-
-          if (cfgData) {
+          if (status.config) {
             setForm(f => ({
               ...f,
-              wifi: cfgData.wifi_password || '',
-              checkin: cfgData.checkin_instructions || '',
-              localTips: cfgData.local_tips || '',
-              houseRules: cfgData.house_rules || '',
+              wifi: status.config.wifi_password || '',
+              checkin: status.config.checkin_instructions || '',
+              localTips: status.config.local_tips || '',
+              houseRules: status.config.house_rules || '',
             }))
           }
 
@@ -313,7 +292,7 @@ function SignupPage() {
   }, [step])
 
   // Complete after Stripe payment → go to welcome (step 6)
-  const completeAfterPayment = async (authUserId: string, sessionId: string) => {
+  const completeAfterPayment = async (_authUserId: string, sessionId: string) => {
     setLoading(true)
     try {
       let stripeData: any = {}
@@ -335,24 +314,17 @@ function SignupPage() {
       if (savedPropertyId) setPropertyId(savedPropertyId)
       if (savedPropertyName) setForm(f => ({ ...f, propertyName: savedPropertyName }))
 
-      const { data: org } = await supabase
-        .from('organizations')
-        .select('id')
-        .eq('auth_user_id', authUserId)
-        .single()
-
-      if (org) {
-        setOrgId(org.id)
-        await supabase
-          .from('organizations')
-          .update({
-            plan: savedPlan || stripeData.plan || 'professional',
-            stripe_customer_id: stripeData.customerId || null,
-            subscription_status: 'trialing',
-            trial_started_at: new Date().toISOString(),
-            trial_ends_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-          })
-          .eq('id', org.id)
+      const paymentRes = await fetch('/api/signup/complete-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan: savedPlan || stripeData.plan || 'professional',
+          stripeCustomerId: stripeData.customerId || null,
+        }),
+      })
+      const paymentData = await paymentRes.json()
+      if (paymentData.org) {
+        setOrgId(paymentData.org.id)
       }
 
       if (savedPropertyId) await generateQR(savedPropertyId)
@@ -370,35 +342,23 @@ function SignupPage() {
     setLoading(false)
   }
 
-  // Step 1: Create organization
+  // Step 1: Create organization (via server API to bypass RLS)
   const handleCreateOrg = async () => {
     if (!userId) return
     setLoading(true)
     setError(null)
     try {
-      const { data: existingOrg } = await supabase
-        .from('organizations')
-        .select('id')
-        .eq('auth_user_id', userId)
-        .single()
-
-      if (existingOrg) {
-        setOrgId(existingOrg.id)
-      } else {
-        const { data: { user } } = await supabase.auth.getUser()
-        const { data: org, error: orgErr } = await supabase
-          .from('organizations')
-          .insert({
-            name: account.company || account.name,
-            email: user?.email || account.email,
-            user_id: userId,
-            auth_user_id: userId,
-          })
-          .select()
-          .single()
-        if (orgErr) throw orgErr
-        setOrgId(org.id)
-      }
+      const res = await fetch('/api/signup/create-org', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: account.company || account.name,
+          email: account.email,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to create account')
+      setOrgId(data.org.id)
       setStep(2)
     } catch (err: any) {
       setError(err?.message || 'Failed to create account')
@@ -412,38 +372,34 @@ function SignupPage() {
     setLoading(true)
     setError(null)
     try {
-      const { data: prop, error: propErr } = await supabase
-        .from('properties')
-        .insert({
-          org_id: orgId,
-          name: form.propertyName,
-          address: form.propertyAddress,
-          postal_code: form.propertyPostalCode,
-          city: form.propertyCity,
-          country: form.propertyCountry,
-          latitude: form.propertyLat,
-          longitude: form.propertyLng,
-          property_type: form.propertyType,
-          images: form.propertyImages,
-          ical_url: form.icalUrl || null,
-          whatsapp_number: '',
-        })
-        .select()
-        .single()
-
-      if (propErr) throw propErr
-
-      const { error: configErr } = await supabase
-        .from('property_config_sheets')
-        .insert({
-          property_id: prop.id,
-          wifi_password: form.wifi,
-          checkin_instructions: form.checkin,
-          local_tips: form.localTips,
-          house_rules: form.houseRules,
-        })
-
-      if (configErr) console.error('Config sheet creation error:', configErr)
+      const res = await fetch('/api/signup/create-property', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orgId,
+          property: {
+            name: form.propertyName,
+            address: form.propertyAddress,
+            postal_code: form.propertyPostalCode,
+            city: form.propertyCity,
+            country: form.propertyCountry,
+            latitude: form.propertyLat,
+            longitude: form.propertyLng,
+            property_type: form.propertyType,
+            images: form.propertyImages,
+            ical_url: form.icalUrl || null,
+          },
+          config: {
+            wifi_password: form.wifi,
+            checkin_instructions: form.checkin,
+            local_tips: form.localTips,
+            house_rules: form.houseRules,
+          },
+        }),
+      })
+      const propData = await res.json()
+      if (!res.ok) throw new Error(propData.error || 'Failed to create property')
+      const prop = propData.property
 
       // Extract and store images from uploaded docs
       if (pendingDocFiles.length > 0) {
@@ -509,15 +465,19 @@ function SignupPage() {
     setTestDataFilled(true)
 
     if (propertyId) {
-      await supabase
-        .from('property_config_sheets')
-        .update({
-          wifi_password: TEST_CONFIG.wifi,
-          checkin_instructions: TEST_CONFIG.checkin,
-          local_tips: TEST_CONFIG.localTips,
-          house_rules: TEST_CONFIG.houseRules,
-        })
-        .eq('property_id', propertyId)
+      await fetch('/api/signup/update-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          propertyId,
+          config: {
+            wifi_password: TEST_CONFIG.wifi,
+            checkin_instructions: TEST_CONFIG.checkin,
+            local_tips: TEST_CONFIG.localTips,
+            house_rules: TEST_CONFIG.houseRules,
+          },
+        }),
+      })
     }
   }
 
@@ -539,7 +499,11 @@ function SignupPage() {
 
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || 'Failed to create checkout session')
-      if (data.url) window.location.href = data.url
+      if (data.url) {
+        window.location.href = data.url
+      } else {
+        throw new Error('No checkout URL returned from Stripe')
+      }
     } catch (err) {
       console.error('Checkout error:', err)
       setError(err instanceof Error ? err.message : 'Failed to start checkout')

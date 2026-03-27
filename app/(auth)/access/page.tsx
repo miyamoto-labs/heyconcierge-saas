@@ -6,21 +6,31 @@ import { useRouter } from 'next/navigation'
 export default function AccessPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // Check password
-    const validPassword = process.env.NEXT_PUBLIC_ACCESS_CODE || 'heyc2026'
-    
-    if (password === validPassword) {
-      // Set cookie and redirect
-      document.cookie = `heyconcierge_access=${password}; path=/; max-age=86400` // 24 hours
-      router.push('/')
-    } else {
+    setLoading(true)
+    setError(false)
+
+    try {
+      const res = await fetch('/api/verify-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: password }),
+      })
+
+      if (res.ok) {
+        router.push('/')
+      } else {
+        setError(true)
+        setPassword('')
+      }
+    } catch {
       setError(true)
-      setPassword('')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -64,9 +74,10 @@ export default function AccessPage() {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200"
+            disabled={loading}
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50"
           >
-            Access Site
+            {loading ? 'Verifying...' : 'Access Site'}
           </button>
         </form>
 

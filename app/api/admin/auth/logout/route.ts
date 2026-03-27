@@ -16,6 +16,4 @@ export async function POST() {
   return response
 }
 
-export async function GET() {
-  return POST()
-}
+// GET intentionally removed — POST-only to prevent CSRF via <img src="/api/admin/auth/logout">
