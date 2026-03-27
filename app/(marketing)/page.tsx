@@ -59,7 +59,7 @@ export default function Home() {
     { icon: MessageSquare, title: '24/7 AI Chat', desc: 'Guests get an answer in seconds. Not hours. Every question, every hour of the day.' },
     { icon: Globe, title: '50+ Languages', desc: 'A Japanese guest gets a Japanese reply. A French guest gets French. No effort on your end.' },
     { icon: Smartphone, title: 'WhatsApp, Telegram & SMS', desc: 'Guests text the way they normally text. Nothing to download, nothing to sign up for.' },
-    { icon: Star, title: 'Earn Commission', desc: 'When a guest asks what to do today, the AI suggests local experiences via GetYourGuide. You earn on every booking.' },
+    { icon: Star, title: 'Earn Commission', desc: 'When a guest asks what to do, the AI suggests GetYourGuide experiences. You earn commission on every completed, paid booking.' },
   ]
 
   const steps = [
@@ -150,7 +150,7 @@ export default function Home() {
               Your guests have questions.<br />You have better<br />things to do.
             </h1>
             <p className="text-lg text-earth-muted max-w-lg mb-10 leading-relaxed animate-fade-in-up-1">
-              An AI concierge trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. It answers every guest question instantly on WhatsApp, around the clock. And earns you commission whenever it recommends a local activity.
+              An AI concierge trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. It answers every guest question instantly on WhatsApp, around the clock. And earns you commission every time a guest pays for an activity it recommends.
             </p>
             <div className="flex gap-4 items-center flex-wrap animate-fade-in-up-2 mb-12">
               <Link
@@ -369,7 +369,7 @@ export default function Home() {
                 Every &ldquo;what should<br />I do today?&rdquo; is<br />a revenue opportunity.
               </h2>
               <p className="text-earth-muted text-base leading-relaxed mb-6">
-                When a guest asks what to do, HeyConcierge recommends local experiences from <strong className="text-earth-dark font-medium">GetYourGuide</strong>. They book from the chat. You earn a commission. No invoices, no follow-up, nothing.
+                When a guest asks what to do, HeyConcierge recommends local experiences from <strong className="text-earth-dark font-medium">GetYourGuide</strong>. When the guest pays and completes the booking, you earn a commission. No invoices, no follow-up, nothing.
               </p>
               <ul className="space-y-3 mb-8">
                 {[
