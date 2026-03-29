@@ -72,6 +72,7 @@ export async function middleware(request: NextRequest) {
     '/api/verify-access',    // Access gate — public by design
     '/api/sync-calendar',    // Calendar sync — service-level auth
     '/api/activities/search', // Activity search — used by AI concierge
+    '/api/geo-price',         // Geo pricing — public, display-only
   ]
   const isPublicApi = publicApiPaths.some(path => pathname.startsWith(path))
 
