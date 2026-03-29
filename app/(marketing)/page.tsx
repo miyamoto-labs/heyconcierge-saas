@@ -440,19 +440,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Ambient Video Break */}
+      {/* Ambient Break */}
       <section className="relative h-[60vh] min-h-[420px] overflow-hidden">
-        <video
+        <img
           className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
-        >
-          <source src="https://videos.pexels.com/video-files/7670332/7670332-hd_1920_1080_30fps.mp4" type="video/mp4" />
-          <source src="https://videos.pexels.com/video-files/4066443/4066443-hd_1920_1080_30fps.mp4" type="video/mp4" />
-        </video>
+          src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1600&q=80"
+          alt="Luxury vacation rental"
+        />
         {/* Subtle dark overlay */}
         <div className="absolute inset-0 bg-black/35" />
         {/* Centered text */}
