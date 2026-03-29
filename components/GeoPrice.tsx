@@ -21,20 +21,20 @@ export function GeoPrice({ variant = 'inline', className }: GeoPriceProps) {
   const [data, setData] = useState<GeoPriceData | null>(null)
 
   useEffect(() => {
-    fetch('/api/geo-price')
+    const fallback = () => setData({
+      country: 'US', currency: 'USD', symbol: '$',
+      price: '12.99', formattedPrice: '$12.99', flag: '🇺🇸',
+    })
+    // Abort after 4 s so users never get stuck on a skeleton
+    const controller = new AbortController()
+    const timer = setTimeout(() => { controller.abort(); fallback() }, 4000)
+
+    fetch('/api/geo-price', { signal: controller.signal })
       .then(r => r.json())
-      .then(setData)
-      .catch(() => {
-        // Fallback to USD on any error
-        setData({
-          country: 'US',
-          currency: 'USD',
-          symbol: '$',
-          price: '12.99',
-          formattedPrice: '$12.99',
-          flag: '🇺🇸',
-        })
-      })
+      .then(d => { clearTimeout(timer); setData(d) })
+      .catch(() => { clearTimeout(timer); fallback() })
+
+    return () => { clearTimeout(timer); controller.abort() }
   }, [])
 
   if (!data) {

@@ -66,8 +66,9 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(response, {
     headers: {
-      // Cache per region for 1 hour, but revalidate in background
-      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+      // Private: each user's browser caches their own geo response.
+      // Must NOT be public — Vercel's CDN would cache one country's price for all users.
+      'Cache-Control': 'private, max-age=3600',
     },
   })
 }
