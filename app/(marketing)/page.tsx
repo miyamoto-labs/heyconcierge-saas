@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 import ChatWidget from '@/components/chat/SimpleChatWidget'
 import PhoneMockup from '@/components/PhoneMockup'
+import { GeoPrice } from '@/components/GeoPrice'
 import {
   MessageSquare,
   Globe,
@@ -69,7 +70,7 @@ export default function Home() {
   ]
 
   const faqs = [
-    { q: 'Is $12.99/month per property actually worth it?', a: 'Do the math. If you save 30 minutes a day on guest messages, that\'s 15 hours a month. At any reasonable rate, that\'s worth far more than $12.99. Then add GetYourGuide commission on top. Most managers with 3 or more properties are in profit within the first week.' },
+    { q: 'Is the monthly price per property actually worth it?', a: 'Do the math. If you save 30 minutes a day on guest messages, that\'s 15 hours a month. At any reasonable hourly rate, that\'s worth far more than a cup of coffee per property. Add GetYourGuide commission on top and most managers with 3 or more properties are in profit within the first week.' },
     { q: 'Will my guests actually use WhatsApp to contact me?', a: 'Yes. WhatsApp is the most used messaging app in the world. Most guests would rather send a quick text than dig through their Airbnb inbox to find your email. When you hand them a WhatsApp number, they use it.' },
     { q: 'What if the AI gives a guest wrong information?', a: 'It only knows what you tell it. It won\'t make things up. If a question comes in that it can\'t answer, it tells the guest it will check and flags it to you. You can review every conversation and update the knowledge base in a few clicks.' },
     { q: 'I already use Guesty or Hostaway. Do I need this too?', a: 'Yes, and they work well together. Your PMS handles the back office. HeyConcierge handles the conversation your guests actually have. It syncs with your iCal so it always knows who is checked in.' },
@@ -150,7 +151,7 @@ export default function Home() {
               Your guests have questions.<br />You have better<br />things to do.
             </h1>
             <p className="text-lg text-earth-muted max-w-lg mb-10 leading-relaxed animate-fade-in-up-1">
-              Trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. Answers every guest question on WhatsApp, any hour of the day. When a guest books an experience it suggested — the commission is yours.
+              Trained on <em className="not-italic font-medium text-earth-dark">your</em> properties. Answers every guest question on WhatsApp, any hour of the day. When a guest books an experience it suggested, you earn a commission on the sale.
             </p>
             <div className="flex gap-4 items-center flex-wrap animate-fade-in-up-2 mb-12">
               <Link
@@ -175,7 +176,9 @@ export default function Home() {
               </div>
               <div className="w-px bg-earth-border" />
               <div>
-                <p className="text-2xl font-serif text-earth-dark">$12.99</p>
+                <p className="text-2xl font-serif text-earth-dark">
+                  <GeoPrice variant="hero" />
+                </p>
                 <p className="text-xs text-earth-muted mt-0.5">/ property / month</p>
               </div>
               <div className="w-px bg-earth-border" />
@@ -548,7 +551,10 @@ export default function Home() {
           >
             Start Free Trial <ArrowRight size={16} />
           </Link>
-          <p className="text-xs text-earth-light mt-4 reveal">$12.99 / property / month after trial &nbsp;·&nbsp; No lock-in &nbsp;·&nbsp; 10+ properties? <a href="mailto:hello@heyconcierge.io" className="text-grove hover:underline">Contact us for enterprise pricing</a></p>
+          <p className="text-xs text-earth-light mt-4 reveal">
+            <GeoPrice variant="inline" /> &nbsp;·&nbsp; No lock-in &nbsp;·&nbsp; 10+ properties?{' '}
+            <a href="mailto:hello@heyconcierge.io" className="text-grove hover:underline">Contact us for enterprise pricing</a>
+          </p>
         </div>
       </section>
 
