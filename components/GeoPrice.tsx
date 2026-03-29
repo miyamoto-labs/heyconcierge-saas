@@ -17,32 +17,26 @@ interface GeoPriceProps {
   className?: string
 }
 
+const USD_DEFAULT: GeoPriceData = {
+  country: 'US', currency: 'USD', symbol: '$',
+  price: '12.99', formattedPrice: '$12.99', flag: '🇺🇸',
+}
+
 export function GeoPrice({ variant = 'inline', className }: GeoPriceProps) {
-  const [data, setData] = useState<GeoPriceData | null>(null)
+  // Start with USD so the price is always visible immediately — no skeleton
+  const [data, setData] = useState<GeoPriceData>(USD_DEFAULT)
 
   useEffect(() => {
-    const fallback = () => setData({
-      country: 'US', currency: 'USD', symbol: '$',
-      price: '12.99', formattedPrice: '$12.99', flag: '🇺🇸',
-    })
-    // Abort after 4 s so users never get stuck on a skeleton
     const controller = new AbortController()
-    const timer = setTimeout(() => { controller.abort(); fallback() }, 4000)
+    const timer = setTimeout(() => controller.abort(), 4000)
 
     fetch('/api/geo-price', { signal: controller.signal })
       .then(r => r.json())
       .then(d => { clearTimeout(timer); setData(d) })
-      .catch(() => { clearTimeout(timer); fallback() })
+      .catch(() => clearTimeout(timer)) // on failure keep showing USD default
 
     return () => { clearTimeout(timer); controller.abort() }
   }, [])
-
-  if (!data) {
-    // Skeleton — same width as default USD price so layout doesn't shift
-    return variant === 'hero'
-      ? <span className={`inline-block w-16 h-7 bg-earth-border/50 rounded animate-pulse ${className ?? ''}`} />
-      : <span className={`inline-block w-14 h-4 bg-earth-border/50 rounded animate-pulse align-middle ${className ?? ''}`} />
-  }
 
   if (variant === 'hero') {
     return (
