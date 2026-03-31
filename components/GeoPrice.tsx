@@ -41,7 +41,7 @@ export function GeoPrice({ variant = 'inline', className }: GeoPriceProps) {
   if (variant === 'hero') {
     return (
       <span className={className}>
-        <span title={`${data.currency} · detected country: ${data.country}`}>
+        <span>
           {data.formattedPrice}
         </span>
         {data.currency !== 'USD' && (
@@ -55,7 +55,7 @@ export function GeoPrice({ variant = 'inline', className }: GeoPriceProps) {
 
   // inline variant — used in the CTA footer line
   return (
-    <span className={className} title={`${data.currency} · detected country: ${data.country}`}>
+    <span className={className}>
       {data.formattedPrice} / property / month after trial
       {data.currency !== 'USD' && (
         <span className="ml-1">{data.flag}</span>

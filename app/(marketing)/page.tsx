@@ -171,7 +171,7 @@ export default function Home() {
             {/* Stat row */}
             <div className="flex gap-8 animate-fade-in-up-3">
               <div>
-                <p className="text-2xl font-serif text-earth-dark">3h+</p>
+                <p className="text-2xl font-serif text-earth-dark">1.5h+</p>
                 <p className="text-xs text-earth-muted mt-0.5">Saved per day</p>
               </div>
               <div className="w-px bg-earth-border" />
