@@ -282,6 +282,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Gap Section — objection: "I already have messaging built in" */}
+      <section className="py-28 px-6 lg:px-8 bg-grove-subtle">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-16">
+            <p className="text-sm font-medium text-grove tracking-wide mb-4 reveal">What your current setup misses</p>
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-earth-dark leading-tight mb-4 reveal max-w-2xl">
+              Your booking platform handles bookings.<br />HeyConcierge handles everything after.
+            </h2>
+            <p className="text-base text-earth-muted max-w-xl reveal">
+              Most chat tools live inside your booking platform. Your guests don&apos;t.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10">
+            {[
+              {
+                title: 'Guests leave the platform',
+                body: 'Once they arrive, guests text on WhatsApp or just knock. HeyConcierge meets them there — not inside a booking app they stopped checking.',
+              },
+              {
+                title: 'Questions come at 2am',
+                body: "The key code doesn't work. The WiFi dropped. You're asleep. HeyConcierge answers instantly, without waking you up.",
+              },
+              {
+                title: 'Not everyone speaks English',
+                body: 'Guests might text in German, French, or Japanese. HeyConcierge replies in their language automatically — no effort on your end.',
+              },
+              {
+                title: 'Context your booking tool will never have',
+                body: 'The quiet parking spot two streets over. When the bins go out. The neighbour to avoid. These details live in HeyConcierge.',
+              },
+            ].map((item, i) => (
+              <div key={i} className="reveal border-t border-earth-border pt-6">
+                <h3 className="text-base font-medium text-earth-dark mb-2">{item.title}</h3>
+                <p className="text-sm text-earth-muted leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Local Expert Section */}
       <section className="py-28 px-6 lg:px-8 bg-earth-dark text-white">
         <div className="max-w-5xl mx-auto">
