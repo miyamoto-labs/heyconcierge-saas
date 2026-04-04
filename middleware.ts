@@ -24,6 +24,7 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith('/legal') ||
     pathname === '/access' ||
     pathname === '/faq' ||
+    pathname === '/pricing' ||
     pathname === '/'
   ) {
     return NextResponse.next()
