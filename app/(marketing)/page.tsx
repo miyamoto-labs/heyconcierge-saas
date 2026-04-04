@@ -69,58 +69,6 @@ export default function Home() {
     { num: '03', title: 'Share the link and step back', desc: 'Send guests a WhatsApp link or put a QR code in the property. They chat. You get peace of mind. Commission comes in automatically when they book activities.' },
   ]
 
-  // ─── SOCIAL PROOF CONFIG ─────────────────────────────────────────────────────
-  // Update these numbers as the product grows
-  const SOCIAL_PROOF_STATS = [
-    { value: '180+',    label: 'Properties on HeyConcierge' },
-    { value: '24,000+', label: 'Guest messages handled' },
-    { value: '<10s',    label: 'Average guest response time' },
-  ]
-
-  // PLACEHOLDER testimonials — swap with real ones as they come in.
-  // Each entry is one card in the testimonials grid.
-  const TESTIMONIALS = [
-    {
-      quote: "I was skeptical — I thought guests would find it impersonal. Then I got a 5-star review last week specifically mentioning the 'incredibly helpful concierge'. Didn't see that coming.",
-      name: 'Marcus T.',
-      location: 'Lisbon, Portugal',
-      properties: 4,
-      stars: 5,
-      initials: 'MT',
-    },
-    {
-      quote: "Cut my morning message routine from about 45 minutes down to almost nothing. I check the app once a day now instead of being glued to my phone. Genuinely changed how I manage the portfolio.",
-      name: 'Sarah K.',
-      location: 'Edinburgh, Scotland',
-      properties: 7,
-      stars: 5,
-      initials: 'SK',
-    },
-    {
-      quote: "Setup took maybe 20 minutes. WiFi, parking, check-in steps, a few restaurant picks. That was it. It just runs quietly in the background.",
-      name: 'Pieter V.',
-      location: 'Amsterdam, Netherlands',
-      properties: 3,
-      stars: 5,
-      initials: 'PV',
-    },
-    {
-      quote: "We manage city apartments and rural cottages — very different guests, very different questions. Having the AI trained separately per property is what makes it actually useful rather than generic.",
-      name: 'Anna-Lena B.',
-      location: 'Bavaria, Germany',
-      properties: 11,
-      stars: 5,
-      initials: 'AL',
-    },
-  ]
-
-  // PLACEHOLDER highlight quote — replace with a real verified quote when available
-  const HIGHLIGHT_QUOTE = {
-    text: 'Set it up on a Sunday. By Monday morning, my inbox was quiet.',
-    attribution: 'Property manager · 6 units · Barcelona',
-  }
-  // ─────────────────────────────────────────────────────────────────────────────
-
   const faqs = [
     { q: 'Is the monthly price per property actually worth it?', a: 'Do the math. If you save 30 minutes a day on guest messages, that\'s 15 hours a month. At any reasonable hourly rate, that\'s worth far more than a cup of coffee per property. Add GetYourGuide commission on top and most managers with 3 or more properties are in profit within the first week.' },
     { q: 'Will my guests actually use WhatsApp to contact me?', a: 'Yes. WhatsApp is the most used messaging app in the world. Most guests would rather send a quick text than dig through their Airbnb inbox to find your email. When you hand them a WhatsApp number, they use it.' },
@@ -264,32 +212,6 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <Smartphone size={18} className="text-earth-muted" />
               <span className="text-sm font-medium text-earth-dark">SMS</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof Stats + Logo Strip */}
-      <section className="py-10 px-6 lg:px-8 border-b border-earth-border/60">
-        <div className="max-w-5xl mx-auto flex flex-col items-center gap-8">
-          {/* Stats row */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-10 sm:gap-20">
-            {SOCIAL_PROOF_STATS.map((stat, i) => (
-              <div key={i} className="text-center">
-                <p className="text-2xl font-serif text-earth-dark">{stat.value}</p>
-                <p className="text-xs text-earth-muted mt-0.5">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-          {/* Platform logo strip */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5">
-            <p className="text-xs text-earth-light tracking-wide">Trusted by hosts listing on</p>
-            <div className="flex items-center gap-5">
-              <span className="text-sm font-semibold text-[#FF5A5F]">Airbnb</span>
-              <span className="text-earth-border text-xs">·</span>
-              <span className="text-sm font-semibold text-[#003580]">Booking.com</span>
-              <span className="text-earth-border text-xs">·</span>
-              <span className="text-sm font-semibold text-[#1C5CF3]">VRBO</span>
             </div>
           </div>
         </div>
@@ -617,40 +539,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-28 px-6 lg:px-8 bg-grove-subtle/40">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-16">
-            <p className="text-sm font-medium text-grove tracking-wide mb-4 reveal">What managers say</p>
-            <h2 className="font-serif text-3xl sm:text-4xl text-earth-dark leading-tight reveal max-w-xl">
-              Don&apos;t take our word for it.
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {TESTIMONIALS.map((t, i) => (
-              // PLACEHOLDER: replace with real testimonial
-              <div key={i} className="bg-white border border-earth-border rounded-2xl p-6 reveal flex flex-col gap-4">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: t.stars }).map((_, s) => (
-                    <Star key={s} size={13} className="fill-grove text-grove" />
-                  ))}
-                </div>
-                <p className="text-sm text-earth-text leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-3 border-t border-earth-border">
-                  <div className="w-9 h-9 rounded-full bg-grove-subtle flex items-center justify-center flex-shrink-0">
-                    <span className="text-xs font-semibold text-grove">{t.initials}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-earth-dark">{t.name}</p>
-                    <p className="text-xs text-earth-muted">{t.location} · {t.properties} properties</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section className="py-28 px-6 lg:px-8 bg-grove-subtle/50">
         <div className="max-w-3xl mx-auto">
@@ -680,16 +568,6 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Highlight Quote — PLACEHOLDER: replace with a real verified quote */}
-      <section className="py-20 px-6 lg:px-8 bg-earth-dark">
-        <div className="max-w-2xl mx-auto text-center reveal">
-          <p className="font-serif text-2xl sm:text-3xl text-white italic leading-snug mb-5">
-            &ldquo;{HIGHLIGHT_QUOTE.text}&rdquo;
-          </p>
-          <p className="text-sm text-white/40 tracking-wide">{HIGHLIGHT_QUOTE.attribution}</p>
         </div>
       </section>
 
